@@ -14,10 +14,7 @@
 - [Chapter 9](./chapter_9.md)
 - [Chapter 10](./chapter_10.md)
 - [Chapter 11](./chapter_11.md)
-<<<<<<< HEAD
 
-=======
->>>>>>> 82fa38dc28e5e6d1c3a27880fb33bc261dd8d545
 
 - [Appendix A: Transducing](./apA.md)
 - [Appendix B: The Humble Monad](./apB.md)
