@@ -15,7 +15,6 @@
 - [Chapter 10](./chapter_10.md)
 - [Chapter 11](./chapter_11.md)
 
-
 - [Appendix A: Transducing](./apA.md)
 - [Appendix B: The Humble Monad](./apB.md)
 - [Appendix C: FP Libraries](./apC.md)
