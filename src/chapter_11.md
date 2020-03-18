@@ -532,7 +532,7 @@ I am quite sure that as I learn FP better on my own journey, I will continue to 
 As we draw the main text of this book to a close, I want to remind you of that readability curve that I [shared back in Chapter 1](chapter_1.md/#readability):
 
 <p align="center">
-    <img src="images/fig17.png" width="50%">
+    <img alt="figure" src="images/fig17.png" width="50%">
 </p>
 
 It's so important that you internalize the truth of that graph and set realistic expectations for yourself on this journey to learn and apply FP principles to your JavaScript. You've made it this far, and that's quite an accomplishment.
