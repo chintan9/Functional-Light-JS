@@ -37,4 +37,3 @@ jobs:
     - name: mdBook Action
       uses: peaceiris/actions-mdbook@v1.1.8
 
-
