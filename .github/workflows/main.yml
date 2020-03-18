@@ -22,5 +22,5 @@ jobs:
       # The mdBook version to download (if necessary) and use. Example: 0.3.5
         mdbook-version: 0.3.5 # optional, default is latest
     - name: rust-mdbook
-     uses: ryankurte/action-mdbook@0.1.1
+      uses: ryankurte/action-mdbook@0.1.1
 
