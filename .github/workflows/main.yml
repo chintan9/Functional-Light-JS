@@ -1,29 +1,26 @@
-name: CI
+name: github pages
+
 on:
-  # Only run when merging to master, or open/synchronize/reopen a PR.
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
-jobs:
-  pull-request:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: pull-request
-      uses: repo-sync/pull-request@v2
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: mdBook Action
-      uses: peaceiris/actions-mdbook@v1.1.8
-      with:
-      # The mdBook version to download (if necessary) and use. Example: 0.3.5
-        mdbook-version: 0.3.5 # optional, default is latest
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
 
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v1
+        with:
+          mdbook-version: '0.3.5'
+          # mdbook-version: 'latest'
+
+      - run: mdbook build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./book
