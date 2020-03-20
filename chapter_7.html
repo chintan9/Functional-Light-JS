@@ -1,0 +1,996 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 7 - Functional-Light JavaScript</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="foreword.html"><strong aria-hidden="true">1.</strong> Foreword</a></li><li class="expanded "><a href="preface.html"><strong aria-hidden="true">2.</strong> Preface</a></li><li class="expanded "><a href="chapter_1.html"><strong aria-hidden="true">3.</strong> Chapter 1</a></li><li class="expanded "><a href="chapter_2.html"><strong aria-hidden="true">4.</strong> Chapter 2</a></li><li class="expanded "><a href="chapter_3.html"><strong aria-hidden="true">5.</strong> Chapter 3</a></li><li class="expanded "><a href="chapter_4.html"><strong aria-hidden="true">6.</strong> Chapter 4</a></li><li class="expanded "><a href="chapter_5.html"><strong aria-hidden="true">7.</strong> Chapter 5</a></li><li class="expanded "><a href="chapter_6.html"><strong aria-hidden="true">8.</strong> Chapter 6</a></li><li class="expanded "><a href="chapter_7.html" class="active"><strong aria-hidden="true">9.</strong> Chapter 7</a></li><li class="expanded "><a href="chapter_8.html"><strong aria-hidden="true">10.</strong> Chapter 8</a></li><li class="expanded "><a href="chapter_9.html"><strong aria-hidden="true">11.</strong> Chapter 9</a></li><li class="expanded "><a href="chapter_10.html"><strong aria-hidden="true">12.</strong> Chapter 10</a></li><li class="expanded "><a href="chapter_11.html"><strong aria-hidden="true">13.</strong> Chapter 11</a></li><li class="expanded "><a href="apA.html"><strong aria-hidden="true">14.</strong> Appendix A: Transducing</a></li><li class="expanded "><a href="apB.html"><strong aria-hidden="true">15.</strong> Appendix B: The Humble Monad</a></li><li class="expanded "><a href="apC.html"><strong aria-hidden="true">16.</strong> Appendix C: FP Libraries</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Functional-Light JavaScript</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#functional-light-javascript" id="functional-light-javascript">Functional-Light JavaScript</a></h1>
+<h1><a class="header" href="#chapter-7-closure-vs-object" id="chapter-7-closure-vs-object">Chapter 7: Closure vs. Object</a></h1>
+<p>A number of years ago, Anton van Straaten crafted what has become a rather
+famous and oft-cited <a href="https://www.merriam-webster.com/dictionary/koan">koan</a> to
+illustrate and provoke an important tension between closure and objects:</p>
+<blockquote>
+<p>The venerable master Qc Na was walking with his student, Anton. Hoping to
+prompt the master into a discussion, Anton said &quot;Master, I have heard that
+objects are a very good thing - is this true?&quot; Qc Na looked pityingly at his
+student and replied, &quot;Foolish pupil - objects are merely a poor man's
+closures.&quot;</p>
+<p>Chastised, Anton took his leave from his master and returned to his cell,
+intent on studying closures. He carefully read the entire &quot;Lambda: The
+Ultimate...&quot; series of papers and its cousins, and implemented a small Scheme
+interpreter with a closure-based object system. He learned much, and looked
+forward to informing his master of his progress.</p>
+<p>On his next walk with Qc Na, Anton attempted to impress his master by saying
+&quot;Master, I have diligently studied the matter, and now understand that objects
+are truly a poor man's closures.&quot; Qc Na responded by hitting Anton with his
+stick, saying &quot;When will you learn? Closures are a poor man's object.&quot; At that
+moment, Anton became enlightened.</p>
+<p>-- Anton van Straaten 6/4/2003</p>
+<p>http://people.csail.mit.edu/gregs/ll1-discuss-archive-html/msg03277.html</p>
+</blockquote>
+<p>The original posting, while brief, has more context to the origin and
+motivations, and I strongly suggest you read that post to properly set your
+mindset for approaching this chapter.</p>
+<p>Many people I've observed read this koan smirk at its clever wit but then move
+on without it changing much about their thinking. However, the purpose of a koan
+(from the Zen Buddhist perspective) is to prod the reader into wrestling with
+the contradictory truths therein. So, go back and read it again. Now read it
+again.</p>
+<p>Which is it? Is a closure a poor man's object, or is an object a poor man's
+closure? Or neither? Or both? Is merely the take-away that closures and objects
+are in some way equivalent?</p>
+<p>And what does any of this have to do with functional programming? Pull up a
+chair and ponder for a while. This chapter will be an interesting detour, an
+excursion if you will.</p>
+<h2><a class="header" href="#the-same-page" id="the-same-page">The Same Page</a></h2>
+<p>First, let's make sure we're all on the same page when we refer to closures and
+objects. We're obviously in the context of how JavaScript deals with these two
+mechanisms, and specifically talking about simple function closure (see
+<a href="chapter_2.html">Chapter 2, &quot;Keeping Scope&quot;</a>) and simple objects
+(collections of key-value pairs).</p>
+<p>For the record, here's an illustration of a simple function closure:</p>
+<pre><code class="language-js">function outer() {
+  var one = 1;
+  var two = 2;
+
+  return function inner() {
+    return one + two;
+  };
+}
+
+var three = outer();
+
+three(); // 3
+</code></pre>
+<p>And an illustration of a simple object:</p>
+<pre><code class="language-js">var obj = {
+  one: 1,
+  two: 2
+};
+
+function three(outer) {
+  return outer.one + outer.two;
+}
+
+three(obj); // 3
+</code></pre>
+<p>Many people conjure lots of extra things when you mention &quot;closure&quot;, such as the
+asynchronous callbacks or even the module pattern with encapsulation and
+information hiding. Similarly, &quot;object&quot; brings to mind classes, <code>this</code>,
+prototypes, and a whole slew of other utilities and patterns.</p>
+<p>As we go along, we'll carefully address the parts of this external context that
+matter, but for now, try to just stick to the simplest interpretations of
+&quot;closure&quot; and &quot;object&quot; as illustrated here; it'll make our exploration less
+confusing.</p>
+<h2><a class="header" href="#look-alike" id="look-alike">Look Alike</a></h2>
+<p>It may not be obvious how closures and objects are related. So let's explore
+their similarities first.</p>
+<p>To frame this discussion, let me just briefly assert two things:</p>
+<ol>
+<li>A programming language without closures can simulate them with objects
+instead.</li>
+<li>A programming language without objects can simulate them with closures
+instead.</li>
+</ol>
+<p>In other words, we can think of closures and objects as two different
+representations of a thing.</p>
+<h3><a class="header" href="#state" id="state">State</a></h3>
+<p>Consider this code from before:</p>
+<pre><code class="language-js">function outer() {
+  var one = 1;
+  var two = 2;
+
+  return function inner() {
+    return one + two;
+  };
+}
+
+var obj = {
+  one: 1,
+  two: 2
+};
+</code></pre>
+<p>Both the scope closed over by <code>inner()</code> and the object <code>obj</code> contain two
+elements of state: <code>one</code> with value <code>1</code> and <code>two</code> with value <code>2</code>. Syntactically
+and mechanically, these representations of state are different. But
+conceptually, they're actually quite similar.</p>
+<p>As a matter of fact, it's fairly straightforward to represent an object as a
+closure, or a closure as an object. Go ahead, try it yourself:</p>
+<pre><code class="language-js">var point = {
+  x: 10,
+  y: 12,
+  z: 14
+};
+</code></pre>
+<p>Did you come up with something like?</p>
+<pre><code class="language-js">function outer() {
+  var x = 10;
+  var y = 12;
+  var z = 14;
+
+  return function inner() {
+    return [x, y, z];
+  };
+}
+
+var point = outer();
+</code></pre>
+<p><strong>Note:</strong> The <code>inner()</code> function creates and returns a new array (aka, an
+object!) each time it's called. That's because JS doesn't afford us any
+capability to <code>return</code> multiple values without encapsulating them in an object.
+That's not technically a violation of our object-as-closure task, because it's
+just an implementation detail of exposing/transporting values; the state
+tracking itself is still object-free. With ES6+ array destructuring, we can
+declaratively ignore this temporary intermediate array on the other side:
+<code>var [x,y,z] = point()</code>. From a developer ergonomics perspective, the values are
+stored individually and tracked via closure instead of objects.</p>
+<p>What if we have nested objects?</p>
+<pre><code class="language-js">var person = {
+  name: &quot;Kyle Simpson&quot;,
+  address: {
+    street: &quot;123 Easy St&quot;,
+    city: &quot;JS'ville&quot;,
+    state: &quot;ES&quot;
+  }
+};
+</code></pre>
+<p>We could represent that same kind of state with nested closures:</p>
+<pre><code class="language-js">function outer() {
+  var name = &quot;Kyle Simpson&quot;;
+  return middle();
+
+  // ********************
+
+  function middle() {
+    var street = &quot;123 Easy St&quot;;
+    var city = &quot;JS'ville&quot;;
+    var state = &quot;ES&quot;;
+
+    return function inner() {
+      return [name, street, city, state];
+    };
+  }
+}
+
+var person = outer();
+</code></pre>
+<p>Let's practice going the other direction, from closure to object:</p>
+<pre><code class="language-js">function point(x1, y1) {
+  return function distFromPoint(x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  };
+}
+
+var pointDistance = point(1, 1);
+
+pointDistance(4, 5); // 5
+</code></pre>
+<p><code>distFromPoint(..)</code> is closed over <code>x1</code> and <code>y1</code>, but we could instead
+explicitly pass those values as an object:</p>
+<pre><code class="language-js">function pointDistance(point, x2, y2) {
+  return Math.sqrt(Math.pow(x2 - point.x1, 2) + Math.pow(y2 - point.y1, 2));
+}
+
+pointDistance(
+  { x1: 1, y1: 1 },
+  4, // x2
+  5 // y2
+);
+// 5
+</code></pre>
+<p>The <code>point</code> object state explicitly passed in replaces the closure that
+implicitly held that state.</p>
+<h3><a class="header" href="#behavior-too" id="behavior-too">Behavior, Too!</a></h3>
+<p>It's not just that objects and closures represent ways to express collections of
+state, but also that they can include behavior via functions/methods. Bundling
+data with its behavior has a fancy name: encapsulation.</p>
+<p>Consider:</p>
+<pre><code class="language-js">function person(name,age) {
+    return happyBirthday(){
+        age++;
+        console.log(
+            `Happy ${age}th Birthday, ${name}!`
+        );
+    }
+}
+
+var birthdayBoy = person( &quot;Kyle&quot;, 36 );
+
+birthdayBoy();          // Happy 37th Birthday, Kyle!
+</code></pre>
+<p>The inner function <code>happyBirthday()</code> has closure over <code>name</code> and <code>age</code> so that
+the functionality therein is kept with the state.</p>
+<p>We can achieve that same capability with a <code>this</code> binding to an object:</p>
+<pre><code class="language-js">var birthdayBoy = {
+  name: &quot;Kyle&quot;,
+  age: 36,
+  happyBirthday() {
+    this.age++;
+    console.log(`Happy ${this.age}th Birthday, ${this.name}!`);
+  }
+};
+
+birthdayBoy.happyBirthday();
+// Happy 37th Birthday, Kyle!
+</code></pre>
+<p>We're still expressing the encapsulation of state data with the
+<code>happyBirthday()</code> function, but with an object instead of a closure. And we
+don't have to explicitly pass in an object to a function (as with earlier
+examples); JavaScript's <code>this</code> binding easily creates an implicit binding.</p>
+<p>Another way to analyze this relationship: a closure associates a single function
+with a set of state, whereas an object holding the same state can have any
+number of functions to operate on that state.</p>
+<p>As a matter of fact, you could even expose multiple methods with a single
+closure as the interface. Consider a traditional object with two methods:</p>
+<pre><code class="language-js">var person = {
+  firstName: &quot;Kyle&quot;,
+  lastName: &quot;Simpson&quot;,
+  first() {
+    return this.firstName;
+  },
+  last() {
+    return this.lastName;
+  }
+};
+
+person.first() + &quot; &quot; + person.last();
+// Kyle Simpson
+</code></pre>
+<p>Just using closure without objects, we could represent this program as:</p>
+<pre><code class="language-js">function createPerson(firstName, lastName) {
+  return API;
+
+  // ********************
+
+  function API(methodName) {
+    switch (methodName) {
+      case &quot;first&quot;:
+        return first();
+        break;
+      case &quot;last&quot;:
+        return last();
+        break;
+    }
+  }
+
+  function first() {
+    return firstName;
+  }
+
+  function last() {
+    return lastName;
+  }
+}
+
+var person = createPerson(&quot;Kyle&quot;, &quot;Simpson&quot;);
+
+person(&quot;first&quot;) + &quot; &quot; + person(&quot;last&quot;);
+// Kyle Simpson
+</code></pre>
+<p>While these programs look and feel a bit different ergonomically, they're
+actually just different implementation variations of the same program behavior.</p>
+<h3><a class="header" href="#immutability" id="immutability">(Im)mutability</a></h3>
+<p>Many people will initially think that closures and objects behave differently
+with respect to mutability; closures protect from external mutation while
+objects do not. But, it turns out, both forms have identical mutation behavior.</p>
+<p>That's because what we care about, as discussed in <a href="chapter_6.html">Chapter 6</a>, is
+<strong>value</strong> mutability, and this is a characteristic of the value itself,
+regardless of where or how it's assigned:</p>
+<pre><code class="language-js">function outer() {
+  var x = 1;
+  var y = [2, 3];
+
+  return function inner() {
+    return [x, y[0], y[1]];
+  };
+}
+
+var xyPublic = {
+  x: 1,
+  y: [2, 3]
+};
+</code></pre>
+<p>The value stored in the <code>x</code> lexical variable inside <code>outer()</code> is immutable --
+remember, primitives like <code>2</code> are by definition immutable. But the value
+referenced by <code>y</code>, an array, is definitely mutable. The exact same goes for the
+<code>x</code> and <code>y</code> properties on <code>xyPublic</code>.</p>
+<p>We can reinforce the point that objects and closures have no bearing on
+mutability by pointing out that <code>y</code> is itself an array, and thus we need to
+break this example down further:</p>
+<pre><code class="language-js">function outer() {
+  var x = 1;
+  return middle();
+
+  // ********************
+
+  function middle() {
+    var y0 = 2;
+    var y1 = 3;
+
+    return function inner() {
+      return [x, y0, y1];
+    };
+  }
+}
+
+var xyPublic = {
+  x: 1,
+  y: {
+    0: 2,
+    1: 3
+  }
+};
+</code></pre>
+<p>If you think about it as &quot;turtles (aka, objects) all the way down&quot;, at the
+lowest level, all state data is primitives, and all primitives are
+value-immutable.</p>
+<p>Whether you represent this state with nested objects, or with nested closures,
+the values being held are all immutable.</p>
+<h3><a class="header" href="#isomorphic" id="isomorphic">Isomorphic</a></h3>
+<p>The term &quot;isomorphic&quot; gets thrown around a lot in JavaScript these days, and
+it's usually used to refer to code that can be used/shared in both the server
+and the browser. I wrote a blog post a while back that calls bogus on that usage
+of this word &quot;isomorphic&quot;, which actually has an explicit and important meaning
+that's being clouded.</p>
+<p>Here's some selections from a part of that post:</p>
+<blockquote>
+<p>What does isomorphic mean? Well, we could talk about it in mathematical terms,
+or sociology, or biology. The general notion of isomorphism is that you have
+two things which are similar in structure but not the same.</p>
+<p>In all those usages, isomorphism is differentiated from equality in this way:
+two values are equal if they’re exactly identical in all ways, but they are
+isomorphic if they are represented differently but still have a 1-to-1,
+bi-directional mapping relationship.</p>
+<p>In other words, two things A and B would be isomorphic if you could map
+(convert) from A to B and then go back to A with the inverse mapping.</p>
+</blockquote>
+<p>Recall in <a href="chapter_2.html">Chapter 2, &quot;Brief Math Review&quot;</a>, we
+discussed the mathematical definition of a function as being a mapping between
+inputs and outputs. We pointed out this is technically called a morphism. An
+isomorphism is a special case of bijective (aka, 2-way) morphism that requires
+not only that the mapping must be able to go in either direction, but also that
+the behavior is identical in either form.</p>
+<p>But instead of thinking about numbers, let's relate isomorphism to code. Again
+quoting my blog post:</p>
+<blockquote>
+<p>[W]hat would isomorphic JS be if there were such a thing? Well, it could be
+that you have one set of JS code that is converted to another set of JS code,
+and that (importantly) you could convert from the latter back to the former if
+you wanted.</p>
+</blockquote>
+<p>As we asserted earlier with our examples of closures-as-objects and
+objects-as-closures, these representative alternations go either way. In this
+respect, they are isomorphisms to each other.</p>
+<p>Put simply, closures and objects are isomorphic representations of state (and
+its associated functionality).</p>
+<p>The next time you hear someone say &quot;X is isomorphic to Y&quot;, what they mean is, &quot;X
+and Y can be converted from either one to the other in either direction, and not
+lose information.&quot;</p>
+<h3><a class="header" href="#under-the-hood" id="under-the-hood">Under the Hood</a></h3>
+<p>So, we can think of objects as an isomorphic representation of closures from the
+perspective of code we could write. But we can also observe that a closure
+system could actually be implemented -- and likely is -- with objects!</p>
+<p>Think about it this way: in the following code, how is JS keeping track of the
+<code>x</code> variable for <code>inner()</code> to keep referencing, well after <code>outer()</code> has already
+run?</p>
+<pre><code class="language-js">function outer() {
+  var x = 1;
+
+  return function inner() {
+    return x;
+  };
+}
+</code></pre>
+<p>We could imagine that the scope -- the set of all variables defined -- of
+<code>outer()</code> is implemented as an object with properties. So, conceptually,
+somewhere in memory, there's something like:</p>
+<pre><code class="language-js">scopeOfOuter = {
+  x: 1
+};
+</code></pre>
+<p>And then for the <code>inner()</code> function, when created, it gets an (empty) scope
+object called <code>scopeOfInner</code>, which is linked via its <code>[[Prototype]]</code> to the
+<code>scopeOfOuter</code> object, sorta like this:</p>
+<pre><code class="language-js">scopeOfInner = {};
+Object.setPrototypeOf(scopeOfInner, scopeOfOuter);
+</code></pre>
+<p>Then, inside <code>inner()</code>, when it makes reference to the lexical variable <code>x</code>,
+it's actually more like:</p>
+<pre><code class="language-js">return scopeOfInner.x;
+</code></pre>
+<p><code>scopeOfInner</code> doesn't have an <code>x</code> property, but it's <code>[[Prototype]]</code>-linked to
+<code>scopeOfOuter</code>, which does have an <code>x</code> property. Accessing <code>scopeOfOuter.x</code> via
+prototype delegation results in the <code>1</code> value being returned.</p>
+<p>In this way, we can sorta see why the scope of <code>outer()</code> is preserved (via
+closure) even after it finishes: because the <code>scopeOfInner</code> object is linked to
+the <code>scopeOfOuter</code> object, thereby keeping that object and its properties alive
+and well.</p>
+<p>Now, this is all conceptual. I'm not literally saying the JS engine uses objects
+and prototypes. But it's entirely plausible that it <em>could</em> work similarly.</p>
+<p>Many languages do in fact implement closures via objects. And other languages
+implement objects in terms of closures. But we'll let the reader use their
+imagination on how that would work.</p>
+<h2><a class="header" href="#two-roads-diverged-in-a-wood" id="two-roads-diverged-in-a-wood">Two Roads Diverged in a Wood...</a></h2>
+<p>So closures and objects are equivalent, right? Not quite. I bet they're more
+similar than you thought before you started this chapter, but they still have
+important differences.</p>
+<p>These differences should not be viewed as weaknesses or arguments against usage;
+that's the wrong perspective. They should be viewed as features and advantages
+that make one or the other more suitable (and readable!) for a given task.</p>
+<h3><a class="header" href="#structural-mutability" id="structural-mutability">Structural Mutability</a></h3>
+<p>Conceptually, the structure of a closure is not mutable.</p>
+<p>In other words, you can never add to or remove state from a closure. Closure is
+a characteristic of where variables are declared (fixed at author/compile time),
+and is not sensitive to any runtime conditions -- assuming you use strict mode
+and/or avoid using cheats like <code>eval(..)</code>, of course!</p>
+<p><strong>Note:</strong> The JS engine could technically cull a closure to weed out any
+variables in its scope that are no longer going to be used, but this is an
+advanced optimization that's transparent to the developer. Whether the engine
+actually does these kinds of optimizations, I think it's safest for the
+developer to assume that closure is per-scope rather than per-variable. If you
+don't want it to stay around, don't close over it!</p>
+<p>However, objects by default are quite mutable. You can freely add or remove
+(<code>delete</code>) properties/indices from an object, as long as that object hasn't been
+frozen (<code>Object.freeze(..)</code>).</p>
+<p>It may be an advantage of the code to be able to track more (or less!) state
+depending on the runtime conditions in the program.</p>
+<p>For example, let's imagine tracking the keypress events in a game. Almost
+certainly, you'll think about using an array to do this:</p>
+<pre><code class="language-js">function trackEvent(evt, keypresses = []) {
+  return [...keypresses, evt];
+}
+
+var keypresses = trackEvent(newEvent1);
+
+keypresses = trackEvent(newEvent2, keypresses);
+</code></pre>
+<p><strong>Note:</strong> Did you spot why I didn't <code>push(..)</code> directly to <code>keypresses</code>? Because
+in FP, we typically want to treat arrays as immutable data structures that can
+be re-created and added to, but not directly changed. We trade out the evil of
+side-effects for an explicit reassignment (more on that later).</p>
+<p>Though we're not changing the structure of the array, we could if we wanted to.
+More on this in a moment.</p>
+<p>But an array is not the only way to track this growing &quot;list&quot; of <code>evt</code> objects.
+We could use closure:</p>
+<pre><code class="language-js">function trackEvent(evt, keypresses = () =&gt; []) {
+  return function newKeypresses() {
+    return [...keypresses(), evt];
+  };
+}
+
+var keypresses = trackEvent(newEvent1);
+
+keypresses = trackEvent(newEvent2, keypresses);
+</code></pre>
+<p>Do you spot what's happening here?</p>
+<p>Each time we add a new event to the &quot;list&quot;, we create a new closure wrapped
+around the existing <code>keypresses()</code> function (closure), which captures the
+current <code>evt</code>. When we call the <code>keypresses()</code> function, it will successively
+call all the nested functions, building up an intermediate array of all the
+individually closed-over <code>evt</code> objects. Again, closure is the mechanism that's
+tracking all the state; the array you see is only an implementation detail of
+needing a way to return multiple values from a function.</p>
+<p>So which one is better suited for our task? No surprise here, the array approach
+is probably a lot more appropriate. The structural immutability of a closure
+means our only option is to wrap more closure around it. Objects are by default
+extensible, so we can just grow the array as needed.</p>
+<p>By the way, even though I'm presenting this structural (im)mutability as a clear
+difference between closure and object, the way we're using the object as an
+immutable value is actually more similar than not.</p>
+<p>Creating a new array for each addition to the array is treating the array as
+structurally immutable, which is conceptually symmetrical to closure being
+structurally immutable by its very design.</p>
+<h3><a class="header" href="#privacy" id="privacy">Privacy</a></h3>
+<p>Probably one of the first differences you think of when analyzing closure vs.
+object is that closure offers &quot;privacy&quot; of state through nested lexical scoping,
+whereas objects expose everything as public properties. Such privacy has a fancy
+name: information hiding.</p>
+<p>Consider lexical closure hiding:</p>
+<pre><code class="language-js">function outer() {
+  var x = 1;
+
+  return function inner() {
+    return x;
+  };
+}
+
+var xHidden = outer();
+
+xHidden(); // 1
+</code></pre>
+<p>Now the same state in public:</p>
+<pre><code class="language-js">var xPublic = {
+  x: 1
+};
+
+xPublic.x; // 1
+</code></pre>
+<p>There are some obvious differences around general software engineering
+principles -- consider abstraction, the module pattern with public and private
+APIs, etc. -- but let's try to constrain our discussion to the perspective of
+FP; this is, after all, a book about functional programming!</p>
+<h4><a class="header" href="#visibility" id="visibility">Visibility</a></h4>
+<p>It may seem that the ability to hide information is a desired characteristic of
+state tracking, but I believe the FPer might argue the opposite.</p>
+<p>One of the advantages of managing state as public properties on an object is
+that it's easier to enumerate (and iterate!) all the data in your state. Imagine
+you wanted to process each keypress event (from the earlier example) to save it
+to a database, using a utility like:</p>
+<pre><code class="language-js">function recordKeypress(keypressEvt) {
+  // database utility
+  DB.store(&quot;keypress-events&quot;, keypressEvt);
+}
+</code></pre>
+<p>If you already have an array -- just an object with public numerically named
+properties -- this is very straightforward using a built-in JS array utility
+<code>forEach(..)</code>:</p>
+<pre><code class="language-js">keypresses.forEach(recordKeypress);
+</code></pre>
+<p>But if the list of keypresses is hidden inside closure, you'll have to expose a
+utility on the public API of the closure with privileged access to the hidden
+data.</p>
+<p>For example, we can give our closure-<code>keypresses</code> example its own <code>forEach</code>,
+like built-in arrays have:</p>
+<pre><code class="language-js">function trackEvent(
+  evt,
+  keypresses = {
+    list() {
+      return [];
+    },
+    forEach() {}
+  }
+) {
+  return {
+    list() {
+      return [...keypresses.list(), evt];
+    },
+    forEach(fn) {
+      keypresses.forEach(fn);
+      fn(evt);
+    }
+  };
+}
+
+// ..
+
+keypresses.list(); // [ evt, evt, .. ]
+
+keypresses.forEach(recordKeypress);
+</code></pre>
+<p>The visibility of an object's state data makes using it more straightforward,
+whereas closure obscures the state making us work harder to process it.</p>
+<h4><a class="header" href="#change-control" id="change-control">Change Control</a></h4>
+<p>If the lexical variable <code>x</code> is hidden inside a closure, the only code that has
+the freedom to reassign it is also inside that closure; it's impossible to
+modify <code>x</code> from the outside.</p>
+<p>As we saw in <a href="chapter_6.html">Chapter 6</a>, that fact alone improves the readability
+of code by reducing the surface area that the reader must consider to predict
+the behavior of any given variable.</p>
+<p>The local proximity of lexical reassignment is a big reason why I don't find
+<code>const</code> as a feature that helpful. Scopes (and thus closures) should in general
+be pretty small, and that means there will only be a few lines of code that can
+affect reassignment. In <code>outer()</code> above, we can quickly inspect to see that no
+line of code reassigns <code>x</code>, so for all intents and purposes it's acting as a
+constant.</p>
+<p>This kind of guarantee is a powerful contributor to our confidence in the purity
+of a function, for example.</p>
+<p>On the other hand, <code>xPublic.x</code> is a public property, and any part of the program
+that gets a reference to <code>xPublic</code> has the ability, by default, to reassign
+<code>xPublic.x</code> to some other value. That's a lot more lines of code to consider!</p>
+<p>That's why in
+<a href="chapter_6.html">Chapter 6, we looked at <code>Object.freeze(..)</code></a>
+as a quick-n-dirty means of making all of an object's properties read-only
+(<code>writable: false</code>), so that they can't be reassigned unpredictably.</p>
+<p>Unfortunately, <code>Object.freeze(..)</code> is both all-or-nothing and irreversible.</p>
+<p>With closure, you have some code with the privilege to change, and the rest of
+the program is restricted. When you freeze an object, no part of the code will
+be able to reassign. Moreover, once an object is frozen, it can't be thawed out,
+so the properties will remain read-only for the duration of the program.</p>
+<p>In places where I want to allow reassignment but restrict its surface area,
+closures are a more convenient and flexible form than objects. In places where I
+want no reassignment, a frozen object is a lot more convenient than repeating
+<code>const</code> declarations all over my function.</p>
+<p>Many FPers take a hard-line stance on reassignment: it shouldn't be used. They
+will tend to use <code>const</code> to make all closure variables read-only, and they'll
+use <code>Object.freeze(..)</code> or full immutable data structures to prevent property
+reassignment. Moreover, they'll try to reduce the amount of explicitly
+declared/tracked variables and properties wherever possible, preferring value
+transfer -- function chains, <code>return</code> value passed as argument, etc. -- instead
+of intermediate value storage.</p>
+<p>This book is about &quot;Functional-Light&quot; programming in JavaScript, and this is one
+of those cases where I diverge from the core FP crowd.</p>
+<p>I think variable reassignment can be quite useful, and when used appropriately,
+quite readable in its explicitness. It's certainly been my experience that
+debugging is a lot easier when you can insert a <code>debugger</code> or breakpoint, or
+track a watch expression.</p>
+<h3><a class="header" href="#cloning-state" id="cloning-state">Cloning State</a></h3>
+<p>As we learned in <a href="chapter_6.html">Chapter 6</a>, one of the best ways we prevent side
+effects from eroding the predictability of our code is to make sure we treat all
+state values as immutable, regardless of whether they are actually immutable
+(frozen) or not.</p>
+<p>If you're not using a purpose-built library to provide sophisticated immutable
+data structures, the simplest approach will suffice: duplicate your
+objects/arrays each time before making a change.</p>
+<p>Arrays are easy to clone shallowly -- just use <code>...</code> array spread:</p>
+<pre><code class="language-js">var a = [1, 2, 3];
+
+var b = [...a];
+b.push(4);
+
+a; // [1,2,3]
+b; // [1,2,3,4]
+</code></pre>
+<p>Objects can be shallow-cloned relatively easily too:</p>
+<pre><code class="language-js">var o = {
+  x: 1,
+  y: 2
+};
+
+// in ES2018+, using object spread:
+var p = { ...o };
+p.y = 3;
+
+// in ES6/ES2015+:
+var p = Object.assign({}, o);
+p.y = 3;
+</code></pre>
+<p>If the values in an object/array are themselves non-primitives (objects/arrays),
+to get deep cloning you'll have to walk each layer manually to clone each nested
+object. Otherwise, you'll have copies of shared references to those sub-objects,
+and that's likely to create havoc in your program logic.</p>
+<p>Did you notice that this cloning is possible only because all these state values
+are visible and can thus be easily copied? What about a set of state wrapped up
+in a closure; how would you clone that state?</p>
+<p>That's much more tedious. Essentially, you'd have to do something similar to our
+custom <code>forEach</code> API method earlier: provide a function inside each layer of the
+closure with the privilege to extract/copy the hidden values, creating new
+equivalent closures along the way.</p>
+<p>Even though that's theoretically possible -- another exercise for the reader! --
+it's far less practical to implement than you're likely to justify for any real
+program.</p>
+<p>Objects have a clear advantage when it comes to representing state that we need
+to be able to clone.</p>
+<h3><a class="header" href="#performance" id="performance">Performance</a></h3>
+<p>One reason objects may be favored over closures, from an implementation
+perspective, is that in JavaScript objects are often lighter-weight in terms of
+memory and even computation.</p>
+<p>But be careful with that as a general assertion: there are plenty of things you
+can do with objects that will erase any performance gains you may get from
+ignoring closure and moving to object-based state tracking.</p>
+<p>Let's consider a scenario with both implementations. First, the closure-style
+implementation:</p>
+<pre><code class="language-js">function StudentRecord(name, major, gpa) {
+  return function printStudent() {
+    return `${name}, Major: ${major}, GPA: ${gpa.toFixed(1)}`;
+  };
+}
+
+var student = StudentRecord(&quot;Kyle Simpson&quot;, &quot;CS&quot;, 4);
+
+// later
+
+student();
+// Kyle Simpson, Major: CS, GPA: 4.0
+</code></pre>
+<p>The inner function <code>printStudent()</code> closes over three variables: <code>name</code>,
+<code>major</code>, and <code>gpa</code>. It maintains this state wherever we transfer a reference to
+that function -- we call it <code>student()</code> in this example.</p>
+<p>Now for the object (and <code>this</code>) approach:</p>
+<pre><code class="language-js">function StudentRecord() {
+  return `${this.name}, Major: ${this.major}, \
+GPA: ${this.gpa.toFixed(1)}`;
+}
+
+var student = StudentRecord.bind({
+  name: &quot;Kyle Simpson&quot;,
+  major: &quot;CS&quot;,
+  gpa: 4
+});
+
+// later
+
+student();
+// Kyle Simpson, Major: CS, GPA: 4.0
+</code></pre>
+<p>The <code>student()</code> function -- technically referred to as a &quot;bound function&quot; -- has
+a hard-bound <code>this</code> reference to the object literal we passed in, such that any
+later call to <code>student()</code> will use that object for its <code>this</code>, and thus be able
+to access its encapsulated state.</p>
+<p>Both implementations have the same outcome: a function with preserved state. But
+what about the performance; what differences will there be?</p>
+<p><strong>Note:</strong> Accurately and actionably judging performance of a snippet of JS code
+is a very dodgy affair. We won't get into all the details here, but I urge you
+to read <em>You Don't Know JS: Async &amp; Performance</em>, specifically Chapter 6,
+&quot;Benchmarking &amp; Tuning&quot;, for more details.</p>
+<p>If you were writing a library that created a pairing of state with its function
+-- either the call to <code>StudentRecord(..)</code> in the first snippet or the call to
+<code>StudentRecord.bind(..)</code> in the second snippet -- you're likely to care most
+about how those two perform. Inspecting the code, we can see that the former has
+to create a new function expression each time. The second one uses <code>bind(..)</code>,
+which is not as obvious in its implications.</p>
+<p>One way to think about what <code>bind(..)</code> does under the covers is that it creates
+a closure over a function, like this:</p>
+<pre><code class="language-js">function bind(orinFn, thisObj) {
+  return function boundFn(...args) {
+    return origFn.apply(thisObj, args);
+  };
+}
+
+var student = bind(StudentRecord, { name: &quot;Kyle..&quot; });
+</code></pre>
+<p>In this way, it looks like both implementations of our scenario create a
+closure, so the performance is likely to be about the same.</p>
+<p>However, the built-in <code>bind(..)</code> utility doesn't really have to create a closure
+to accomplish the task. It simply creates a function and manually sets its
+internal <code>this</code> to the specified object. That's potentially a more efficient
+operation than if we did the closure ourselves.</p>
+<p>The kind of performance savings we're talking about here is miniscule on an
+individual operation. But if your library's critical path is doing this hundreds
+or thousands of times or more, that savings can add up quickly. Many libraries
+-- Bluebird being one such example -- have ended up optimizing by removing
+closures and going with objects, in exactly this means.</p>
+<p>Outside of the library use-case, the pairing of the state with its function
+usually only happens relatively few times in the critical path of an
+application. By contrast, typically the usage of the function+state -- calling
+<code>student()</code> in either snippet -- is more common.</p>
+<p>If that's the case for some given situation in your code, you should probably
+care more about the performance of the latter versus the former.</p>
+<p>Bound functions have historically had pretty lousy performance in general, but
+have recently been much more highly optimized by JS engines. If you benchmarked
+these variations a couple of years ago, it's entirely possible you'd get
+different results repeating the same test with the latest engines.</p>
+<p>A bound function is now likely to perform at least as good if not better as the
+equivalent closed-over function. So that's another tick in favor of objects over
+closures.</p>
+<p>I just want to reiterate: these performance observations are not absolutes, and
+the determination of what's best for a given scenario is very complex. Do not
+just casually apply what you've heard from others or even what you've seen on
+some other earlier project. Carefully examine whether objects or closures are
+appropriately efficient for the task.</p>
+<h2><a class="header" href="#summary" id="summary">Summary</a></h2>
+<p>The truth of this chapter cannot be written out. One must read this chapter to
+find its truth.</p>
+<hr />
+<p>Coining some Zen wisdom here was my attempt at being clever. But you deserve a
+proper summary of this chapter's message.</p>
+<p>Objects and closures are isomorphic to each other, which means that they can be
+used somewhat interchangeably to represent state and behavior in your program.</p>
+<p>Representation as a closure has certain benefits, like granular change control
+and automatic privacy. Representation as an object has other benefits, like
+easier cloning of state.</p>
+<p>The critically thinking FPer should be able to conceive any segment of state and
+behavior in the program with either representation, and pick the representation
+that's most appropriate for the task at hand.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="chapter_6.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="chapter_8.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="chapter_6.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="chapter_8.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

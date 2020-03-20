@@ -1,0 +1,703 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Appendix B: The Humble Monad - Functional-Light JavaScript</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="foreword.html"><strong aria-hidden="true">1.</strong> Foreword</a></li><li class="expanded "><a href="preface.html"><strong aria-hidden="true">2.</strong> Preface</a></li><li class="expanded "><a href="chapter_1.html"><strong aria-hidden="true">3.</strong> Chapter 1</a></li><li class="expanded "><a href="chapter_2.html"><strong aria-hidden="true">4.</strong> Chapter 2</a></li><li class="expanded "><a href="chapter_3.html"><strong aria-hidden="true">5.</strong> Chapter 3</a></li><li class="expanded "><a href="chapter_4.html"><strong aria-hidden="true">6.</strong> Chapter 4</a></li><li class="expanded "><a href="chapter_5.html"><strong aria-hidden="true">7.</strong> Chapter 5</a></li><li class="expanded "><a href="chapter_6.html"><strong aria-hidden="true">8.</strong> Chapter 6</a></li><li class="expanded "><a href="chapter_7.html"><strong aria-hidden="true">9.</strong> Chapter 7</a></li><li class="expanded "><a href="chapter_8.html"><strong aria-hidden="true">10.</strong> Chapter 8</a></li><li class="expanded "><a href="chapter_9.html"><strong aria-hidden="true">11.</strong> Chapter 9</a></li><li class="expanded "><a href="chapter_10.html"><strong aria-hidden="true">12.</strong> Chapter 10</a></li><li class="expanded "><a href="chapter_11.html"><strong aria-hidden="true">13.</strong> Chapter 11</a></li><li class="expanded "><a href="apA.html"><strong aria-hidden="true">14.</strong> Appendix A: Transducing</a></li><li class="expanded "><a href="apB.html" class="active"><strong aria-hidden="true">15.</strong> Appendix B: The Humble Monad</a></li><li class="expanded "><a href="apC.html"><strong aria-hidden="true">16.</strong> Appendix C: FP Libraries</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Functional-Light JavaScript</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#functional-light-javascript" id="functional-light-javascript">Functional-Light JavaScript</a></h1>
+<h1><a class="header" href="#appendix-b-the-humble-monad" id="appendix-b-the-humble-monad">Appendix B: The Humble Monad</a></h1>
+<p>Let me just start off this appendix by admitting: I did not know much about what
+a monad was before starting to write this appendix. And it took a lot of
+mistakes to get something sensible. If you don't believe me, go look at the
+commit history of this appendix in the
+<a href="https://github.com/getify/Functional-Light-JS">Github repository for this book</a>!</p>
+<p>I am including the topic of monads in the book because it's part of the journey
+that every developer will encounter while learning FP, just as I have in this
+book writing.</p>
+<p>We're basically ending this book with a brief glimpse at monads, whereas most
+other FP literature kinda almost starts with monads! I do not encounter in my
+&quot;Functional-Light&quot; programming much of a need to think explicitly in terms of
+monads, so that's why this material is more bonus than main core. But that's not
+to say monads aren't useful or prevalent -- they very much are.</p>
+<p>There's a bit of a joke around the JavaScript FP world that pretty much
+everybody has to write their own tutorial or blog post on what a monad is, like
+the writing of it alone is some rite of passage. Over the years, monads have
+variously been depicted as burritos, onions, and all sorts of other wacky
+conceptual abstractions. I hope there's none of that silly business going on
+here!</p>
+<blockquote>
+<p>A monad is just a monoid in the category of endofunctors.</p>
+</blockquote>
+<p>We started the preface with this quote, so it seems fitting we come back to it
+here. But no, we won't be talking about monoids, endofunctors, or category
+theory. That quote is not only condescending, but totally unhelpful.</p>
+<p>My only hope for what you get out of this discussion is to not be scared of the
+term monad or the concept anymore -- I have been, for years! -- and to be able
+to recognize them when you see them. You might, just maybe, even use them on
+occasion.</p>
+<h2><a class="header" href="#type" id="type">Type</a></h2>
+<p>There's a huge area of interest in FP that we've basically stayed entirely away
+from throughout this book: type theory. I'm not going to get very deep into type
+theory, because quite frankly I'm not qualified to do so. And you wouldn't
+appreciate it even if I did.</p>
+<p>But what I will say is that a monad is basically a value type.</p>
+<p>The number <code>42</code> has a value type (number!) that brings with it certain
+characteristics and capabilities that we rely on. The string <code>&quot;42&quot;</code> may look
+very similar, but it has a different purpose in our program.</p>
+<p>In object-oriented programming, when you have a set of data (even a single
+discrete value) and you have some behavior you want to bundle with it, you
+create an object/class to represent that &quot;type&quot;. Instances are then members of
+that type. This practice generally goes by the name &quot;data structures&quot;.</p>
+<p>I'm going to use the notion of data structures very loosely here, and assert
+that we may find it useful in a program to define a set of behaviors and
+constraints for a certain value, and bundle them together with that value into a
+single abstraction. That way, as we work with one or more of those kinds of
+values in our program, their behaviors come along for free and will make working
+with them more convenient. And by convenient, I mean more declarative and
+approachable for the reader of your code!</p>
+<p>A monad is a data structure. It's a type. It's a set of behaviors that are
+specifically designed to make working with a value predictable.</p>
+<p>Recall in
+<a href="chapter_9.html">Chapter 9 that we talked about functors</a>: a
+value along with a map-like utility to perform an operation on all its
+constitute data members. A monad is a functor that includes some additional
+behavior.</p>
+<h2><a class="header" href="#loose-interface" id="loose-interface">Loose Interface</a></h2>
+<p>Actually, a monad isn't a single data type, it's really more like a related
+collection of data types. It's kind of an interface that's implemented
+differently depending on the needs of different values. Each implementation is a
+different type of monad.</p>
+<p>For example, you may read about the &quot;Identity Monad&quot;, the &quot;IO Monad&quot;, the &quot;Maybe
+Monad&quot;, the &quot;Either Monad&quot;, or a variety of others. Each of these has the basic
+monad behavior defined, but it extends or overrides the interactions according
+to the use cases for each different type of monad.</p>
+<p>It's a little more than an interface though, because it's not just the presence
+of certain API methods that makes an object a monad. There's a certain set of
+guarantees about the interactions of these methods that is necessary, to be
+monadic. These well-known invariants are critical to usage of monads improving
+readability by familiarity; otherwise, it's just an ad hoc data structure that
+must be fully read to be understood by the reader.</p>
+<p>As a matter of fact, there's not even just one single unified agreement on the
+names of these monadic methods, the way a true interface would mandate; a monad
+is more like a loose interface. Some people call a certain method <code>bind(..)</code>,
+some call it <code>chain(..)</code>, some call it <code>flatMap(..)</code>, and so on.</p>
+<p>So a monad is an object data structure with sufficient methods (of practically
+any name or sort) that at a minimum satisfy the main behavioral requirements of
+the monad definition. Each kind of monad has a different kind of extension above
+the minimum. But, because they all have an overlap in behavior, using two
+different kinds of monads together is still straightforward and predictable.</p>
+<p>It's in that sense that monads are sort of like an interface.</p>
+<h2><a class="header" href="#just-a-monad" id="just-a-monad">Just a Monad</a></h2>
+<p>A basic primitive monad underlying many other monads you will run across is
+called Just. It's <em>just</em> a simple monadic wrapper for any regular (aka,
+non-empty) value.</p>
+<p>Since a monad is a type, you might think we'd define <code>Just</code> as a class to be
+instantiated. That's a valid way of doing it, but it introduces <code>this</code>-binding
+issues in the methods that I don't want to juggle; instead, I'm going to stick
+with just a simple function approach.</p>
+<p>Here's a basic implementation:</p>
+<pre><code class="language-js">function Just(val) {
+  return { map, chain, ap, inspect };
+
+  // *********************
+
+  function map(fn) {
+    return Just(fn(val));
+  }
+
+  // aka: bind, flatMap
+  function chain(fn) {
+    return fn(val);
+  }
+
+  function ap(anotherMonad) {
+    return anotherMonad.map(val);
+  }
+
+  function inspect() {
+    return `Just(${val})`;
+  }
+}
+</code></pre>
+<p><strong>Note:</strong> The <code>inspect(..)</code> method is included here only for our demonstration
+purposes. It serves no direct role in the monadic sense.</p>
+<p>You'll notice that whatever <code>val</code> value a <code>Just(..)</code> instance holds, it's never
+changed. All monad methods create new monad instances instead of mutating the
+monad's value itself.</p>
+<p>Don't worry if most of this doesn't make sense right now. We're not gonna obsess
+too much over the details or the math/theory behind the design of the monad.
+Instead, we'll focus more on illustrating what we can do with them.</p>
+<h3><a class="header" href="#working-with-monad-methods" id="working-with-monad-methods">Working with Monad Methods</a></h3>
+<p>All monad instances will have <code>map(..)</code>, <code>chain(..)</code> (also called <code>bind(..)</code> or
+<code>flatMap(..)</code>), and <code>ap(..)</code> methods. The purpose of these methods and their
+behavior is to provide a standardized way of multiple monad instances
+interacting with each other.</p>
+<p>Let's look first at the monadic <code>map(..)</code> function. Like <code>map(..)</code> on an array
+(see <a href="chapter_9.html">Chapter 9</a>) that calls a mapper function with its
+value(s) and produces a new array, a monad's <code>map(..)</code> calls a mapper function
+with the monad's value, and whatever is returned is wrapped in a new Just monad
+instance:</p>
+<pre><code class="language-js">var A = Just(10);
+var B = A.map(v =&gt; v * 2);
+
+B.inspect(); // Just(20)
+</code></pre>
+<p>Monadic <code>chain(..)</code> kinda does the same thing as <code>map(..)</code>, but then it sort of
+unwraps the resulting value from its new monad. However, instead of thinking
+informally about &quot;unwrapping&quot; a monad, the more formal explanation would be that
+<code>chain(..)</code> flattens the monad. Consider:</p>
+<pre><code class="language-js">var A = Just(10);
+var eleven = A.chain(v =&gt; v + 1);
+
+eleven; // 11
+typeof eleven; // &quot;number&quot;
+</code></pre>
+<p><code>eleven</code> is the actual primitive number <code>11</code>, not a monad holding that value.</p>
+<p>To connect this <code>chain(..)</code> method conceptually to stuff we've already learned,
+we'll point out that many monad implementations name this method <code>flatMap(..)</code>.
+Now, recall from
+<a href="chapter_9.html">Chapter 9 what <code>flatMap(..)</code></a> does (as
+compared to <code>map(..)</code>) with an array:</p>
+<pre><code class="language-js">var x = [3];
+
+map(v =&gt; [v, v + 1], x); // [[3,4]]
+flatMap(v =&gt; [v, v + 1], x); // [3,4]
+</code></pre>
+<p>See the difference? The mapper function <code>v =&gt; [v,v+1]</code> results in a <code>[3,4]</code>
+array, which ends up in the single first position of the outer array, so we get
+<code>[[3,4]]</code>. But <code>flatMap(..)</code> flattens out the inner array into the outer array,
+so we get just <code>[3,4]</code> instead.</p>
+<p>That's the same kind of thing going on with a monad's <code>chain(..)</code> (often
+referred to as <code>flatMap(..)</code>). Instead of getting a monad holding the value as
+<code>map(..)</code> does, <code>chain(..)</code> additionally flattens the monad into the underlying
+value. Actually, instead of creating that intermediate monad only to immediately
+flatten it, <code>chain(..)</code> is generally implemented more performantly to just take
+a shortcut and not create the monad in the first place. Either way, the end
+result is the same.</p>
+<p>One way to illustrate <code>chain(..)</code> in this manner is in combination with the
+<code>identity(..)</code> utility (see <a href="chapter_3.html">Chapter 3</a>), to
+effectively extract a value from a monad:</p>
+<pre><code class="language-js">var identity = v =&gt; v;
+
+A.chain(identity); // 10
+</code></pre>
+<p><code>A.chain(..)</code> calls <code>identity(..)</code> with the value in <code>A</code>, and whatever value
+<code>identity(..)</code> returns (<code>10</code> in this case) just comes right out without any
+intervening monad. In other words, from that earlier <code>Just(..)</code> code listing, we
+wouldn't actually need to include that optional <code>inspect(..)</code> helper, as
+<code>chain(identity)</code> accomplishes the same goal; it's purely for ease of debugging
+as we learn monads.</p>
+<p>At this point, hopefully both <code>map(..)</code> and <code>chain(..)</code> feel fairly reasonable
+to you.</p>
+<p>By contrast, a monad's <code>ap(..)</code> method will likely be much less intuitive at
+first glance. It will seem like a strange contortion of interaction, but there's
+deep and important reasoning behind the design. Let's take a moment to break it
+down.</p>
+<p><code>ap(..)</code> takes the value wrapped in a monad and &quot;applies&quot; it to another monad
+using that other monad's <code>map(..)</code>. OK, fine so far.</p>
+<p>However, <code>map(..)</code> always expects a function. So that means the monad you call
+<code>ap(..)</code> on has to actually contain a function as its value, to pass to that
+other monad's <code>map(..)</code>.</p>
+<p>Confused? Yeah, not what you might have expected. We'll try to briefly
+illuminate, but just expect that these things will be fuzzy for a while until
+you've had a lot more exposure and practice with monads.</p>
+<p>We'll define <code>A</code> as a monad that contains a value <code>10</code>, and <code>B</code> as a monad that
+contains the value <code>3</code>:</p>
+<pre><code class="language-js">var A = Just(10);
+var B = Just(3);
+
+A.inspect(); // Just(10)
+B.inspect(); // Just(3)
+</code></pre>
+<p>Now, how could we make a new monad where the values <code>10</code> and <code>3</code> had been added
+together, say via a <code>sum(..)</code> function? Turns out <code>ap(..)</code> can help.</p>
+<p>To use <code>ap(..)</code>, we said we first need to construct a monad that holds a
+function. Specifically, we need one that holds a function that itself holds
+(remembers via closure) the value in <code>A</code>. Let that sink in for a moment.</p>
+<p>To make a monad from <code>A</code> that holds a value-containing function, we call
+<code>A.map(..)</code>, giving it a curried function that &quot;remembers&quot; that extracted value
+(see <a href="chapter_3.html">Chapter 3</a>) as its first argument. We'll call
+this new function-containing monad <code>C</code>:</p>
+<pre><code class="language-js">function sum(x, y) {
+  return x + y;
+}
+
+var C = A.map(curry(sum));
+
+C.inspect();
+// Just(function curried...)
+</code></pre>
+<p>Think about how that works. The curried <code>sum(..)</code> function is expecting two
+values to do its work, and we give it the first of those values by having
+<code>A.map(..)</code> extract <code>10</code> and pass it in. <code>C</code> now holds the function that
+remembers <code>10</code> via closure.</p>
+<p>Now, to get the second value (<code>3</code> inside <code>B</code>) passed to the waiting curried
+function in <code>C</code>:</p>
+<pre><code class="language-js">var D = C.ap(B);
+
+D.inspect(); // Just(13)
+</code></pre>
+<p>The value <code>10</code> came out of <code>C</code>, and <code>3</code> came out of <code>B</code>, and <code>sum(..)</code> added
+them together to <code>13</code> and wrapped that in the monad <code>D</code>. Let's put the two steps
+together so you can see their connection more clearly:</p>
+<pre><code class="language-js">var D = A.map(curry(sum)).ap(B);
+
+D.inspect(); // Just(13)
+</code></pre>
+<p>To illustrate what <code>ap(..)</code> is helping us with, we could have achieved the same
+result this way:</p>
+<pre><code class="language-js">var D = B.map(A.chain(curry(sum)));
+
+D.inspect(); // Just(13);
+</code></pre>
+<p>And that of course is just a composition (see <a href="chapter_4.html">Chapter 4</a>):</p>
+<pre><code class="language-js">var D = compose(B.map, A.chain, curry)(sum);
+
+D.inspect(); // Just(13)
+</code></pre>
+<p>Cool, huh!?</p>
+<p>If the <em>how</em> of this discussion on monad methods is unclear so far, go back and
+re-read. If the <em>why</em> is elusive, just hang in there. Monads so easily confound
+developers, that's <em>just</em> how it is!</p>
+<h2><a class="header" href="#maybe" id="maybe">Maybe</a></h2>
+<p>It's very common in FP material to cover well-known monads like Maybe. Actually,
+the Maybe monad is a particular pairing of two other simpler monads: Just and
+Nothing.</p>
+<p>We've already seen Just; Nothing is a monad that holds an empty value. Maybe is
+a monad that either holds a Just or a Nothing.</p>
+<p>Here's a minimal implementation of Maybe:</p>
+<pre><code class="language-js">var Maybe = { Just, Nothing, of /* aka: unit, pure */: Just };
+
+function Just(val) {
+  /* .. */
+}
+
+function Nothing() {
+  return { map: Nothing, chain: Nothing, ap: Nothing, inspect };
+
+  // *********************
+
+  function inspect() {
+    return &quot;Nothing&quot;;
+  }
+}
+</code></pre>
+<p><strong>Note:</strong> <code>Maybe.of(..)</code> (sometimes referred to as <code>unit(..)</code> or <code>pure(..)</code>) is
+a convenience alias for <code>Just(..)</code>.</p>
+<p>In contrast to <code>Just()</code> instances, <code>Nothing()</code> instances have no-op definitions
+for all monadic methods. So if such a monad instance shows up in any monadic
+operations, it has the effect of basically short-circuiting to have no behavior
+happen. Notice there's no imposition here of what &quot;empty&quot; means -- your code
+gets to decide that. More on that later.</p>
+<p>In Maybe, if a value is non-empty, it's represented by an instance of
+<code>Just(..)</code>; if it's empty, it's represented by an instance of <code>Nothing()</code>.</p>
+<p>But the importance of this kind of monad representation is that whether we have
+a <code>Just(..)</code> instance or a <code>Nothing()</code> instance, we'll use the API methods the
+same.</p>
+<p>The power of the Maybe abstraction is to encapsulate that behavior/no-op duality
+implicitly.</p>
+<h3><a class="header" href="#different-maybes" id="different-maybes">Different Maybes</a></h3>
+<p>Many implementations of a JavaScript Maybe monad include a check (usually in
+<code>map(..)</code>) to see if the value is <code>null</code>/<code>undefined</code>, and skipping the behavior
+if so. In fact, Maybe is trumpeted as being valuable precisely because it sort
+of automatically short-circuits its behavior with the encapsulated empty-value
+check.</p>
+<p>Here's how Maybe is usually illustrated:</p>
+<pre><code class="language-js">// instead of unsafe `console.log( someObj.something.else.entirely )`:
+
+Maybe.of(someObj)
+  .map(prop(&quot;something&quot;))
+  .map(prop(&quot;else&quot;))
+  .map(prop(&quot;entirely&quot;))
+  .map(console.log);
+</code></pre>
+<p>In other words, if at any point in the chain we get a <code>null</code>/<code>undefined</code> value,
+the Maybe magically switches into no-op mode -- it's now a <code>Nothing()</code> monad
+instance! -- and stops doing anything for the rest of the chain. That makes the
+nested-property access safe against throwing JS exceptions if some property is
+missing/empty. That's cool, and a nice helpful abstraction for sure!</p>
+<p>But... <strong><em>that approach to Maybe is not a pure monad.</em></strong></p>
+<p>The core spirit of a Monad says that it must be valid for all values and cannot
+do any inspection of the value, at all -- not even a null check. So those other
+implementations are cutting corners for the sake of convenience. It's not a huge
+deal, but when it comes to learning something, you should probably learn it in
+its purest form first before you go bending the rules.</p>
+<p>The earlier implementation of the Maybe monad I provided differs from other
+Maybes primarily in that it does not have the empty-check in it. Also, we
+present <code>Maybe</code> merely as a loose pairing of <code>Just(..)</code>/<code>Nothing()</code>.</p>
+<p>So wait. If we don't get the automatic short-circuiting, why is Maybe useful at
+all?!? That seems like its whole point.</p>
+<p>Never fear! We can simply provide the empty-check externally, and the rest of
+the short-circuiting behavior of the Maybe monad will work just fine. Here's how
+you could do the nested-property access (<code>someObj.something.else.entirely</code>) from
+before, but more &quot;correctly&quot;:</p>
+<pre><code class="language-js">function isEmpty(val) {
+  return val === null || val === undefined;
+}
+
+var safeProp = curry(function safeProp(prop, obj) {
+  if (isEmpty(obj[prop])) return Maybe.Nothing();
+  return Maybe.of(obj[prop]);
+});
+
+Maybe.of(someObj)
+  .chain(safeProp(&quot;something&quot;))
+  .chain(safeProp(&quot;else&quot;))
+  .chain(safeProp(&quot;entirely&quot;))
+  .map(console.log);
+</code></pre>
+<p>We made a <code>safeProp(..)</code> that does the empty-check, and selects either a
+<code>Nothing()</code> monad instance if so, or wraps the value in a <code>Just(..)</code> instance
+(via <code>Maybe.of(..)</code>). Then instead of <code>map(..)</code>, we use <code>chain(..)</code> which knows
+how to &quot;unwrap&quot; the monad that <code>safeProp(..)</code> returns.</p>
+<p>We get the same chain short-circuiting upon encountering an empty value. We just
+don't embed that logic into the Maybe.</p>
+<p>The benefit of the monad, and Maybe specifically, is that our <code>map(..)</code> and
+<code>chain(..)</code> methods have a consistent and predictable interaction regardless of
+which kind of monad comes back. That's pretty cool!</p>
+<h2><a class="header" href="#humble" id="humble">Humble</a></h2>
+<p>Now that we have a little more understanding of Maybe and what it does, I'm
+going to put a little twist on it -- and add some self-deferential humor to our
+discussion -- by inventing the Maybe+Humble monad. Technically,
+<code>MaybeHumble(..)</code> is not a monad itself, but a factory function that produces a
+Maybe monad instance.</p>
+<p>Humble is an admittedly contrived data structure wrapper that uses Maybe to
+track the status of an <code>egoLevel</code> number. Specifically,
+<code>MaybeHumble(..)</code>-produced monad instances only operate affirmatively if their
+ego-level value is low enough (less than <code>42</code>!) to be considered humble;
+otherwise it's a <code>Nothing()</code> no-op. That should sound a lot like Maybe; it's
+pretty similar!</p>
+<p>Here's the factory function for our Maybe+Humble monad:</p>
+<pre><code class="language-js">function MaybeHumble(egoLevel) {
+  // accept anything other than a number that's 42 or higher
+  return !(Number(egoLevel) &gt;= 42) ? Maybe.of(egoLevel) : Maybe.Nothing();
+}
+</code></pre>
+<p>You'll notice that this factory function is kinda like <code>safeProp(..)</code>, in that
+it uses a condition to decide if it should pick the <code>Just(..)</code> or the
+<code>Nothing()</code> part of the Maybe.</p>
+<p>Let's illustrate some basic usage:</p>
+<pre><code class="language-js">var bob = MaybeHumble(45);
+var alice = MaybeHumble(39);
+
+bob.inspect(); // Nothing
+alice.inspect(); // Just(39)
+</code></pre>
+<p>What if Alice wins a big award and is now a bit more proud of herself?</p>
+<pre><code class="language-js">function winAward(ego) {
+  return MaybeHumble(ego + 3);
+}
+
+alice = alice.chain(winAward);
+alice.inspect(); // Nothing
+</code></pre>
+<p>The <code>MaybeHumble( 39 + 3 )</code> call creates a <code>Nothing()</code> monad instance to return
+back from the <code>chain(..)</code> call, so now Alice doesn't qualify as humble anymore.</p>
+<p>Now, let's use a few monads together:</p>
+<pre><code class="language-js">var bob = MaybeHumble(41);
+var alice = MaybeHumble(39);
+
+var teamMembers = curry(function teamMembers(ego1, ego2) {
+  console.log(`Our humble team's egos: ${ego1} ${ego2}`);
+});
+
+bob.map(teamMembers).ap(alice);
+// Our humble team's egos: 41 39
+</code></pre>
+<p>Recalling the usage of <code>ap(..)</code> from earlier, we can now explain how this code
+works.</p>
+<p>Because <code>teamMembers(..)</code> is curried, the <code>bob.map(..)</code> call passes in the <code>bob</code>
+ego level (<code>41</code>), and creates a monad instance with the remaining function
+wrapped up. Calling <code>ap(alice)</code> on <em>that</em> monad calls <code>alice.map(..)</code> and passes
+to it the function from the monad. The effect is that both the <code>bob</code> and <code>alice</code>
+monad's numeric values have been provided to <code>teamMembers(..)</code> function,
+printing out the message as shown.</p>
+<p>However, if either or both monads are actually <code>Nothing()</code> instances (because
+their ego level was too high):</p>
+<pre><code class="language-js">var frank = MaybeHumble(45);
+
+bob.map(teamMembers).ap(frank);
+// ..no output..
+
+frank.map(teamMembers).ap(bob);
+// ..no output..
+</code></pre>
+<p><code>teamMembers(..)</code> never gets called (and no message is printed), because <code>frank</code>
+is a <code>Nothing()</code> instance. That's the power of the Maybe monad, and our
+<code>MaybeHumble(..)</code> factory allows us to select based on the ego level. Cool!</p>
+<h3><a class="header" href="#humility" id="humility">Humility</a></h3>
+<p>One more example to illustrate the behaviors of our Maybe+Humble data structure:</p>
+<pre><code class="language-js">function introduction() {
+  console.log(&quot;I'm just a learner like you! :)&quot;);
+}
+
+var egoChange = curry(function egoChange(amount, concept, egoLevel) {
+  console.log(`${amount &gt; 0 ? &quot;Learned&quot; : &quot;Shared&quot;} ${concept}.`);
+  return MaybeHumble(egoLevel + amount);
+});
+
+var learn = egoChange(3);
+
+var learner = MaybeHumble(35);
+
+learner
+  .chain(learn(&quot;closures&quot;))
+  .chain(learn(&quot;side effects&quot;))
+  .chain(learn(&quot;recursion&quot;))
+  .chain(learn(&quot;map/reduce&quot;))
+  .map(introduction);
+// Learned closures.
+// Learned side effects.
+// Learned recursion.
+// ..nothing else..
+</code></pre>
+<p>Unfortunately, the learning process seems to have been cut short. You see, I've
+found that learning a bunch of stuff without sharing with others inflates your
+ego too much and is not good for your skills.</p>
+<p>Let's try a better approach to learning:</p>
+<pre><code class="language-js">var share = egoChange(-2);
+
+learner
+  .chain(learn(&quot;closures&quot;))
+  .chain(share(&quot;closures&quot;))
+  .chain(learn(&quot;side effects&quot;))
+  .chain(share(&quot;side effects&quot;))
+  .chain(learn(&quot;recursion&quot;))
+  .chain(share(&quot;recursion&quot;))
+  .chain(learn(&quot;map/reduce&quot;))
+  .chain(share(&quot;map/reduce&quot;))
+  .map(introduction);
+// Learned closures.
+// Shared closures.
+// Learned side effects.
+// Shared side effects.
+// Learned recursion.
+// Shared recursion.
+// Learned map/reduce.
+// Shared map/reduce.
+// I'm just a learner like you! :)
+</code></pre>
+<p>Sharing while you learn. That's the best way to learn more and learn better.</p>
+<h2><a class="header" href="#summary" id="summary">Summary</a></h2>
+<p>What is a monad, anyway? A monad is a value type, an interface, an object data
+structure with encapsulated behaviors.</p>
+<p>But none of those definitions are particularly useful. Here's an attempt at
+something better: <strong>a monad is how you organize behavior around a value in a
+more declarative way.</strong></p>
+<p>As with everything else in this book, use monads where they are helpful but
+don't use them just because everyone else talks about them in FP. Monads aren't
+a universal silver bullet, but they do offer some utility when used
+conservatively.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="apA.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="apC.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="apA.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="apC.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

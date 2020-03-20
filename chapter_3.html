@@ -1,0 +1,1401 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 3 - Functional-Light JavaScript</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="foreword.html"><strong aria-hidden="true">1.</strong> Foreword</a></li><li class="expanded "><a href="preface.html"><strong aria-hidden="true">2.</strong> Preface</a></li><li class="expanded "><a href="chapter_1.html"><strong aria-hidden="true">3.</strong> Chapter 1</a></li><li class="expanded "><a href="chapter_2.html"><strong aria-hidden="true">4.</strong> Chapter 2</a></li><li class="expanded "><a href="chapter_3.html" class="active"><strong aria-hidden="true">5.</strong> Chapter 3</a></li><li class="expanded "><a href="chapter_4.html"><strong aria-hidden="true">6.</strong> Chapter 4</a></li><li class="expanded "><a href="chapter_5.html"><strong aria-hidden="true">7.</strong> Chapter 5</a></li><li class="expanded "><a href="chapter_6.html"><strong aria-hidden="true">8.</strong> Chapter 6</a></li><li class="expanded "><a href="chapter_7.html"><strong aria-hidden="true">9.</strong> Chapter 7</a></li><li class="expanded "><a href="chapter_8.html"><strong aria-hidden="true">10.</strong> Chapter 8</a></li><li class="expanded "><a href="chapter_9.html"><strong aria-hidden="true">11.</strong> Chapter 9</a></li><li class="expanded "><a href="chapter_10.html"><strong aria-hidden="true">12.</strong> Chapter 10</a></li><li class="expanded "><a href="chapter_11.html"><strong aria-hidden="true">13.</strong> Chapter 11</a></li><li class="expanded "><a href="apA.html"><strong aria-hidden="true">14.</strong> Appendix A: Transducing</a></li><li class="expanded "><a href="apB.html"><strong aria-hidden="true">15.</strong> Appendix B: The Humble Monad</a></li><li class="expanded "><a href="apC.html"><strong aria-hidden="true">16.</strong> Appendix C: FP Libraries</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Functional-Light JavaScript</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#functional-light-javascript" id="functional-light-javascript">Functional-Light JavaScript</a></h1>
+<h1><a class="header" href="#chapter-3-managing-function-inputs" id="chapter-3-managing-function-inputs">Chapter 3: Managing Function Inputs</a></h1>
+<p><a href="chapter_2.html">Chapter 2</a> explored the core nature of JS <code>function</code>s, and laid
+the foundation for what makes a <code>function</code> an FP <em>function</em>. But to leverage the
+full power of FP, we also need patterns and practices for manipulating functions
+to shift and adjust their interactions -- to bend them to our will.</p>
+<p>Specifically, our attention for this chapter will be on the parameter inputs of
+functions. As you bring functions of all different shapes together in your
+programs, you'll quickly face incompatibilities in the number/order/type of
+inputs, as well as the need to specify some inputs at different times than
+others.</p>
+<p>As a matter of fact, for stylistic purposes of readability, sometimes you'll
+want to define functions in a way that hides their inputs entirely!</p>
+<p>These kinds of techniques are absolutely essential to making functions truly
+<em>function</em>-al.</p>
+<h2><a class="header" href="#all-for-one" id="all-for-one">All for One</a></h2>
+<p>Imagine you're passing a function to a utility, where the utility will send
+multiple arguments to that function. But you may only want the function to
+receive a single argument.</p>
+<p>We can design a simple helper that wraps a function call to ensure only one
+argument will pass through. Since this is effectively enforcing that a function
+is treated as unary, let's name it as such:</p>
+<p><a name="unary"></a></p>
+<pre><code class="language-js">function unary(fn) {
+  return function onlyOneArg(arg) {
+    return fn(arg);
+  };
+}
+</code></pre>
+<p>Many FPers tend to prefer the shorter <code>=&gt;</code> arrow function syntax for such code
+(see
+<a href="chapter_2.html">Chapter 2, &quot;Functions without <code>function</code>&quot;</a>),
+such as:</p>
+<pre><code class="language-js">var unary = fn =&gt; arg =&gt; fn(arg);
+</code></pre>
+<p><strong>Note:</strong> No question this is more terse, sparse even. But I personally feel
+that whatever it may gain in symmetry with the mathematical notation, it loses
+more in overall readability with the functions all being anonymous, and by
+obscuring the scope boundaries, making deciphering closure a little more
+cryptic.</p>
+<p>A commonly cited example for using <code>unary(..)</code> is with the <code>map(..)</code> utility
+(see <a href="chapter_9.html">Chapter 9, &quot;Map&quot;</a>) and <code>parseInt(..)</code>. <code>map(..)</code> calls
+a mapper function for each item in a list, and each time it invokes the mapper
+function, it passes in three arguments: <code>value</code>, <code>idx</code>, <code>arr</code>.</p>
+<p>That's usually not a big deal, unless you're trying to use something as a mapper
+function that will behave incorrectly if it's passed too many arguments.
+Consider:</p>
+<pre><code class="language-js">[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;].map(parseInt);
+// [1,NaN,NaN]
+</code></pre>
+<p>For the signature <code>parseInt(str,radix)</code>, it's clear that when <code>map(..)</code> passes
+<code>index</code> in the second argument position, it's interpreted by <code>parseInt(..)</code> as
+the <code>radix</code>, which we don't want.</p>
+<p><code>unary(..)</code> creates a function that will ignore all but the first argument
+passed to it, meaning the passed-in <code>index</code> is never received by <code>parseInt(..)</code>
+and mistaken as the <code>radix</code>:</p>
+<p><a name="mapunary"></a></p>
+<pre><code class="language-js">[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;].map(unary(parseInt));
+// [1,2,3]
+</code></pre>
+<h3><a class="header" href="#one-on-one" id="one-on-one">One on One</a></h3>
+<p>Speaking of functions with only one argument, another common base utility in the
+FP toolbelt is a function that takes one argument and does nothing but return
+the value untouched:</p>
+<pre><code class="language-js">function identity(v) {
+  return v;
+}
+
+// or the ES6 =&gt; arrow form
+var identity = v =&gt; v;
+</code></pre>
+<p>This utility looks so simple as to hardly be useful. But even simple functions
+can be helpful in the world of FP. Like they say in acting: there are no small
+parts, only small actors.</p>
+<p>For example, imagine you'd like to split up a string using a regular expression,
+but the resulting array may have some empty values in it. To discard those, we
+can use JS's <code>filter(..)</code> array operation (see
+<a href="chapter_9.html">Chapter 9, &quot;Filter&quot;</a>) with <code>identity(..)</code> as the
+predicate:</p>
+<pre><code class="language-js">var words = &quot;   Now is the time for all...  &quot;.split(/\s|\b/);
+words;
+// [&quot;&quot;,&quot;Now&quot;,&quot;is&quot;,&quot;the&quot;,&quot;time&quot;,&quot;for&quot;,&quot;all&quot;,&quot;...&quot;,&quot;&quot;]
+
+words.filter(identity);
+// [&quot;Now&quot;,&quot;is&quot;,&quot;the&quot;,&quot;time&quot;,&quot;for&quot;,&quot;all&quot;,&quot;...&quot;]
+</code></pre>
+<p>Because <code>identity(..)</code> simply returns the value passed to it, JS coerces each
+value into either <code>true</code> or <code>false</code>, and that determines whether to keep or
+exclude each value in the final array.</p>
+<p><strong>Tip:</strong> Another unary function that can be used as the predicate in the
+previous example is JS's built-in <code>Boolean(..)</code> function, which explicitly
+coerces a value to <code>true</code> or <code>false</code>.</p>
+<p>Another example of using <code>identity(..)</code> is as a default function in place of a
+transformation:</p>
+<pre><code class="language-js">function output(msg, formatFn = identity) {
+  msg = formatFn(msg);
+  console.log(msg);
+}
+
+function upper(txt) {
+  return txt.toUpperCase();
+}
+
+output(&quot;Hello World&quot;, upper); // HELLO WORLD
+output(&quot;Hello World&quot;); // Hello World
+</code></pre>
+<p>You also may see <code>identity(..)</code> used as a default transformation function for
+<code>map(..)</code> calls or as the initial value in a <code>reduce(..)</code> of a list of
+functions; both of these utilities will be covered in <a href="chapter_9.html">Chapter 9</a>.</p>
+<h3><a class="header" href="#unchanging-one" id="unchanging-one">Unchanging One</a></h3>
+<p>Certain APIs don't let you pass a value directly into a method, but require you
+to pass in a function, even if that function literally just returns the value.
+One such API is the <code>then(..)</code> method on JS Promises:</p>
+<pre><code class="language-js">// doesn't work:
+p1.then(foo)
+  .then(p2)
+  .then(bar);
+
+// instead:
+p1.then(foo)
+  .then(function() {
+    return p2;
+  })
+  .then(bar);
+</code></pre>
+<p>Many claim that ES6 <code>=&gt;</code> arrow functions are the best &quot;solution&quot;:</p>
+<pre><code class="language-js">p1.then(foo)
+  .then(() =&gt; p2)
+  .then(bar);
+</code></pre>
+<p>But there's an FP utility that's more well suited for the task:</p>
+<pre><code class="language-js">function constant(v) {
+  return function value() {
+    return v;
+  };
+}
+
+// or the ES6 =&gt; form
+var constant = v =&gt; () =&gt; v;
+</code></pre>
+<p>With this tidy little FP utility, we can solve our <code>then(..)</code> annoyance
+properly:</p>
+<pre><code class="language-js">p1.then(foo)
+  .then(constant(p2))
+  .then(bar);
+</code></pre>
+<p><strong>Warning:</strong> Although the <code>() =&gt; p2</code> arrow function version is shorter than
+<code>constant(p2)</code>, I would encourage you to resist the temptation to use it. The
+arrow function is returning a value from outside of itself, which is a bit worse
+from the FP perspective. We'll cover the pitfalls of such actions later in the
+book (see <a href="chapter_5.html">Chapter 5</a>).</p>
+<h2><a class="header" href="#adapting-arguments-to-parameters" id="adapting-arguments-to-parameters">Adapting Arguments to Parameters</a></h2>
+<p>There are a variety of patterns and tricks we can use to adapt a function's
+signature to match the kinds of arguments we want to provide to it.</p>
+<p>Recall
+<a href="chapter_2.html">this function signature from Chapter 2</a>
+which highlights using array parameter destructuring:</p>
+<pre><code class="language-js">function foo( [x,y,...args] = [] ) {
+</code></pre>
+<p>This pattern is handy if an array will be passed in but you want to treat its
+contents as individual parameters. <code>foo(..)</code> is thus technically unary -- when
+it's executed, only one argument (an array) will be passed to it. But inside the
+function, you get to address different inputs (<code>x</code>, <code>y</code>, etc) individually.</p>
+<p>However, sometimes you won't have the ability to change the declaration of the
+function to use array parameter destructuring. For example, imagine these
+functions:</p>
+<pre><code class="language-js">function foo(x, y) {
+  console.log(x + y);
+}
+
+function bar(fn) {
+  fn([3, 9]);
+}
+
+bar(foo); // fails
+</code></pre>
+<p>Do you spot why <code>bar(foo)</code> fails?</p>
+<p>The array <code>[3,9]</code> is sent in as a single value to <code>fn(..)</code>, but <code>foo(..)</code>
+expects <code>x</code> and <code>y</code> separately. If we could change the declaration of <code>foo(..)</code>
+to be <code>function foo([x,y]) { ..</code>, we'd be fine. Or, if we could change the
+behavior of <code>bar(..)</code> to make the call as <code>fn(...[3,9])</code>, the values <code>3</code> and <code>9</code>
+would be passed in individually.</p>
+<p>There will be occasions when you have two functions that are incompatible in
+this way, and you won't be able to change their declarations/definitions. So,
+how can you use them together?</p>
+<p>We can define a helper to adapt a function so that it spreads out a single
+received array as its individual arguments:</p>
+<p><a name="spreadargs"></a></p>
+<pre><code class="language-js">function spreadArgs(fn) {
+  return function spreadFn(argsArr) {
+    return fn(...argsArr);
+  };
+}
+
+// or the ES6 =&gt; arrow form
+var spreadArgs = fn =&gt; argsArr =&gt; fn(...argsArr);
+</code></pre>
+<p><strong>Note:</strong> I called this helper <code>spreadArgs(..)</code>, but in libraries like Ramda
+it's commonly called <code>apply(..)</code>.</p>
+<p>Now we can use <code>spreadArgs(..)</code> to adapt <code>foo(..)</code> to work as the proper input
+to <code>bar(..)</code>:</p>
+<pre><code class="language-js">bar(spreadArgs(foo)); // 12
+</code></pre>
+<p>It won't seem clear yet why these occasions arise, but you will see them often.
+Essentially, <code>spreadArgs(..)</code> allows us to define functions that <code>return</code>
+multiple values via an array, but still have those multiple values treated
+independently as inputs to another function.</p>
+<p>While we're talking about a <code>spreadArgs(..)</code> utility, let's also define a
+utility to handle the opposite action:</p>
+<pre><code class="language-js">function gatherArgs(fn) {
+  return function gatheredFn(...argsArr) {
+    return fn(argsArr);
+  };
+}
+
+// or the ES6 =&gt; arrow form
+var gatherArgs = fn =&gt; (...argsArr) =&gt; fn(argsArr);
+</code></pre>
+<p><strong>Note:</strong> In Ramda, this utility is referred to as <code>unapply(..)</code>, being that
+it's the opposite of <code>apply(..)</code>. I think the &quot;spread&quot;/&quot;gather&quot; terminology is a
+little more descriptive for what's going on.</p>
+<p>We can use this utility to gather individual arguments into a single array,
+perhaps because we want to adapt a function with array parameter destructuring
+to another utility that passes arguments separately. We will
+<a href="chapter_9.html">cover <code>reduce(..)</code> more fully in Chapter 9</a>; in short, it
+repeatedly calls its reducer function with two individual parameters, which we
+can now <em>gather</em> together:</p>
+<pre><code class="language-js">function combineFirstTwo([v1, v2]) {
+  return v1 + v2;
+}
+
+[1, 2, 3, 4, 5].reduce(gatherArgs(combineFirstTwo));
+// 15
+</code></pre>
+<h2><a class="header" href="#some-now-some-later" id="some-now-some-later">Some Now, Some Later</a></h2>
+<p>If a function takes multiple arguments, you may want to specify some of those up
+front and leave the rest to be specified later.</p>
+<p>Consider this function:</p>
+<pre><code class="language-js">function ajax(url, data, callback) {
+  // ..
+}
+</code></pre>
+<p>Let's imagine you'd like to set up several API calls where the URLs are known up
+front, but the data and the callback to handle the response won't be known until
+later.</p>
+<p>Of course, you can just defer making the <code>ajax(..)</code> call until all the bits are
+known, and refer to some global constant for the URL at that time. But another
+way is to create a function reference that already has the <code>url</code> argument
+preset.</p>
+<p>What we're going to do is make a new function that still calls <code>ajax(..)</code> under
+the covers, and it manually sets the first argument to the API URL you care
+about, while waiting to accept the other two arguments later:</p>
+<pre><code class="language-js">function getPerson(data, cb) {
+  ajax(&quot;http://some.api/person&quot;, data, cb);
+}
+
+function getOrder(data, cb) {
+  ajax(&quot;http://some.api/order&quot;, data, cb);
+}
+</code></pre>
+<p>Manually specifying these function call wrappers is certainly possible, but it
+may get quite tedious, especially if there will also be variations with
+different arguments preset, like:</p>
+<pre><code class="language-js">function getCurrentUser(cb) {
+  getPerson({ user: CURRENT_USER_ID }, cb);
+}
+</code></pre>
+<p>One practice an FPer gets very used to is looking for patterns where we do the
+same sorts of things repeatedly, and trying to turn those actions into generic
+reusable utilities. As a matter of fact, I'm sure that's already the instinct
+for many of you readers, so that's not uniquely an FP thing. But it's
+unquestionably important for FP.</p>
+<p>To conceive such a utility for argument presetting, let's examine conceptually
+what's going on, not just looking at the manual implementations shown here.</p>
+<p>One way to articulate what's going on is that the <code>getOrder(data,cb)</code> function
+is a <em>partial application</em> of the <code>ajax(url,data,cb)</code> function. This terminology
+comes from the notion that arguments are <em>applied</em> to parameters at the function
+call-site. And as you can see, we're only applying some of the arguments up
+front -- specifically, the argument for the <code>url</code> parameter -- while leaving the
+rest to be applied later.</p>
+<p>To be a tiny bit more formal about this pattern, partial application is strictly
+a reduction in a function's arity; remember, that's the number of expected
+parameter inputs. We reduced the original <code>ajax(..)</code> function's arity from 3 to
+2 for the <code>getOrder(..)</code> function.</p>
+<p>Let's define a <code>partial(..)</code> utility:</p>
+<pre><code class="language-js">function partial(fn, ...presetArgs) {
+  return function partiallyApplied(...laterArgs) {
+    return fn(...presetArgs, ...laterArgs);
+  };
+}
+
+// or the ES6 =&gt; arrow form
+var partial = (fn, ...presetArgs) =&gt; (...laterArgs) =&gt;
+  fn(...presetArgs, ...laterArgs);
+</code></pre>
+<p><strong>Tip:</strong> Don't just take this snippet at face value. Pause for a few moments to
+digest what's going on with this utility. Make sure you really <em>get it</em>.</p>
+<p>The <code>partial(..)</code> function takes an <code>fn</code> for which function we are partially
+applying. Then, any subsequent arguments passed in are gathered into the
+<code>presetArgs</code> array and saved for later.</p>
+<p>A new inner function (called <code>partiallyApplied(..)</code> just for clarity) is created
+and <code>return</code>ed; the inner function's own arguments are gathered into an array
+called <code>laterArgs</code>.</p>
+<p>Notice the references to <code>fn</code> and <code>presetArgs</code> inside this inner function? How
+does that work? After <code>partial(..)</code> finishes running, how does the inner
+function keep being able to access <code>fn</code> and <code>presetArgs</code>? If you answered
+<strong>closure</strong>, you're right on track! The inner function <code>partiallyApplied(..)</code>
+closes over both the <code>fn</code> and <code>presetArgs</code> variables so it can keep accessing
+them later, no matter where the function runs. This is why understanding closure
+is critical!</p>
+<p>When the <code>partiallyApplied(..)</code> function is later executed somewhere else in
+your program, it uses the closed over <code>fn</code> to execute the original function,
+first providing any of the (closed over) <code>presetArgs</code> partial application
+arguments, then any further <code>laterArgs</code> arguments.</p>
+<p>If any of that was confusing, stop and go re-read it. Trust me, you'll be glad
+you did as we get further into the text.</p>
+<p>Let's now use the <code>partial(..)</code> utility to make those earlier partially applied
+functions:</p>
+<pre><code class="language-js">var getPerson = partial(ajax, &quot;http://some.api/person&quot;);
+
+var getOrder = partial(ajax, &quot;http://some.api/order&quot;);
+</code></pre>
+<p>Take a moment to consider the shape/internals of <code>getPerson(..)</code>. It will look
+sorta like this:</p>
+<pre><code class="language-js">var getPerson = function partiallyApplied(...laterArgs) {
+  return ajax(&quot;http://some.api/person&quot;, ...laterArgs);
+};
+</code></pre>
+<p>The same will be true of <code>getOrder(..)</code>. But what about <code>getCurrentUser(..)</code>?</p>
+<pre><code class="language-js">// version 1
+var getCurrentUser = partial(ajax, &quot;http://some.api/person&quot;, {
+  user: CURRENT_USER_ID
+});
+
+// version 2
+var getCurrentUser = partial(getPerson, { user: CURRENT_USER_ID });
+</code></pre>
+<p>We can either define <code>getCurrentUser(..)</code> with both the <code>url</code> and <code>data</code>
+arguments specified directly (version 1), or define <code>getCurrentUser(..)</code> as a
+partial application of the <code>getPerson(..)</code> partial application, specifying only
+the additional <code>data</code> argument (version 2).</p>
+<p>Version 2 is a little cleaner to express because it reuses something already
+defined. As such, I think it fits a little closer to the spirit of FP.</p>
+<p>Just to make sure we understand how these two versions will work under the
+covers, they look respectively kinda like:</p>
+<pre><code class="language-js">// version 1
+var getCurrentUser = function partiallyApplied(...laterArgs) {
+  return ajax(
+    &quot;http://some.api/person&quot;,
+    { user: CURRENT_USER_ID },
+    ...laterArgs
+  );
+};
+
+// version 2
+var getCurrentUser = function outerPartiallyApplied(...outerLaterArgs) {
+  var getPerson = function innerPartiallyApplied(...innerLaterArgs) {
+    return ajax(&quot;http://some.api/person&quot;, ...innerLaterArgs);
+  };
+
+  return getPerson({ user: CURRENT_USER_ID }, ...outerLaterArgs);
+};
+</code></pre>
+<p>Again, stop and re-read those code snippets to make sure you understand what's
+going on there.</p>
+<p><strong>Note:</strong> Version 2 has an extra layer of function wrapping involved. That may
+smell strange and unnecessary, but this is just one of those things in FP that
+you'll want to get really comfortable with. We'll be wrapping many layers of
+functions onto each other as we progress through the text. Remember, this is
+<em>function</em>al programming!</p>
+<p>Let's take a look at another example of the usefulness of partial application.
+Consider an <code>add(..)</code> function which takes two arguments and adds them together:</p>
+<pre><code class="language-js">function add(x, y) {
+  return x + y;
+}
+</code></pre>
+<p>Now imagine we'd like take a list of numbers and add a certain number to each of
+them. We'll use the <code>map(..)</code> utility (see
+<a href="chapter_9.html">Chapter 9, &quot;Map&quot;</a>) built into JS arrays:</p>
+<pre><code class="language-js">[1, 2, 3, 4, 5].map(function adder(val) {
+  return add(3, val);
+});
+// [4,5,6,7,8]
+</code></pre>
+<p>The reason we can't pass <code>add(..)</code> directly to <code>map(..)</code> is because the
+signature of <code>add(..)</code> doesn't match the mapping function that <code>map(..)</code>
+expects. That's where partial application can help us: we can adapt the
+signature of <code>add(..)</code> to something that will match:</p>
+<pre><code class="language-js">[1, 2, 3, 4, 5].map(partial(add, 3));
+// [4,5,6,7,8]
+</code></pre>
+<p>The <code>partial(add,3)</code> call produces a new unary function which is expecting only
+one more argument.</p>
+<p>The <code>map(..)</code> utility will loop through the array (<code>[1,2,3,4,5]</code>) and repeatedly
+call this unary function, once for each of those values, respectively. So, the
+calls made will effectively be <code>add(3,1)</code>, <code>add(3,2)</code>, <code>add(3,3)</code>, <code>add(3,4)</code>,
+and <code>add(3,5)</code>. The array of those results is <code>[4,5,6,7,8]</code>.</p>
+<h3><a class="header" href="#bind" id="bind"><code>bind(..)</code></a></h3>
+<p>JavaScript functions all have a built-in utility called <code>bind(..)</code>. It has two
+capabilities: presetting the <code>this</code> context and partially applying arguments.</p>
+<p>I think it's incredibly misguided to conflate these two capabilities in one
+utility. Sometimes you'll want to hard-bind the <code>this</code> context and not partially
+apply arguments. Other times you'll want to partially apply arguments but not
+care about <code>this</code> binding at all. I have never needed both at the same time.</p>
+<p>The latter scenario (partial application without setting <code>this</code> context) is
+awkward because you have to pass an ignorable placeholder for the <code>this</code>-binding
+argument (the first one), usually <code>null</code>.</p>
+<p>Consider:</p>
+<pre><code class="language-js">var getPerson = ajax.bind(null, &quot;http://some.api/person&quot;);
+</code></pre>
+<p>That <code>null</code> just bugs me to no end. Despite this <em>this</em> annoyance, it's mildly
+convenient that JS has a built-in utility for partial application. However, most
+FP programmers prefer using the dedicated <code>partial(..)</code> utility in their chosen
+FP library.</p>
+<h3><a class="header" href="#reversing-arguments" id="reversing-arguments">Reversing Arguments</a></h3>
+<p>Recall that the signature for our Ajax function is: <code>ajax( url, data, cb )</code>.
+What if we wanted to partially apply the <code>cb</code> but wait to specify <code>data</code> and
+<code>url</code> later? We could create a utility that wraps a function to reverse its
+argument order:</p>
+<pre><code class="language-js">function reverseArgs(fn) {
+  return function argsReversed(...args) {
+    return fn(...args.reverse());
+  };
+}
+
+// or the ES6 =&gt; arrow form
+var reverseArgs = fn =&gt; (...args) =&gt; fn(...args.reverse());
+</code></pre>
+<p>Now we can reverse the order of the <code>ajax(..)</code> arguments, so that we can then
+partially apply from the right rather than the left. To restore the expected
+order, we'll then reverse the subsequent partially applied function:</p>
+<pre><code class="language-js">var cache = {};
+
+var cacheResult = reverseArgs(
+  partial(reverseArgs(ajax), function onResult(obj) {
+    cache[obj.id] = obj;
+  })
+);
+
+// later:
+cacheResult(&quot;http://some.api/person&quot;, { user: CURRENT_USER_ID });
+</code></pre>
+<p>Instead of manually using <code>reverseArgs(..)</code> (twice!) for this purpose, we can
+define a <code>partialRight(..)</code> which partially applies the rightmost arguments.
+Under the covers, it can use the same double-reverse trick:</p>
+<p><a name="partialright"></a></p>
+<pre><code class="language-js">function partialRight(fn, ...presetArgs) {
+  return reverseArgs(partial(reverseArgs(fn), ...presetArgs.reverse()));
+}
+
+var cacheResult = partialRight(ajax, function onResult(obj) {
+  cache[obj.id] = obj;
+});
+
+// later:
+cacheResult(&quot;http://some.api/person&quot;, { user: CURRENT_USER_ID });
+</code></pre>
+<p>Another more straightforward (and certainly more performant) implementation of
+<code>partialRight(..)</code> that doesn't use the double-reverse trick:</p>
+<pre><code class="language-js">function partialRight(fn, ...presetArgs) {
+  return function partiallyApplied(...laterArgs) {
+    return fn(...laterArgs, ...presetArgs);
+  };
+}
+
+// or the ES6 =&gt; arrow form
+var partialRight = (fn, ...presetArgs) =&gt; (...laterArgs) =&gt;
+  fn(...laterArgs, ...presetArgs);
+</code></pre>
+<p>None of these implementations of <code>partialRight(..)</code> guarantee that a specific
+parameter will receive a specific partially applied value; it only ensures that
+the partially applied value(s) appear as the rightmost (aka, last) argument(s)
+passed to the original function.</p>
+<p>For example:</p>
+<pre><code class="language-js">function foo(x, y, z, ...rest) {
+  console.log(x, y, z, rest);
+}
+
+var f = partialRight(foo, &quot;z:last&quot;);
+
+f(1, 2); // 1 2 &quot;z:last&quot; []
+
+f(1); // 1 &quot;z:last&quot; undefined []
+
+f(1, 2, 3); // 1 2 3 [&quot;z:last&quot;]
+
+f(1, 2, 3, 4); // 1 2 3 [4,&quot;z:last&quot;]
+</code></pre>
+<p>The value <code>&quot;z:last&quot;</code> is only applied to the <code>z</code> parameter in the case where
+<code>f(..)</code> is called with exactly two arguments (matching <code>x</code> and <code>y</code> parameters).
+In all other cases, the <code>&quot;z:last&quot;</code> will just be the rightmost argument, however
+many arguments precede it.</p>
+<h2><a class="header" href="#one-at-a-time" id="one-at-a-time">One at a Time</a></h2>
+<p>Let's examine a technique similar to partial application, where a function that
+expects multiple arguments is broken down into successive chained functions that
+each take a single argument (arity: 1) and return another function to accept the
+next argument.</p>
+<p>This technique is called currying.</p>
+<p>To first illustrate, let's imagine we had a curried version of <code>ajax(..)</code>
+already created. This is how we'd use it:</p>
+<pre><code class="language-js">curriedAjax(&quot;http://some.api/person&quot;)({ user: CURRENT_USER_ID })(
+  function foundUser(user) {
+    /* .. */
+  }
+);
+</code></pre>
+<p>The three sets of <code>(..)</code>s denote three chained function calls. But perhaps
+splitting out each of the three calls helps see what's going on better:</p>
+<pre><code class="language-js">var personFetcher = curriedAjax(&quot;http://some.api/person&quot;);
+
+var getCurrentUser = personFetcher({ user: CURRENT_USER_ID });
+
+getCurrentUser(function foundUser(user) {
+  /* .. */
+});
+</code></pre>
+<p>Instead of taking all the arguments at once (like <code>ajax(..)</code>), or some of the
+arguments up front and the rest later (via <code>partial(..)</code>), this
+<code>curriedAjax(..)</code> function receives one argument at a time, each in a separate
+function call.</p>
+<p>Currying is similar to partial application in that each successive curried call
+partially applies another argument to the original function, until all arguments
+have been passed.</p>
+<p>The main difference is that <code>curriedAjax(..)</code> will return a function (we call it
+<code>personFetcher(..)</code>) that expects <strong>only the next argument</strong> <code>data</code>, not one
+that (like the earlier <code>getPerson(..)</code>) can receive all the rest of the
+arguments.</p>
+<p>If an original function expected five arguments, the curried form of that
+function would take just the first argument, and return a function to accept the
+second. That one would take just the second argument, and return a function to
+accept the third. And so on.</p>
+<p>So currying unwinds a single higher-arity function into a series of chained
+unary functions.</p>
+<p>How might we define a utility to do this currying? Consider:</p>
+<p><a name="curry"></a></p>
+<pre><code class="language-js">function curry(fn, arity = fn.length) {
+  return (function nextCurried(prevArgs) {
+    return function curried(nextArg) {
+      var args = [...prevArgs, nextArg];
+
+      if (args.length &gt;= arity) {
+        return fn(...args);
+      } else {
+        return nextCurried(args);
+      }
+    };
+  })([]);
+}
+
+// or the ES6 =&gt; arrow form
+var curry = (fn, arity = fn.length, nextCurried) =&gt;
+  (nextCurried = prevArgs =&gt; nextArg =&gt; {
+    var args = [...prevArgs, nextArg];
+
+    if (args.length &gt;= arity) {
+      return fn(...args);
+    } else {
+      return nextCurried(args);
+    }
+  })([]);
+</code></pre>
+<p>The approach here is to start a collection of arguments in <code>prevArgs</code> as an
+empty <code>[]</code> array, and add each received <code>nextArg</code> to that, calling the
+concatenation <code>args</code>. While <code>args.length</code> is less than <code>arity</code> (the number of
+declared/expected parameters of the original <code>fn(..)</code> function), make and return
+another <code>curried(..)</code> function to collect the next <code>nextArg</code> argument, passing
+the running <code>args</code> collection along as its <code>prevArgs</code>. Once we have enough
+<code>args</code>, execute the original <code>fn(..)</code> function with them.</p>
+<p>By default, this implementation relies on being able to inspect the <code>length</code>
+property of the to-be-curried function to know how many iterations of currying
+we'll need before we've collected all its expected arguments.</p>
+<p><strong>Note:</strong> If you use this implementation of <code>curry(..)</code> with a function that
+doesn't have an accurate <code>length</code> property, you'll need to pass the <code>arity</code> (the
+second parameter of <code>curry(..)</code>) to ensure <code>curry(..)</code> works correctly. <code>length</code>
+will be inaccurate if the function's parameter signature includes default
+parameter values, parameter destructuring, or is variadic with <code>...args</code> (see
+<a href="chapter_2.html">Chapter 2</a>).</p>
+<p>Here's how we would use <code>curry(..)</code> for our earlier <code>ajax(..)</code> example:</p>
+<pre><code class="language-js">var curriedAjax = curry(ajax);
+
+var personFetcher = curriedAjax(&quot;http://some.api/person&quot;);
+
+var getCurrentUser = personFetcher({ user: CURRENT_USER_ID });
+
+getCurrentUser(function foundUser(user) {
+  /* .. */
+});
+</code></pre>
+<p>Each call partially applies one more argument to the original <code>ajax(..)</code> call,
+until all three have been provided and <code>ajax(..)</code> is actually invoked.</p>
+<p>Remember our example from the discussion of partial application about adding <code>3</code>
+to each value in a list of numbers? As currying is similar to partial
+application, we could do that task with currying in almost the same way:</p>
+<pre><code class="language-js">[1, 2, 3, 4, 5].map(curry(add)(3));
+// [4,5,6,7,8]
+</code></pre>
+<p>The difference between the two? <code>partial(add,3)</code> vs <code>curry(add)(3)</code>.</p>
+<p>Why might you choose <code>curry(..)</code> over <code>partial(..)</code>? It might be helpful in the
+case where you know ahead of time that <code>add(..)</code> is the function to be adapted,
+but the value <code>3</code> isn't known yet:</p>
+<pre><code class="language-js">var adder = curry(add);
+
+// later
+[1, 2, 3, 4, 5].map(adder(3));
+// [4,5,6,7,8]
+</code></pre>
+<p>Let's look at another numbers example, this time adding a list of them together:</p>
+<pre><code class="language-js">function sum(...nums) {
+  var total = 0;
+  for (let num of nums) {
+    total += num;
+  }
+  return total;
+}
+
+sum(1, 2, 3, 4, 5); // 15
+
+// now with currying:
+// (5 to indicate how many we should wait for)
+var curriedSum = curry(sum, 5);
+
+curriedSum(1)(2)(3)(4)(5); // 15
+</code></pre>
+<p>The advantage of currying here is that each call to pass in an argument produces
+another function that's more specialized, and we can capture and use <em>that</em> new
+function later in the program. Partial application specifies all the partially
+applied arguments up front, producing a function that's waiting for all the rest
+of the arguments <strong>on the next call</strong>.</p>
+<p>If you wanted to use partial application to specify one parameter (or several!)
+at a time, you'd have to keep calling <code>partial(..)</code> again on each successive
+partially applied function. By contrast, curried functions do this
+automatically, making working with individual arguments one-at-a-time more
+ergonomic.</p>
+<p>Both currying and partial application use closure to remember the arguments over
+time until all have been received, and then the original function can be
+invoked.</p>
+<h3><a class="header" href="#visualizing-curried-functions" id="visualizing-curried-functions">Visualizing Curried Functions</a></h3>
+<p>Let's examine more closely the <code>curriedSum(..)</code> from the previous section.
+Recall its usage: <code>curriedSum(1)(2)(3)(4)(5)</code>; five subsequent (chained)
+function calls.</p>
+<p>What if we manually defined a <code>curriedSum(..)</code> instead of using <code>curry(..)</code>? How
+would that look?</p>
+<pre><code class="language-js">function curriedSum(v1) {
+  return function(v2) {
+    return function(v3) {
+      return function(v4) {
+        return function(v5) {
+          return sum(v1, v2, v3, v4, v5);
+        };
+      };
+    };
+  };
+}
+</code></pre>
+<p>Definitely uglier, no question. But this is an important way to visualize what's
+going on with a curried function. Each nested function call is returning another
+function that's going to accept the next argument, and that continues until
+we've specified all the expected arguments.</p>
+<p>When trying to decipher curried functions, I've found it helps me tremendously
+if I can unwrap them mentally as a series of nested functions.</p>
+<p>In fact, to reinforce that point, let's consider the same code but written with
+ES6 arrow functions:</p>
+<pre><code class="language-js">curriedSum = v1 =&gt; v2 =&gt; v3 =&gt; v4 =&gt; v5 =&gt; sum(v1, v2, v3, v4, v5);
+</code></pre>
+<p>And now, all on one line:</p>
+<pre><code class="language-js">curriedSum = v1 =&gt; v2 =&gt; v3 =&gt; v4 =&gt; v5 =&gt; sum(v1, v2, v3, v4, v5);
+</code></pre>
+<p>Depending on your perspective, that form of visualizing the curried function may
+be more or less helpful to you. For me, it's a fair bit more obscured.</p>
+<p>But the reason I show it that way is that it happens to look almost identical to
+the mathematical notation (and Haskell syntax) for a curried function! That's
+one reason why those who like mathematical notation (and/or Haskell) like the
+ES6 arrow function form.</p>
+<h3><a class="header" href="#why-currying-and-partial-application" id="why-currying-and-partial-application">Why Currying and Partial Application?</a></h3>
+<p>With either style -- currying (such as <code>sum(1)(2)(3)</code>) or partial application
+(such as <code>partial(sum,1,2)(3)</code>) -- the call-site unquestionably looks stranger
+than a more common one like <code>sum(1,2,3)</code>. So <strong>why would we ever go this
+direction</strong> when adopting FP? There are multiple layers to answering that
+question.</p>
+<p>The first and most obvious reason is that both currying and partial application
+allow you to separate in time/space (throughout your codebase) when and where
+separate arguments are specified, whereas traditional function calls require all
+the arguments to be present at the same time. If you have a place in your code
+where you'll know some of the arguments and another place where the other
+arguments are determined, currying or partial application are very useful.</p>
+<p>Another layer to this answer, specifically for currying, is that composition of
+functions is much easier when there's only one argument. So a function that
+ultimately needs three arguments, if curried, becomes a function that needs just
+one, three times over. That kind of unary function will be a lot easier to work
+with when we start composing them. We'll tackle this topic later in
+<a href="chapter_4.html">Chapter 4</a>.</p>
+<p>But the most important layer is specialization of generalized functions, and how
+such abstraction improves readability of code.</p>
+<p>Consider our running <code>ajax(..)</code> example:</p>
+<pre><code class="language-js">ajax(&quot;http://some.api/person&quot;, { user: CURRENT_USER_ID }, function foundUser(
+  user
+) {
+  /* .. */
+});
+</code></pre>
+<p>The call-site includes all the information necessary to pass to the most
+generalized version of the utility (<code>ajax(..)</code>). The potential readability
+downside is that it may be the case that the URL and the data are not relevant
+information at this point in the program, but yet that information is cluttering
+up the call-site nonetheless.</p>
+<p>Now consider:</p>
+<pre><code class="language-js">var getCurrentUser = partial(ajax, &quot;http://some.api/person&quot;, {
+  user: CURRENT_USER_ID
+});
+
+// later
+
+getCurrentUser(function foundUser(user) {
+  /* .. */
+});
+</code></pre>
+<p>In this version, we define a <code>getCurrentUser(..)</code> function ahead of time that
+already has known information like URL and data preset. The call-site for
+<code>getCurrentUser(..)</code> then isn't cluttered by information that <strong>at that point of
+the code</strong> isn't relevant.</p>
+<p>Moreover, the semantic name for the function <code>getCurrentUser(..)</code> more
+accurately depicts what is happening than just <code>ajax(..)</code> with a URL and data
+would.</p>
+<p>That's what abstraction is all about: separating two sets of details -- in this
+case, the <em>how</em> of getting a current user and the <em>what</em> we do with that user --
+and inserting a semantic boundary between them, which eases the reasoning of
+each part independently.</p>
+<p>Whether you use currying or partial application, creating specialized functions
+from generalized ones is a powerful technique for semantic abstraction and
+improved readability.</p>
+<h3><a class="header" href="#currying-more-than-one-argument" id="currying-more-than-one-argument">Currying More Than One Argument?</a></h3>
+<p>The definition and implementation I've given of currying thus far is, I believe,
+as true to the spirit as we can likely get in JavaScript.</p>
+<p>Specifically, if we look briefly at how currying works in Haskell, we can
+observe that multiple arguments always go in to a function one at a time, one
+per curried call -- other than tuples (analogous to arrays for our purposes)
+that transport multiple values in a single argument.</p>
+<p>For example, in Haskell:</p>
+<pre><code class="language-haskell">foo 1 2 3
+</code></pre>
+<p>This calls the <code>foo</code> function, and has the result of passing in three values
+<code>1</code>, <code>2</code>, and <code>3</code>. But functions are automatically curried in Haskell, which
+means each value goes in as a separate curried-call. The JS equivalent of that
+would look like <code>foo(1)(2)(3)</code>, which is the same style as the <code>curry(..)</code> I
+presented earlier.</p>
+<p><strong>Note:</strong> In Haskell, <code>foo (1,2,3)</code> is not passing in those three values at once
+as three separate arguments, but a tuple (kinda like a JS array) as a single
+argument. To work, <code>foo</code> would need to be altered to handle a tuple in that
+argument position. As far as I can tell, there's no way in Haskell to pass all
+three arguments separately with just one function call; each argument gets its
+own curried-call. Of course, the presence of multiple calls is transparent to
+the Haskell developer, but it's a lot more syntactically obvious to the JS
+developer.</p>
+<p>For these reasons, I think the <code>curry(..)</code> that I demonstrated earlier is a
+faithful adaptation, or what I might call &quot;strict currying&quot;. However, it's
+important to note that there's a looser definition used in most popular
+JavaScript FP libraries.</p>
+<p>Specifically, JS currying utilities typically allow you to specify multiple
+arguments for each curried-call. Revisiting our <code>sum(..)</code> example from before,
+this would look like:</p>
+<pre><code class="language-js">var curriedSum = looseCurry(sum, 5);
+
+curriedSum(1)(2, 3)(4, 5); // 15
+</code></pre>
+<p>We see a slight syntax savings of fewer <code>( )</code>, and an implied performance
+benefit of now having three function calls instead of five. But other than that,
+using <code>looseCurry(..)</code> is identical in end result to the narrower <code>curry(..)</code>
+definition from earlier. I would guess the convenience/performance factor is
+probably why frameworks allow multiple arguments. This seems mostly like a
+matter of taste.</p>
+<p>We can adapt our previous currying implementation to this common looser
+definition:</p>
+<p><a name="loosecurry"></a></p>
+<pre><code class="language-js">function looseCurry(fn, arity = fn.length) {
+  return (function nextCurried(prevArgs) {
+    return function curried(...nextArgs) {
+      var args = [...prevArgs, ...nextArgs];
+
+      if (args.length &gt;= arity) {
+        return fn(...args);
+      } else {
+        return nextCurried(args);
+      }
+    };
+  })([]);
+}
+</code></pre>
+<p>Now each curried-call accepts one or more arguments (as <code>nextArgs</code>). We'll leave
+it as an exercise for the interested reader to define the ES6 <code>=&gt;</code> version of
+<code>looseCurry(..)</code> similar to how we did it for <code>curry(..)</code> earlier.</p>
+<h3><a class="header" href="#no-curry-for-me-please" id="no-curry-for-me-please">No Curry for Me, Please</a></h3>
+<p>It may also be the case that you have a curried function that you'd like to
+essentially un-curry -- basically, to turn a function like <code>f(1)(2)(3)</code> back
+into a function like <code>g(1,2,3)</code>.</p>
+<p>The standard utility for this is (un)shockingly typically called <code>uncurry(..)</code>.
+Here's a simple naive implementation:</p>
+<pre><code class="language-js">function uncurry(fn) {
+  return function uncurried(...args) {
+    var ret = fn;
+
+    for (let arg of args) {
+      ret = ret(arg);
+    }
+
+    return ret;
+  };
+}
+
+// or the ES6 =&gt; arrow form
+var uncurry = fn =&gt; (...args) =&gt; {
+  var ret = fn;
+
+  for (let arg of args) {
+    ret = ret(arg);
+  }
+
+  return ret;
+};
+</code></pre>
+<p><strong>Warning:</strong> Don't just assume that <code>uncurry(curry(f))</code> has the same behavior as
+<code>f</code>. In some libraries the uncurrying would result in a function like the
+original, but not all of them; certainly our example here does not. The
+uncurried function acts (mostly) the same as the original function if you pass
+as many arguments to it as the original function expected. However, if you pass
+fewer arguments, you still get back a partially curried function waiting for
+more arguments; this quirk is illustrated in the following snippet:</p>
+<pre><code class="language-js">function sum(...nums) {
+  var sum = 0;
+  for (let num of nums) {
+    sum += num;
+  }
+  return sum;
+}
+
+var curriedSum = curry(sum, 5);
+var uncurriedSum = uncurry(curriedSum);
+
+curriedSum(1)(2)(3)(4)(5); // 15
+
+uncurriedSum(1, 2, 3, 4, 5); // 15
+uncurriedSum(1, 2, 3)(4)(5); // 15
+</code></pre>
+<p>Probably the more common case of using <code>uncurry(..)</code> is not with a manually
+curried function as just shown, but with a function that comes out curried as a
+result of some other set of operations. We'll illustrate that scenario later in
+this chapter in the <a href="#no-points">&quot;No Points&quot; discussion</a>.</p>
+<h2><a class="header" href="#order-matters" id="order-matters">Order Matters</a></h2>
+<p>In Chapter 2, we explored the
+<a href="chapter_2.html">named arguments pattern</a>. One primary advantage
+of named arguments is not needing to juggle argument ordering, thereby improving
+readability.</p>
+<p>We've looked at the advantages of using currying/partial application to provide
+individual arguments to a function separately. But the downside is that these
+techniques are traditionally based on positional arguments; argument ordering is
+thus an inevitable headache.</p>
+<p>Utilities like <code>reverseArgs(..)</code> (and others) are necessary to juggle arguments
+to get them into the right order. Sometimes we get lucky and define a function
+with parameters in the order that we later want to curry them, but other times
+that order is incompatible and we have to jump through hoops to reorder.</p>
+<p>The frustration is not merely that we need to use some utility to juggle the
+properties, but the fact that the usage of the utility clutters up our code a
+bit with extra noise. These kinds of things are like little paper cuts; one here
+or there isn't a showstopper, but the pain can certainly add up.</p>
+<p>Can we improve currying/partial application to free it from these ordering
+concerns? Let's apply the tricks from named arguments style and invent some
+helper utilities for this adaptation:</p>
+<pre><code class="language-js">function partialProps(fn, presetArgsObj) {
+  return function partiallyApplied(laterArgsObj) {
+    return fn(Object.assign({}, presetArgsObj, laterArgsObj));
+  };
+}
+
+function curryProps(fn, arity = 1) {
+  return (function nextCurried(prevArgsObj) {
+    return function curried(nextArgObj = {}) {
+      var [key] = Object.keys(nextArgObj);
+      var allArgsObj = Object.assign({}, prevArgsObj, {
+        [key]: nextArgObj[key]
+      });
+
+      if (Object.keys(allArgsObj).length &gt;= arity) {
+        return fn(allArgsObj);
+      } else {
+        return nextCurried(allArgsObj);
+      }
+    };
+  })({});
+}
+</code></pre>
+<p><strong>Tip:</strong> We don't even need a <code>partialPropsRight(..)</code> because we don't need to
+care about what order properties are being mapped; the name mappings make that
+ordering concern moot!</p>
+<p>Here's how to use those helpers:</p>
+<pre><code class="language-js">function foo({ x, y, z } = {}) {
+  console.log(`x:${x} y:${y} z:${z}`);
+}
+
+var f1 = curryProps(foo, 3);
+var f2 = partialProps(foo, { y: 2 });
+
+f1({ y: 2 })({ x: 1 })({ z: 3 });
+// x:1 y:2 z:3
+
+f2({ z: 3, x: 1 });
+// x:1 y:2 z:3
+</code></pre>
+<p>Even with currying or partial application, order doesn't matter anymore! We can
+now specify which arguments we want in whatever sequence makes sense. No more
+<code>reverseArgs(..)</code> or other nuisances. Cool!</p>
+<p><strong>Tip:</strong> If this style of function arguments seems useful or interesting to you,
+check out coverage of my <a href="apC.html">FPO library in Appendix C</a>.</p>
+<h3><a class="header" href="#spreading-properties" id="spreading-properties">Spreading Properties</a></h3>
+<p>Unfortunately, we can only take advantage of currying with named arguments if we
+have control over the signature of <code>foo(..)</code> and define it to destructure its
+first parameter. What if we wanted to use this technique with a function that
+had its parameters individually listed (no parameter destructuring!), and we
+couldn't change that function signature? For example:</p>
+<pre><code class="language-js">function bar(x, y, z) {
+  console.log(`x:${x} y:${y} z:${z}`);
+}
+</code></pre>
+<p>Just like the <code>spreadArgs(..)</code> utility earlier, we can define a
+<code>spreadArgProps(..)</code> helper that takes the <code>key: value</code> pairs out of an object
+argument and &quot;spreads&quot; the values out as individual arguments.</p>
+<p>There are some quirks to be aware of, though. With <code>spreadArgs(..)</code>, we were
+dealing with arrays, where ordering is well defined and obvious. However, with
+objects, property order is less clear and not necessarily reliable. Depending on
+how an object is created and properties set, we cannot be absolutely certain
+what enumeration order properties would come out.</p>
+<p>Such a utility needs a way to let you define what order the function in question
+expects its arguments (e.g., property enumeration order). We can pass an array
+like <code>[&quot;x&quot;,&quot;y&quot;,&quot;z&quot;]</code> to tell the utility to pull the properties off the object
+argument in exactly that order.</p>
+<p>That's decent, but it's also unfortunate that it then <em>obligates</em> us to add that
+property-name array even for the simplest of functions. Is there any kind of
+trick we could use to detect what order the parameters are listed for a
+function, in at least the common simple cases? Fortunately, yes!</p>
+<p>JavaScript functions have a <code>.toString()</code> method that gives a string
+representation of the function's code, including the function declaration
+signature. Dusting off our regular expression parsing skills, we can parse the
+string representation of the function, and pull out the individually named
+parameters. The code looks a bit gnarly, but it's good enough to get the job
+done:</p>
+<pre><code class="language-js">function spreadArgProps(
+    fn,
+    propOrder =
+        fn.toString()
+        .replace( /^(?:(?:function.*\(([^]*?)\))|(?:([^\(\)]+?)
+            \s*=&gt;)|(?:\(([^]*?)\)\s*=&gt;))[^]+$/, &quot;$1$2$3&quot; )
+        .split( /\s*,\s*/ )
+        .map( v =&gt; v.replace( /[=\s].*$/, &quot;&quot; ) )
+) {
+    return function spreadFn(argsObj){
+        return fn( ...propOrder.map( k =&gt; argsObj[k] ) );
+    };
+}
+</code></pre>
+<p><strong>Note:</strong> This utility's parameter parsing logic is far from bullet-proof; we're
+using regular expressions to parse code, which is already a faulty premise! But
+our only goal here is to handle the common cases, which this does reasonably
+well. We only need a sensible default detection of parameter order for functions
+with simple parameters (including those with default parameter values). We
+don't, for example, need to be able to parse out a complex destructured
+parameter, because we wouldn't likely be using this utility with such a
+function, anyway. So, this logic gets the job done 80% of the time; it lets us
+override the <code>propOrder</code> array for any other more complex function signature
+that wouldn't otherwise be correctly parsed. That's the kind of pragmatic
+balance this book seeks to find wherever possible.</p>
+<p>Let's illustrate using our <code>spreadArgProps(..)</code> utility:</p>
+<pre><code class="language-js">function bar(x, y, z) {
+  console.log(`x:${x} y:${y} z:${z}`);
+}
+
+var f3 = curryProps(spreadArgProps(bar), 3);
+var f4 = partialProps(spreadArgProps(bar), { y: 2 });
+
+f3({ y: 2 })({ x: 1 })({ z: 3 });
+// x:1 y:2 z:3
+
+f4({ z: 3, x: 1 });
+// x:1 y:2 z:3
+</code></pre>
+<p>While order is no longer a concern, usage of functions defined in this style
+requires you to know what each argument's exact name is. You can't just
+remember, &quot;oh, the function goes in as the first argument&quot; anymore. Instead, you
+have to remember, &quot;the function parameter is called 'fn'.&quot; Conventions can
+create consistency of naming that lessens this burden, but it's still something
+to be aware of.</p>
+<p>Weigh these trade-offs carefully.</p>
+<h2><a class="header" href="#no-points" id="no-points">No Points</a></h2>
+<p>A popular style of coding in the FP world aims to reduce some of the visual
+clutter by removing unnecessary parameter-argument mapping. This style is
+formally called tacit programming, or more commonly: point-free style. The term
+&quot;point&quot; here is referring to a function's parameter input.</p>
+<p><strong>Warning:</strong> Stop for a moment. Let's make sure we're careful not to take this
+discussion as an unbounded suggestion that you go overboard trying to be
+point-free in your FP code at all costs. This should be a technique for
+improving readability, when used in moderation. But as with most things in
+software development, you can definitely abuse it. If your code gets harder to
+understand because of the hoops you have to jump through to be point-free, stop.
+You won't win a blue ribbon just because you found some clever but esoteric way
+to remove another &quot;point&quot; from your code.</p>
+<p>Let's start with a simple example:</p>
+<pre><code class="language-js">function double(x) {
+  return x * 2;
+}
+
+[1, 2, 3, 4, 5].map(function mapper(v) {
+  return double(v);
+});
+// [2,4,6,8,10]
+</code></pre>
+<p>Can you see that <code>mapper(..)</code> and <code>double(..)</code> have the same (or compatible,
+anyway) signatures? The parameter (&quot;point&quot;) <code>v</code> can directly map to the
+corresponding argument in the <code>double(..)</code> call. As such, the <code>mapper(..)</code>
+function wrapper is unnecessary. Let's simplify with point-free style:</p>
+<pre><code class="language-js">function double(x) {
+  return x * 2;
+}
+
+[1, 2, 3, 4, 5].map(double);
+// [2,4,6,8,10]
+</code></pre>
+<p>Let's revisit an example from earlier:</p>
+<pre><code class="language-js">[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;].map(function mapper(v) {
+  return parseInt(v);
+});
+// [1,2,3]
+</code></pre>
+<p>In this example, <code>mapper(..)</code> is actually serving an important purpose, which is
+to discard the <code>index</code> argument that <code>map(..)</code> would pass in, because
+<code>parseInt(..)</code> would incorrectly interpret that value as a <code>radix</code> for the
+parsing.</p>
+<p>If you recall from the beginning of this chapter, this was an example where
+<code>unary(..)</code> helps us out:</p>
+<pre><code class="language-js">[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;].map(unary(parseInt));
+// [1,2,3]
+</code></pre>
+<p>Point-free!</p>
+<p>The key thing to look for is if you have a function with parameter(s) that
+is/are directly passed to an inner function call. In both of the preceding
+examples, <code>mapper(..)</code> had the <code>v</code> parameter that was passed along to another
+function call. We were able to replace that layer of abstraction with a
+point-free expression using <code>unary(..)</code>.</p>
+<p><strong>Warning:</strong> You might have been tempted, as I was, to try
+<code>map(partialRight(parseInt,10))</code> to right-partially apply the <code>10</code> value as the
+<code>radix</code>. However, as we saw earlier, <code>partialRight(..)</code> only guarantees that
+<code>10</code> will be the last argument passed in, not that it will be specifically the
+second argument. Since <code>map(..)</code> itself passes three arguments (<code>value</code>,
+<code>index</code>, <code>arr</code>) to its mapping function, the <code>10</code> value would just be the fourth
+argument to <code>parseInt(..)</code>; it only pays attention to the first two.</p>
+<p><a name="shortlongenough"></a></p>
+<p>Here's another example:</p>
+<pre><code class="language-js">// convenience to avoid any potential binding issue
+// with trying to use `console.log` as a function
+function output(txt) {
+  console.log(txt);
+}
+
+function printIf(predicate, msg) {
+  if (predicate(msg)) {
+    output(msg);
+  }
+}
+
+function isShortEnough(str) {
+  return str.length &lt;= 5;
+}
+
+var msg1 = &quot;Hello&quot;;
+var msg2 = msg1 + &quot; World&quot;;
+
+printIf(isShortEnough, msg1); // Hello
+printIf(isShortEnough, msg2);
+</code></pre>
+<p>Now let's say you want to print a message only if it's long enough; in other
+words, if it's <code>!isShortEnough(..)</code>. Your first thought is probably this:</p>
+<pre><code class="language-js">function isLongEnough(str) {
+  return !isShortEnough(str);
+}
+
+printIf(isLongEnough, msg1);
+printIf(isLongEnough, msg2); // Hello World
+</code></pre>
+<p>Easy enough... but &quot;points&quot; now! See how <code>str</code> is passed through? Without
+re-implementing the <code>str.length</code> check, can we refactor this code to point-free
+style?</p>
+<p>Let's define a <code>not(..)</code> negation helper (often referred to as <code>complement(..)</code>
+in FP libraries):</p>
+<pre><code class="language-js">function not(predicate) {
+  return function negated(...args) {
+    return !predicate(...args);
+  };
+}
+
+// or the ES6 =&gt; arrow form
+var not = predicate =&gt; (...args) =&gt; !predicate(...args);
+</code></pre>
+<p>Next, let's use <code>not(..)</code> to alternatively define <code>isLongEnough(..)</code> without
+&quot;points&quot;:</p>
+<pre><code class="language-js">var isLongEnough = not(isShortEnough);
+
+printIf(isLongEnough, msg2); // Hello World
+</code></pre>
+<p>That's pretty good, isn't it? But we <em>could</em> keep going. <code>printIf(..)</code> could be
+refactored to be point-free itself.</p>
+<p>We can express the <code>if</code> conditional part with a <code>when(..)</code> utility:</p>
+<pre><code class="language-js">function when(predicate, fn) {
+  return function conditional(...args) {
+    if (predicate(...args)) {
+      return fn(...args);
+    }
+  };
+}
+
+// or the ES6 =&gt; form
+var when = (predicate, fn) =&gt; (...args) =&gt;
+  predicate(...args) ? fn(...args) : undefined;
+</code></pre>
+<p>Let's mix <code>when(..)</code> with a few other helper utilities we've seen earlier in
+this chapter, to make the point-free <code>printIf(..)</code>:</p>
+<pre><code class="language-js">var printIf = uncurry(partialRight(when, output));
+</code></pre>
+<p>Here's how we did it: we right-partially-applied the <code>output</code> method as the
+second (<code>fn</code>) argument for <code>when(..)</code>, which leaves us with a function still
+expecting the first argument (<code>predicate</code>). <em>That</em> function when called produces
+another function expecting the message string; it would look like this:
+<code>fn(predicate)(str)</code>.</p>
+<p>A chain of multiple (two) function calls like that looks an awful lot like a
+curried function, so we <code>uncurry(..)</code> this result to produce a single function
+that expects the two <code>str</code> and <code>predicate</code> arguments together, which matches the
+original <code>printIf(predicate,str)</code> signature.</p>
+<p>Here's the whole example put back together (assuming various utilities we've
+already detailed in this chapter are present):</p>
+<p><a name="finalshortlong"></a></p>
+<pre><code class="language-js">function output(msg) {
+  console.log(msg);
+}
+
+function isShortEnough(str) {
+  return str.length &lt;= 5;
+}
+
+var isLongEnough = not(isShortEnough);
+
+var printIf = uncurry(partialRight(when, output));
+
+var msg1 = &quot;Hello&quot;;
+var msg2 = msg1 + &quot; World&quot;;
+
+printIf(isShortEnough, msg1); // Hello
+printIf(isShortEnough, msg2);
+
+printIf(isLongEnough, msg1);
+printIf(isLongEnough, msg2); // Hello World
+</code></pre>
+<p>Hopefully the FP practice of point-free style coding is starting to make a
+little more sense. It'll still take a lot of practice to train yourself to think
+this way naturally. <strong>And you'll still have to make judgement calls</strong> as to
+whether point-free coding is worth it, as well as what extent will benefit your
+code's readability.</p>
+<p>What do you think? Points or no points for you?</p>
+<p><strong>Note:</strong> Want more practice with point-free style coding? We'll revisit this
+technique in <a href="chapter_4.html">Chapter 4, &quot;Revisiting Points&quot;</a>,
+based on newfound knowledge of function composition.</p>
+<h2><a class="header" href="#summary" id="summary">Summary</a></h2>
+<p>Partial application is a technique for reducing the arity (that is, the expected
+number of arguments to a function) by creating a new function where some of the
+arguments are preset.</p>
+<p>Currying is a special form of partial application where the arity is reduced to
+1, with a chain of successive chained function calls, each which takes one
+argument. Once all arguments have been specified by these function calls, the
+original function is executed with all the collected arguments. You can also
+undo a currying.</p>
+<p>Other important utilities like <code>unary(..)</code>, <code>identity(..)</code>, and <code>constant(..)</code>
+are part of the base toolbox for FP.</p>
+<p>Point-free is a style of writing code that eliminates unnecessary verbosity of
+mapping parameters (&quot;points&quot;) to arguments, with the goal of making code easier
+to read/understand.</p>
+<p>All of these techniques twist functions around so they can work together more
+naturally. With your functions shaped compatibly now, the next chapter will
+teach you how to combine them to model the flows of data through your program.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="chapter_2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="chapter_4.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="chapter_2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="chapter_4.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

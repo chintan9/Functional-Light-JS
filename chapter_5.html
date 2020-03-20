@@ -1,0 +1,1396 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 5 - Functional-Light JavaScript</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="foreword.html"><strong aria-hidden="true">1.</strong> Foreword</a></li><li class="expanded "><a href="preface.html"><strong aria-hidden="true">2.</strong> Preface</a></li><li class="expanded "><a href="chapter_1.html"><strong aria-hidden="true">3.</strong> Chapter 1</a></li><li class="expanded "><a href="chapter_2.html"><strong aria-hidden="true">4.</strong> Chapter 2</a></li><li class="expanded "><a href="chapter_3.html"><strong aria-hidden="true">5.</strong> Chapter 3</a></li><li class="expanded "><a href="chapter_4.html"><strong aria-hidden="true">6.</strong> Chapter 4</a></li><li class="expanded "><a href="chapter_5.html" class="active"><strong aria-hidden="true">7.</strong> Chapter 5</a></li><li class="expanded "><a href="chapter_6.html"><strong aria-hidden="true">8.</strong> Chapter 6</a></li><li class="expanded "><a href="chapter_7.html"><strong aria-hidden="true">9.</strong> Chapter 7</a></li><li class="expanded "><a href="chapter_8.html"><strong aria-hidden="true">10.</strong> Chapter 8</a></li><li class="expanded "><a href="chapter_9.html"><strong aria-hidden="true">11.</strong> Chapter 9</a></li><li class="expanded "><a href="chapter_10.html"><strong aria-hidden="true">12.</strong> Chapter 10</a></li><li class="expanded "><a href="chapter_11.html"><strong aria-hidden="true">13.</strong> Chapter 11</a></li><li class="expanded "><a href="apA.html"><strong aria-hidden="true">14.</strong> Appendix A: Transducing</a></li><li class="expanded "><a href="apB.html"><strong aria-hidden="true">15.</strong> Appendix B: The Humble Monad</a></li><li class="expanded "><a href="apC.html"><strong aria-hidden="true">16.</strong> Appendix C: FP Libraries</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Functional-Light JavaScript</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#functional-light-javascript" id="functional-light-javascript">Functional-Light JavaScript</a></h1>
+<h1><a class="header" href="#chapter-5-reducing-side-effects" id="chapter-5-reducing-side-effects">Chapter 5: Reducing Side Effects</a></h1>
+<p>In <a href="chapter_2.html">Chapter 2</a>, we discussed how a function can have outputs
+besides its <code>return</code> value. By now you should be very comfortable with the FP
+definition of a function, so the idea of such side outputs -- side effects! --
+should smell.</p>
+<p>We're going to examine the various different forms of side effects and see why
+they are harmful to our code's quality and readability.</p>
+<p>But let me not bury the lede here. The punchline to this chapter: it's
+impossible to write a program with no side effects. Well, not impossible; you
+certainly can. But that program won't do anything useful or observable. If you
+wrote a program with zero side effects, you wouldn't be able to tell the
+difference between it and an empty program.</p>
+<p>The FPer doesn't eliminate all side effects. Rather, the goal is to limit them
+as much as possible. To do that, we first need to fully understand them.</p>
+<h2><a class="header" href="#effects-on-the-side-please" id="effects-on-the-side-please">Effects on the Side, Please</a></h2>
+<p>Cause and effect: one of the most fundamental, intuitive observations we humans
+can make about the world around us. Push a book off the edge of a table, it
+falls to the ground. You don't need a physics degree to know that the cause was
+you pushing the book and the effect was gravity pulling it to the ground.
+There's a clear and direct relationship.</p>
+<p>In programming, we also deal entirely in cause and effect. If you call a
+function (cause), it displays a message on the screen (effect).</p>
+<p>When reading a program, it's supremely important that the reader be able to
+clearly identify each cause and each effect. To any extent where a direct
+relationship between cause and effect cannot be seen readily upon a read-through
+of the program, that program's readability is degraded.</p>
+<p>Consider:</p>
+<pre><code class="language-js">function foo(x) {
+  return x * 2;
+}
+
+var y = foo(3);
+</code></pre>
+<p>In this trivial program, it is immediately clear that calling foo (the cause)
+with value <code>3</code> will have the effect of returning the value <code>6</code> that is then
+assigned to <code>y</code> (the effect). There's no ambiguity here.</p>
+<p>But now:</p>
+<pre><code class="language-js">function foo(x) {
+  y = x * 2;
+}
+
+var y;
+
+foo(3);
+</code></pre>
+<p>This program has the exact same outcome. But there's a very big difference. The
+cause and the effect are disjoint. The effect is indirect. The setting of <code>y</code> in
+this way is what we call a side effect.</p>
+<p><strong>Note:</strong> When a function makes a reference to a variable outside itself, this
+is called a free variable. Not all free variable references will be bad, but
+we'll want to be very careful with them.</p>
+<p>What if I gave you a reference to call a function <code>bar(..)</code> that you cannot see
+the code for, but I told you that it had no such indirect side effects, only an
+explicit <code>return</code> value effect?</p>
+<pre><code class="language-js">bar(4); // 42
+</code></pre>
+<p>Because you know that the internals of <code>bar(..)</code> do not create any side effects,
+you can now reason about any <code>bar(..)</code> call like this one in a much more
+straightforward way. But if you didn't know that <code>bar(..)</code> had no side effects,
+to understand the outcome of calling it, you'd have to go read and dissect all
+of its logic. This is extra mental tax burden for the reader.</p>
+<p><strong>The readability of a side effecting function is worse</strong> because it requires
+more reading to understand the program.</p>
+<p>But the problem goes deeper than that. Consider:</p>
+<pre><code class="language-js">var x = 1;
+
+foo();
+
+console.log(x);
+
+bar();
+
+console.log(x);
+
+baz();
+
+console.log(x);
+</code></pre>
+<p>How sure are you which values are going to be printed at each <code>console.log(x)</code>?</p>
+<p>The correct answer is: not at all. If you're not sure whether <code>foo()</code>, <code>bar()</code>,
+and <code>baz()</code> are side-effecting or not, you cannot guarantee what <code>x</code> will be at
+each step unless you inspect the implementations of each, <strong>and</strong> then trace the
+program from line 1 forward, keeping track of all the changes in state as you
+go.</p>
+<p>In other words, the final <code>console.log(x)</code> is impossible to analyze or predict
+unless you've mentally executed the whole program up to that point.</p>
+<p>Guess who's good at running your program? The JS engine. Guess who's not as good
+at running your program? The reader of your code. And yet, your choice to write
+code (potentially) with side effects in one or more of those function calls
+means that you've burdened the reader with having to mentally execute your
+program in its entirety up to a certain line, for them to read and understand
+that line.</p>
+<p>If <code>foo()</code>, <code>bar()</code>, and <code>baz()</code> were all free of side effects, they could not
+affect <code>x</code>, which means we do not need to execute them to mentally trace what
+happens with <code>x</code>. This is less mental tax, and makes the code more readable.</p>
+<h3><a class="header" href="#hidden-causes" id="hidden-causes">Hidden Causes</a></h3>
+<p>Outputs, changes in state, are the most commonly cited manifestation of side
+effects. But another readability-harming practice is what some refer to as side
+causes. Consider:</p>
+<pre><code class="language-js">function foo(x) {
+  return x + y;
+}
+
+var y = 3;
+
+foo(1); // 4
+</code></pre>
+<p><code>y</code> is not changed by <code>foo(..)</code>, so it's not the same kind of side effect as we
+saw before. But now, the calling of <code>foo(..)</code> actually depends on the presence
+and current state of a <code>y</code>. If later, we do:</p>
+<pre><code class="language-js">y = 5;
+
+// ..
+
+foo(1); // 6
+</code></pre>
+<p>Might we be surprised that the call to <code>foo(1)</code> returned different results from
+call to call?</p>
+<p><code>foo(..)</code> has an indirection of cause that is harmful to readability. The reader
+cannot see, without inspecting <code>foo(..)</code>'s implementation carefully, what causes
+are contributing to the output effect. It <em>looks</em> like the argument <code>1</code> is the
+only cause, but it turns out it's not.</p>
+<p>To aid readability, all of the causes that will contribute to determining the
+effect output of <code>foo(..)</code> should be made as direct and obvious inputs to
+<code>foo(..)</code>. The reader of the code will clearly see the cause(s) and effect.</p>
+<h4><a class="header" href="#fixed-state" id="fixed-state">Fixed State</a></h4>
+<p>Does avoiding side causes mean the <code>foo(..)</code> function cannot reference any free
+variables?</p>
+<p>Consider this code:</p>
+<pre><code class="language-js">function foo(x) {
+  return x + bar(x);
+}
+
+function bar(x) {
+  return x * 2;
+}
+
+foo(3); // 9
+</code></pre>
+<p>It's clear that for both <code>foo(..)</code> and <code>bar(..)</code>, the only direct cause is the
+<code>x</code> parameter. But what about the <code>bar(x)</code> call? <code>bar</code> is just an identifier,
+and in JS it's not even a constant (aka, non-reassignable variable) by default.
+The <code>foo(..)</code> function is relying on the value of <code>bar</code> -- a variable that
+references the second function -- as a free variable.</p>
+<p>So is this program relying on a side cause?</p>
+<p>I say no. Even though it is <em>possible</em> to overwrite the <code>bar</code> variable's value
+with some other function, I am not doing so in this code, nor is it a common
+practice of mine or precedent to do so. For all intents and purposes, my
+functions are constants (never reassigned).</p>
+<p>Consider:</p>
+<pre><code class="language-js">const PI = 3.141592;
+
+function foo(x) {
+  return x * PI;
+}
+
+foo(3); // 9.424776000000001
+</code></pre>
+<p><strong>Note:</strong> JavaScript has <code>Math.PI</code> built-in, so we're only using the <code>PI</code>
+example in this text as a convenient illustration. In practice, always use
+<code>Math.PI</code> instead of defining your own!</p>
+<p>How about the preceding code snippet? Is <code>PI</code> a side cause of <code>foo(..)</code>?</p>
+<p>Two observations will help us answer that question in a reasonable way:</p>
+<ol>
+<li>
+<p>Think about every call you might ever make to <code>foo(3)</code>. Will it always return
+that <code>9.424..</code> value? <strong>Yes.</strong> Every single time. If you give it the same
+input (<code>x</code>), it will always return the same output.</p>
+</li>
+<li>
+<p>Could you replace every usage of <code>PI</code> with its immediate value, and could the
+program run <strong>exactly</strong> the same as it did before? <strong>Yes.</strong> There's no part
+of this program that relies on being able to change the value of <code>PI</code> --
+indeed since it's a <code>const</code>, it cannot be reassigned -- so the <code>PI</code> variable
+here is only for readability/maintenance sake. Its value can be inlined
+without any change in program behavior.</p>
+</li>
+</ol>
+<p>My conclusion: <code>PI</code> here is not a violation of the spirit of minimizing/avoiding
+side effects (or causes). Nor is the <code>bar(x)</code> call in the previous snippet.</p>
+<p>In both cases, <code>PI</code> and <code>bar</code> are not part of the state of the program. They're
+fixed, non-reassigned references. If they don't change throughout the program,
+we don't have to worry about tracking them as changing state. As such, they
+don't harm our readability. And they cannot be the source of bugs related to
+variables changing in unexpected ways.</p>
+<p><strong>Note:</strong> The use of <code>const</code> here does not, in my opinion, make the case that
+<code>PI</code> is absolved as a side cause; <code>var PI</code> would lead to the same conclusion.
+The lack of reassigning <code>PI</code> is what matters, not the inability to do so. We'll
+discuss <a href="chapter_6.html"><code>const</code> in Chapter 6</a>.</p>
+<h4><a class="header" href="#randomness" id="randomness">Randomness</a></h4>
+<p>You may never have considered it before, but randomness is a side cause. A
+function that uses <code>Math.random()</code> cannot have predictable output based on its
+input. So any code that generates unique random IDs/etc. will by definition be
+considered reliant on the program's side causes.</p>
+<p>In computing, we use what's called pseudo-random algorithms for generation.
+Turns out true randomness is pretty hard, so we just kinda fake it with complex
+algorithms that produce values that seem observably random. These algorithms
+calculate long streams of numbers, but the secret is, the sequence is actually
+predictable if you know the starting point. This starting point is referred to
+as a seed.</p>
+<p>Some languages let you specify the seed value for the random number generation.
+If you always specify the same seed, you'll always get the same sequence of
+outputs from subsequent &quot;pseudo-random number&quot; generations. This is incredibly
+useful for testing purposes, for example, but incredibly dangerous for
+real-world application usage.</p>
+<p>In JS, the randomness of <code>Math.random()</code> calculation is based on an indirect
+input, because you cannot specify the seed. As such, we have to treat built-in
+random number generation as a side cause.</p>
+<h3><a class="header" href="#io-effects" id="io-effects">I/O Effects</a></h3>
+<p>The most common (and essentially unavoidable) form of side cause/effect is
+input/output (I/O). A program with no I/O is totally pointless, because its work
+cannot be observed in any way. Useful programs must at a minimum have output,
+and many also need input. Input is a side cause and output is a side effect.</p>
+<p>The typical input for the browser JS programmer is user events (mouse,
+keyboard), and for output is the DOM. If you work more in Node.js, you may more
+likely receive input from, and send output to, the file system, network
+connections, and/or the <code>stdin</code>/<code>stdout</code> streams.</p>
+<p>As a matter of fact, these sources can be both input and output, both cause and
+effect. Take the DOM, for example. We update (side effect) a DOM element to show
+text or an image to the user, but the current state of the DOM is an implicit
+input (side cause) to those operations as well.</p>
+<h3><a class="header" href="#side-bugs" id="side-bugs">Side Bugs</a></h3>
+<p>The scenarios where side causes and side effects can lead to bugs are as varied
+as the programs in existence. But let's examine a scenario to illustrate these
+hazards, in hopes that they help us recognize similar mistakes in our own
+programs.</p>
+<p>Consider:</p>
+<pre><code class="language-js">var users = {};
+var userOrders = {};
+
+function fetchUserData(userId) {
+  ajax(`http://some.api/user/${userId}`, function onUserData(user) {
+    users[userId] = user;
+  });
+}
+
+function fetchOrders(userId) {
+  ajax(`http://some.api/orders/${userId}`, function onOrders(orders) {
+    for (let order of orders) {
+      // keep a reference to latest order for each user
+      users[userId].latestOrder = order;
+      userOrders[order.orderId] = order;
+    }
+  });
+}
+
+function deleteOrder(orderId) {
+  var user = users[userOrders[orderId].userId];
+  var isLatestOrder = userOrders[orderId] == user.latestOrder;
+
+  // deleting the latest order for a user?
+  if (isLatestOrder) {
+    hideLatestOrderDisplay();
+  }
+
+  ajax(`http://some.api/delete/order/${orderId}`, function onDelete(success) {
+    if (success) {
+      // deleted the latest order for a user?
+      if (isLatestOrder) {
+        user.latestOrder = null;
+      }
+
+      userOrders[orderId] = null;
+    } else if (isLatestOrder) {
+      showLatestOrderDisplay();
+    }
+  });
+}
+</code></pre>
+<p>I bet for some readers one of the potential bugs here is fairly obvious. If the
+callback <code>onOrders(..)</code> runs before the <code>onUserData(..)</code> callback, it will
+attempt to add a <code>latestOrder</code> property to a value (the <code>user</code> object at
+<code>users[userId]</code>) that's not yet been set.</p>
+<p>So one form of &quot;bug&quot; that can occur with logic that relies on side
+causes/effects is the race condition of two different operations (async or not!)
+that we expect to run in a certain order but under some cases may run in a
+different order. There are strategies for ensuring the order of operations, and
+it's fairly obvious that order is critical in that case.</p>
+<p>Another more subtle bug can bite us here. Did you spot it?</p>
+<p>Consider this order of calls:</p>
+<pre><code class="language-js">fetchUserData( 123 );
+onUserData(..);
+fetchOrders( 123 );
+onOrders(..);
+
+// later
+
+fetchOrders( 123 );
+deleteOrder( 456 );
+onOrders(..);
+onDelete(..);
+</code></pre>
+<p>Do you see the interleaving of <code>fetchOrders(..)</code> and <code>onOrders(..)</code> with the
+<code>deleteOrder(..)</code> and <code>onDelete(..)</code> pair? That potential sequencing exposes a
+weird condition with our side causes/effects of state management.</p>
+<p>There's a delay in time (because of the callback) between when we set the
+<code>isLatestOrder</code> flag and when we use it to decide if we should empty the
+<code>latestOrder</code> property of the user data object in <code>users</code>. During that delay, if
+<code>onOrders(..)</code> callback fires, it can potentially change which order value that
+user's <code>latestOrder</code> references. When <code>onDelete(..)</code> then fires, it will assume
+it still needs to unset the <code>latestOrder</code> reference.</p>
+<p>The bug: the data (state) <em>might</em> now be out of sync. <code>latestOrder</code> will be
+unset, when potentially it should have stayed pointing at a newer order that
+came in to <code>onOrders(..)</code>.</p>
+<p>The worst part of this kind of bug is that you don't get a program-crashing
+exception like we did with the other bug. We just simply have state that is
+incorrect; our application's behavior is &quot;silently&quot; broken.</p>
+<p>The sequencing dependency between <code>fetchUserData(..)</code> and <code>fetchOrders(..)</code> is
+fairly obvious, and straightforwardly addressed. But the potential sequencing
+dependency between <code>fetchOrders(..)</code> and <code>deleteOrder(..)</code> is far less obvious.
+These two seem to be more independent. And ensuring that their order is
+preserved is more tricky, because you don't know in advance (before the results
+from <code>fetchOrders(..)</code>) whether that sequencing really must be enforced.</p>
+<p>Yes, you can recompute the <code>isLatestOrder</code> flag once <code>deleteOrder(..)</code> fires.
+But now you have a different problem: your UI state can be out of sync.</p>
+<p>If you had called the <code>hideLatestOrderDisplay()</code> previously, you'll now need to
+call the function <code>showLatestOrderDisplay()</code>, but only if a new <code>latestOrder</code>
+has in fact been set. So you'll need to track at least three states: was the
+deleted order the &quot;latest&quot; originally, and is the &quot;latest&quot; set, and are those
+two orders different? These are solvable problems, of course. But they're not
+obvious by any means.</p>
+<p>All of these hassles are because we decided to structure our code with side
+causes/effects on a shared set of state.</p>
+<p>Functional programmers detest these sorts of side cause/effect bugs because of
+how much it hurts our ability to read, reason about, validate, and ultimately
+<strong>trust</strong> the code. That's why they take the principle to avoid side
+causes/effects so seriously.</p>
+<p>There are multiple different strategies for avoiding/fixing side causes/effects.
+We'll talk about some later in this chapter, and others in later chapters. I'll
+say one thing for certain: <strong>writing with side causes/effects is often of our
+normal default</strong> so avoiding them is going to require careful and intentional
+effort.</p>
+<h2><a class="header" href="#once-is-enough-thanks" id="once-is-enough-thanks">Once Is Enough, Thanks</a></h2>
+<p>If you must make side effect changes to state, one class of operations that's
+useful for limiting the potential trouble is idempotence. If your update of a
+value is idempotent, then data will be resilient to the case where you might
+have multiple such updates from different side effect sources.</p>
+<p>If you try to research it, the definition of idempotence can be a little
+confusing; mathematicians use a slightly different meaning than programmers
+typically do. However, both perspectives are useful for the functional
+programmer.</p>
+<p>First, let's give a counter example that is neither mathematically nor
+programmingly idempotent:</p>
+<pre><code class="language-js">function updateCounter(obj) {
+  if (obj.count &lt; 10) {
+    obj.count++;
+    return true;
+  }
+
+  return false;
+}
+</code></pre>
+<p>This function mutates an object via reference by incrementing <code>obj.count</code>, so it
+produces a side effect on that object. If <code>updateCounter(o)</code> is called multiple
+times -- while <code>o.count</code> is less than <code>10</code>, that is -- the program state changes
+each time. Also, the output of <code>updateCounter(..)</code> is a Boolean, which is not
+suitable to feed back into a subsequent call of <code>updateCounter(..)</code>.</p>
+<h3><a class="header" href="#mathematical-idempotence" id="mathematical-idempotence">Mathematical Idempotence</a></h3>
+<p>From the mathematical point of view, idempotence means an operation whose output
+won't ever change after the first call, if you feed that output back into the
+operation over and over again. In other words, <code>foo(x)</code> would produce the same
+output as <code>foo(foo(x))</code> and <code>foo(foo(foo(x)))</code>.</p>
+<p>A typical mathematical example is <code>Math.abs(..)</code> (absolute value).
+<code>Math.abs(-2)</code> is <code>2</code>, which is the same result as
+<code>Math.abs(Math.abs(Math.abs(Math.abs(-2))))</code>. Other idempotent mathematical
+utilities include:</p>
+<ul>
+<li><code>Math.min(..)</code></li>
+<li><code>Math.max(..)</code></li>
+<li><code>Math.round(..)</code></li>
+<li><code>Math.floor(..)</code></li>
+<li><code>Math.ceil(..)</code></li>
+</ul>
+<p>Some custom mathematical operations we could define with this same
+characteristic:</p>
+<pre><code class="language-js">function toPower0(x) {
+  return Math.pow(x, 0);
+}
+
+function snapUp3(x) {
+  return x - (x % 3) + (x % 3 &gt; 0 &amp;&amp; 3);
+}
+
+toPower0(3) == toPower0(toPower0(3)); // true
+
+snapUp3(3.14) == snapUp3(snapUp3(3.14)); // true
+</code></pre>
+<p>Mathematical-style idempotence is <strong>not</strong> restricted to mathematical operations.
+Another place we can illustrate this form of idempotence is with JavaScript
+primitive type coercions:</p>
+<pre><code class="language-js">var x = 42,
+  y = &quot;hello&quot;;
+
+String(x) === String(String(x)); // true
+
+Boolean(y) === Boolean(Boolean(y)); // true
+</code></pre>
+<p>Earlier in the text, we explored a common FP tool that fulfills this form of
+idempotence:</p>
+<pre><code class="language-js">identity(3) === identity(identity(3)); // true
+</code></pre>
+<p>Certain string operations are also naturally idempotent, such as:</p>
+<pre><code class="language-js">function upper(x) {
+  return x.toUpperCase();
+}
+
+function lower(x) {
+  return x.toLowerCase();
+}
+
+var str = &quot;Hello World&quot;;
+
+upper(str) == upper(upper(str)); // true
+
+lower(str) == lower(lower(str)); // true
+</code></pre>
+<p>We can even design more sophisticated string formatting operations in an
+idempotent way, such as:</p>
+<pre><code class="language-js">function currency(val) {
+  var num = parseFloat(String(val).replace(/[^\d.-]+/g, &quot;&quot;));
+  var sign = num &lt; 0 ? &quot;-&quot; : &quot;&quot;;
+  return `${sign}$${Math.abs(num).toFixed(2)}`;
+}
+
+currency(-3.1); // &quot;-$3.10&quot;
+
+currency(-3.1) == currency(currency(-3.1)); // true
+</code></pre>
+<p><code>currency(..)</code> illustrates an important technique: in some cases the developer
+can take extra steps to normalize an input/output operation to ensure the
+operation is idempotent where it normally wouldn't be.</p>
+<p>Wherever possible, restricting side effects to idempotent operations is much
+better than unrestricted updates.</p>
+<h3><a class="header" href="#programming-idempotence" id="programming-idempotence">Programming Idempotence</a></h3>
+<p>The programming-oriented definition for idempotence is similar, but less formal.
+Instead of requiring <code>f(x) === f(f(x))</code>, this view of idempotence is just that
+<code>f(x);</code> results in the same program behavior as <code>f(x); f(x);</code>. In other words,
+the result of calling <code>f(x)</code> subsequent times after the first call doesn't
+change anything.</p>
+<p>That perspective fits more with our observations about side effects, because
+it's more likely that such an <code>f(..)</code> operation creates an idempotent side
+effect rather than necessarily returning an idempotent output value.</p>
+<p>This idempotence-style is often cited for HTTP operations (verbs) such as GET or
+PUT. If an HTTP REST API is properly following the specification guidance for
+idempotence, PUT is defined as an update operation that fully replaces a
+resource. As such, a client could either send a PUT request once or multiple
+times (with the same data), and the server would have the same resultant state
+regardless.</p>
+<p>Thinking about this in more concrete terms with programming, let's examine some
+side effect operations for their idempotence (or lack thereof):</p>
+<pre><code class="language-js">// idempotent:
+obj.count = 2;
+a[a.length - 1] = 42;
+person.name = upper(person.name);
+
+// non-idempotent:
+obj.count++;
+a[a.length] = 42;
+person.lastUpdated = Date.now();
+</code></pre>
+<p>Remember: the notion of idempotence here is that each idempotent operation (like
+<code>obj.count = 2</code>) could be repeated multiple times and not change the program
+state beyond the first update. The non-idempotent operations change the state
+each time.</p>
+<p>What about DOM updates?</p>
+<pre><code class="language-js">var hist = document.getElementById(&quot;orderHistory&quot;);
+
+// idempotent:
+hist.innerHTML = order.historyText;
+
+// non-idempotent:
+var update = document.createTextNode(order.latestUpdate);
+hist.appendChild(update);
+</code></pre>
+<p>The key difference illustrated here is that the idempotent update replaces the
+DOM element's content. The current state of the DOM element is irrelevant,
+because it's unconditionally overwritten. The non-idempotent operation adds
+content to the element; implicitly, the current state of the DOM element is part
+of computing the next state.</p>
+<p>It won't always be possible to define your operations on data in an idempotent
+way, but if you can, it will definitely help reduce the chances that your side
+effects will crop up to break your expectations when you least expect it.</p>
+<h2><a class="header" href="#pure-bliss" id="pure-bliss">Pure Bliss</a></h2>
+<p>A function with no side causes/effects is called a pure function. A pure
+function is idempotent in the programming sense, because it cannot have any side
+effects. Consider:</p>
+<pre><code class="language-js">function add(x, y) {
+  return x + y;
+}
+</code></pre>
+<p>All the inputs (<code>x</code> and <code>y</code>) and outputs (<code>return ..</code>) are direct; there are no
+free variable references. Calling <code>add(3,4)</code> multiple times would be
+indistinguishable from only calling it once. <code>add(..)</code> is pure and
+programming-style idempotent.</p>
+<p>However, not all pure functions are idempotent in the mathematical sense,
+because they don't have to return a value that would be suitable for feeding
+back in as their own input. Consider:</p>
+<pre><code class="language-js">function calculateAverage(nums) {
+  var sum = 0;
+  for (let num of nums) {
+    sum += num;
+  }
+  return sum / nums.length;
+}
+
+calculateAverage([1, 2, 4, 7, 11, 16, 22]); // 9
+</code></pre>
+<p>The output <code>9</code> is not an array, so you cannot pass it back in:
+<code>calculateAverage(calculateAverage( .. ))</code>.</p>
+<p>As we discussed earlier, a pure function <em>can</em> reference free variables, as long
+as those free variables aren't side causes.</p>
+<p>Some examples:</p>
+<pre><code class="language-js">const PI = 3.141592;
+
+function circleArea(radius) {
+  return PI * radius * radius;
+}
+
+function cylinderVolume(radius, height) {
+  return height * circleArea(radius);
+}
+</code></pre>
+<p><code>circleArea(..)</code> references the free variable <code>PI</code>, but it's a constant so it's
+not a side cause. <code>cylinderVolume(..)</code> references the free variable
+<code>circleArea</code>, which is also not a side cause because this program treats it as,
+in effect, a constant reference to its function value. Both these functions are
+pure.</p>
+<p>Another example where a function can still be pure but reference free variables
+is with closure:</p>
+<pre><code class="language-js">function unary(fn) {
+  return function onlyOneArg(arg) {
+    return fn(arg);
+  };
+}
+</code></pre>
+<p><code>unary(..)</code> itself is clearly pure -- its only input is <code>fn</code> and its only output
+is the <code>return</code>ed function -- but what about the inner function
+<code>onlyOneArg(..)</code>, which closes over the free variable <code>fn</code>?</p>
+<p>It's still pure because <code>fn</code> never changes. In fact, we have full confidence in
+that fact because lexically speaking, those few lines are the only ones that
+could possibly reassign <code>fn</code>.</p>
+<p><strong>Note:</strong> <code>fn</code> is a reference to a function object, which is by default a
+mutable value. Somewhere else in the program <em>could</em>, for example, add a
+property to this function object, which technically &quot;changes&quot; the value
+(mutation, not reassignment). However, because we're not relying on anything
+about <code>fn</code> other than our ability to call it, and it's not possible to affect
+the callability of a function value, <code>fn</code> is still effectively unchanging for
+our reasoning purposes; it cannot be a side cause.</p>
+<p>Another common way to articulate a function's purity is: <strong>given the same
+input(s), it always produces the same output.</strong> If you pass <code>3</code> to
+<code>circleArea(..)</code>, it will always output the same result (<code>28.274328</code>).</p>
+<p>If a function <em>can</em> produce a different output each time it's given the same
+inputs, it is impure. Even if such a function always <code>return</code>s the same value,
+if it produces an indirect output side effect, the program state is changed each
+time it's called; this is impure.</p>
+<p>Impure functions are undesirable because they make all of their calls harder to
+reason about. A pure function's call is perfectly predictable. When someone
+reading the code sees multiple <code>circleArea(3)</code> calls, they won't have to spend
+any extra effort to figure out what its output will be <em>each time</em>.</p>
+<p><strong>Note:</strong> An interesting thing to ponder: is the heat produced by the CPU while
+performing any given operation an unavoidable side effect of even the most pure
+functions/programs? What about just the CPU time delay as it spends time on a
+pure operation before it can do another one?</p>
+<h3><a class="header" href="#purely-relative" id="purely-relative">Purely Relative</a></h3>
+<p>We have to be very careful when talking about a function being pure.
+JavaScript's dynamic value nature makes it all too easy to have non-obvious side
+causes/effects.</p>
+<p>Consider:</p>
+<pre><code class="language-js">function rememberNumbers(nums) {
+  return function caller(fn) {
+    return fn(nums);
+  };
+}
+
+var list = [1, 2, 3, 4, 5];
+
+var simpleList = rememberNumbers(list);
+</code></pre>
+<p><code>simpleList(..)</code> looks like a pure function, as it's a reference to the inner
+function <code>caller(..)</code>, which just closes over the free variable <code>nums</code>. However,
+there's multiple ways that <code>simpleList(..)</code> can actually turn out to be impure.</p>
+<p>First, our assertion of purity is based on the array value (referenced both by
+<code>list</code> and <code>nums</code>) never changing:</p>
+<pre><code class="language-js">function median(nums) {
+  return (nums[0] + nums[nums.length - 1]) / 2;
+}
+
+simpleList(median); // 3
+
+// ..
+
+list.push(6);
+
+// ..
+
+simpleList(median); // 3.5
+</code></pre>
+<p>When we mutate the array, the <code>simpleList(..)</code> call changes its output. So, is
+<code>simpleList(..)</code> pure or impure? Depends on your perspective. It's pure for a
+given set of assumptions. It could be pure in any program that didn't have the
+<code>list.push(6)</code> mutation.</p>
+<p>We could guard against this kind of impurity by altering the definition of
+<code>rememberNumbers(..)</code>. One approach is to duplicate the <code>nums</code> array:</p>
+<pre><code class="language-js">function rememberNumbers(nums) {
+  // make a copy of the array
+  nums = [...nums];
+
+  return function caller(fn) {
+    return fn(nums);
+  };
+}
+</code></pre>
+<p>But an even trickier hidden side effect could be lurking:</p>
+<pre><code class="language-js">var list = [1, 2, 3, 4, 5];
+
+// make `list[0]` be a getter with a side effect
+Object.defineProperty(list, 0, {
+  get: function() {
+    console.log(&quot;[0] was accessed!&quot;);
+    return 1;
+  }
+});
+
+var simpleList = rememberNumbers(list);
+// [0] was accessed!
+</code></pre>
+<p>A perhaps more robust option is to change the signature of <code>rememberNumbers(..)</code>
+to not receive an array in the first place, but rather the numbers as individual
+arguments:</p>
+<pre><code class="language-js">function rememberNumbers(...nums) {
+  return function caller(fn) {
+    return fn(nums);
+  };
+}
+
+var simpleList = rememberNumbers(...list);
+// [0] was accessed!
+</code></pre>
+<p>The two <code>...</code>s have the effect of copying <code>list</code> into <code>nums</code> instead of passing
+it by reference.</p>
+<p><strong>Note:</strong> The console message side effect here comes not from
+<code>rememberNumbers(..)</code> but from the <code>...list</code> spreading. So in this case, both
+<code>rememberNumbers(..)</code> and <code>simpleList(..)</code> are pure.</p>
+<p>But what if the mutation is even harder to spot? Composition of a pure function
+with an impure function <strong>always</strong> produces an impure function. If we pass an
+impure function into the otherwise pure <code>simpleList(..)</code>, it's now impure:</p>
+<pre><code class="language-js">// yes, a silly contrived example :)
+function firstValue(nums) {
+  return nums[0];
+}
+
+function lastValue(nums) {
+  return firstValue(nums.reverse());
+}
+
+simpleList(lastValue); // 5
+
+list; // [1,2,3,4,5] -- OK!
+
+simpleList(lastValue); // 1
+</code></pre>
+<p><strong>Note:</strong> Despite <code>reverse()</code> looking safe (like other array methods in JS) in
+that it returns a reversed array, it actually mutates the array rather than
+creating a new one.</p>
+<p>We need a more robust definition of <code>rememberNumbers(..)</code> to guard against the
+<code>fn(..)</code> mutating its closed over <code>nums</code> via reference:</p>
+<pre><code class="language-js">function rememberNumbers(...nums) {
+  return function caller(fn) {
+    // send in a copy!
+    return fn([...nums]);
+  };
+}
+</code></pre>
+<p>So is <code>simpleList(..)</code> reliably pure yet!? <strong>Nope.</strong> :(</p>
+<p>We're only guarding against side effects we can control (mutating by reference).
+Any function we pass that has other side effects will have polluted the purity
+of <code>simpleList(..)</code>:</p>
+<pre><code class="language-js">simpleList(function impureIO(nums) {
+  console.log(nums.length);
+});
+</code></pre>
+<p>In fact, there's no way to define <code>rememberNumbers(..)</code> to make a perfectly pure
+<code>simpleList(..)</code> function.</p>
+<p>Purity is about confidence. But we have to admit that in many cases, <strong>any
+confidence we feel is actually relative to the context</strong> of our program and what
+we know about it. In practice (in JavaScript) the question of function purity is
+not about being absolutely pure or not, but about a range of confidence in its
+purity.</p>
+<p>The more pure, the better. The more effort you put into making a function
+pure(r), the higher your confidence will be when you read code that uses it, and
+that will make that part of the code more readable.</p>
+<h2><a class="header" href="#there-or-not" id="there-or-not">There or Not</a></h2>
+<p>So far, we've defined function purity both as a function without side
+causes/effects and as a function that, given the same input(s), always produces
+the same output. These are just two different ways of looking at the same
+characteristics.</p>
+<p>But a third way of looking at function purity, and perhaps the most widely
+accepted definition, is that a pure function has referential transparency.</p>
+<p>Referential transparency is the assertion that a function call could be replaced
+by its output value, and the overall program behavior wouldn't change. In other
+words, it would be impossible to tell from the program's execution whether the
+function call was made or its return value was inlined in place of the function
+call.</p>
+<p>From the perspective of referential transparency, both of these programs have
+identical behavior as they are built with pure functions:</p>
+<pre><code class="language-js">function calculateAverage(nums) {
+  var sum = 0;
+  for (let num of nums) {
+    sum += num;
+  }
+  return sum / nums.length;
+}
+
+var numbers = [1, 2, 4, 7, 11, 16, 22];
+
+var avg = calculateAverage(numbers);
+
+console.log(&quot;The average is:&quot;, avg); // The average is: 9
+</code></pre>
+<pre><code class="language-js">function calculateAverage(nums) {
+  var sum = 0;
+  for (let num of nums) {
+    sum += num;
+  }
+  return sum / nums.length;
+}
+
+var numbers = [1, 2, 4, 7, 11, 16, 22];
+
+var avg = 9;
+
+console.log(&quot;The average is:&quot;, avg); // The average is: 9
+</code></pre>
+<p>The only difference between these two snippets is that in the latter one, we
+skipped the <code>calculateAverage(nums)</code> call and just inlined its output (<code>9</code>).
+Since the rest of the program behaves identically, <code>calculateAverage(..)</code> has
+referential transparency, and is thus a pure function.</p>
+<h3><a class="header" href="#mentally-transparent" id="mentally-transparent">Mentally Transparent</a></h3>
+<p>The notion that a referentially transparent pure function <em>can be</em> replaced with
+its output does not mean that it <em>should literally be</em> replaced. Far from it.</p>
+<p>The reasons we build functions into our programs instead of using pre-computed
+magic constants are not just about responding to changing data, but also about
+readability with proper abstractions. The function call to calculate the average
+of that list of numbers makes that part of the program more readable than the
+line that just assigns the value explicitly. It tells the story to the reader of
+where <code>avg</code> comes from, what it means, and so on.</p>
+<p>What we're really suggesting with referential transparency is that as you're
+reading a program, once you've mentally computed what a pure function call's
+output is, you no longer need to think about what that exact function call is
+doing when you see it in code, especially if it appears multiple times.</p>
+<p>That result becomes kinda like a mental <code>const</code> declaration, which as you're
+reading you can transparently swap in and not spend any more mental energy
+working out.</p>
+<p>Hopefully the importance of this characteristic of a pure function is obvious.
+We're trying to make our programs more readable. One way we can do that is to
+give the reader less work, by providing assistance to skip over the unnecessary
+stuff so they can focus on the important stuff.</p>
+<p>The reader shouldn't need to keep re-computing some outcome that isn't going to
+change (and doesn't need to). If you define a pure function with referential
+transparency, the reader won't have to.</p>
+<h3><a class="header" href="#not-so-transparent" id="not-so-transparent">Not So Transparent?</a></h3>
+<p>What about a function that has a side effect, but this side effect isn't ever
+observed or relied upon anywhere else in the program? Does that function still
+have referential transparency?</p>
+<p>Here's one:</p>
+<pre><code class="language-js">function calculateAverage(nums) {
+  sum = 0;
+  for (let num of nums) {
+    sum += num;
+  }
+  return sum / nums.length;
+}
+
+var sum;
+var numbers = [1, 2, 4, 7, 11, 16, 22];
+
+var avg = calculateAverage(numbers);
+</code></pre>
+<p>Did you spot it?</p>
+<p><code>sum</code> is an outer free variable that <code>calculateAverage(..)</code> uses to do its work.
+But, every time we call <code>calculateAverage(..)</code> with the same list, we're going
+to get <code>9</code> as the output. And this program couldn't be distinguished in terms of
+behavior from a program that replaced the <code>calculateAverage(nums)</code> call with the
+value <code>9</code>. No other part of the program cares about the <code>sum</code> variable, so it's
+an unobserved side effect.</p>
+<p>Is a side cause/effect that's unobserved like this tree:</p>
+<blockquote>
+<p>If a tree falls in the forest, but no one is around to hear it, does it still
+make a sound?</p>
+</blockquote>
+<p>By the narrowest definition of referential transparency, I think you'd have to
+say <code>calculateAverage(..)</code> is still a pure function. However, because we're
+trying to avoid a strictly academic approach in favor of balancing it with
+pragmatism, I also think this conclusion needs more perspective. Let's explore.</p>
+<h4><a class="header" href="#performance-effects" id="performance-effects">Performance Effects</a></h4>
+<p>You'll generally find these kind of side-effects-that-go-unobserved being used
+to optimize the performance of an operation. For example:</p>
+<pre><code class="language-js">var cache = [];
+
+function specialNumber(n) {
+  // if we've already calculated this special number,
+  // skip the work and just return it from the cache
+  if (cache[n] !== undefined) {
+    return cache[n];
+  }
+
+  var x = 1,
+    y = 1;
+
+  for (let i = 1; i &lt;= n; i++) {
+    x += i % 2;
+    y += i % 3;
+  }
+
+  cache[n] = (x * y) / (n + 1);
+
+  return cache[n];
+}
+
+specialNumber(6); // 4
+specialNumber(42); // 22
+specialNumber(1e6); // 500001
+specialNumber(987654321); // 493827162
+</code></pre>
+<p>This silly <code>specialNumber(..)</code> algorithm is deterministic and thus pure from the
+definition that it always gives the same output for the same input. It's also
+pure from the referential transparency perspective -- replace any call to
+<code>specialNumber(42)</code> with <code>22</code> and the end result of the program is the same.</p>
+<p>However, the function has to do quite a bit of work to calculate some of the
+bigger numbers, especially the <code>987654321</code> input. If we needed to get that
+particular special number multiple times throughout our program, the <code>cache</code>ing
+of the result means that subsequent calls are far more efficient.</p>
+<p>Don't be so quick to assume that you could just run the calculation
+<code>specialNumber(987654321)</code> once and manually stick that result in some
+variable/constant. Programs are often highly modularized and globally accessible
+scopes are not usually the way you want to share state between those independent
+pieces. Having <code>specialNumber(..)</code> do its own caching (even though it happens to
+be using a global variable to do so!) is a more preferable abstraction of that
+state sharing.</p>
+<p>The point is that if <code>specialNumber(..)</code> is the only part of the program that
+accesses and updates the <code>cache</code> side cause/effect, the referential transparency
+perspective observably holds true, and this might be seen as an acceptable
+pragmatic &quot;cheat&quot; of the pure function ideal.</p>
+<p>But should it?</p>
+<p>Typically, this sort of performance optimization side effecting is done by
+hiding the caching of results so they <em>cannot</em> be observed by any other part of
+the program. This process is referred to as memoization. I always think of that
+word as &quot;memorization&quot;; I have no idea if that's even remotely where it comes
+from, but it certainly helps me understand the concept better.</p>
+<p>Consider:</p>
+<pre><code class="language-js">var specialNumber = (function memoization() {
+  var cache = [];
+
+  return function specialNumber(n) {
+    // if we've already calculated this special number,
+    // skip the work and just return it from the cache
+    if (cache[n] !== undefined) {
+      return cache[n];
+    }
+
+    var x = 1,
+      y = 1;
+
+    for (let i = 1; i &lt;= n; i++) {
+      x += i % 2;
+      y += i % 3;
+    }
+
+    cache[n] = (x * y) / (n + 1);
+
+    return cache[n];
+  };
+})();
+</code></pre>
+<p>We've contained the <code>cache</code> side causes/effects of <code>specialNumber(..)</code> inside
+the scope of the <code>memoization()</code> IIFE, so now we're sure that no other parts of
+the program <em>can</em> observe them, not just that they <em>don't</em> observe them.</p>
+<p>That last sentence may seem like a subtle point, but actually I think it might
+be <strong>the most important point of the entire chapter</strong>. Read it again.</p>
+<p>Recall this philosophical musing:</p>
+<blockquote>
+<p>If a tree falls in the forest, but no one is around to hear it, does it still
+make a sound?</p>
+</blockquote>
+<p>Going with the metaphor, what I'm getting at is: whether the sound is made or
+not, it would be better if we never create a scenario where the tree can fall
+without us being around; we'll always hear the sound when a tree falls.</p>
+<p>The purpose of reducing side causes/effects is not per se to have a program
+where they aren't observed, but to design a program where fewer of them are
+possible, because this makes the code easier to reason about. A program with
+side causes/effects that <em>just happen</em> to not be observed is not nearly as
+effective in this goal as a program that <em>cannot</em> observe them.</p>
+<p>If side causes/effects can happen, the writer and reader must mentally juggle
+them. Make it so they can't happen, and both writer and reader will find more
+confidence over what can and cannot happen in any part.</p>
+<h2><a class="header" href="#purifying" id="purifying">Purifying</a></h2>
+<p>The first best option in writing functions is that you design them from the
+beginning to be pure. But you'll spend plenty of time maintaining existing code,
+where those kinds of decisions were already made; you'll run across a lot of
+impure functions.</p>
+<p>If possible, refactor the impure function to be pure. Sometimes you can just
+shift the side effects out of a function to the part of the program where the
+call of that function happens. The side effect wasn't eliminated, but it was
+made more obvious by showing up at the call-site.</p>
+<p>Consider this trivial example:</p>
+<pre><code class="language-js">function addMaxNum(arr) {
+  var maxNum = Math.max(...arr);
+  arr.push(maxNum + 1);
+}
+
+var nums = [4, 2, 7, 3];
+
+addMaxNum(nums);
+
+nums; // [4,2,7,3,8]
+</code></pre>
+<p>The <code>nums</code> array needs to be modified, but we don't have to obscure that side
+effect by containing it in <code>addMaxNum(..)</code>. Let's move the <code>push(..)</code> mutation
+out, so that <code>addMaxNum(..)</code> becomes a pure function, and the side effect is now
+more obvious:</p>
+<pre><code class="language-js">function addMaxNum(arr) {
+  var maxNum = Math.max(...arr);
+  return maxNum + 1;
+}
+
+var nums = [4, 2, 7, 3];
+
+nums.push(addMaxNum(nums));
+
+nums; // [4,2,7,3,8]
+</code></pre>
+<p><strong>Note:</strong> Another technique for this kind of task could be to use an immutable
+data structure, which we cover in the next chapter.</p>
+<p>But what can you do if you have an impure function where the refactoring is not
+as easy?</p>
+<p>You need to figure what kind of side causes/effects the function has. It may be
+that the side causes/effects come variously from lexical free variables,
+mutations-by-reference, or even <code>this</code> binding. We'll look at approaches that
+address each of these scenarios.</p>
+<h3><a class="header" href="#containing-effects" id="containing-effects">Containing Effects</a></h3>
+<p>If the nature of the concerned side causes/effects is with lexical free
+variables, and you have the option to modify the surrounding code, you can
+encapsulate them using scope.</p>
+<p>Recall:</p>
+<pre><code class="language-js">var users = {};
+
+function fetchUserData(userId) {
+  ajax(`http://some.api/user/${userId}`, function onUserData(user) {
+    users[userId] = user;
+  });
+}
+</code></pre>
+<p>One option for purifying this code is to create a wrapper around both the
+variable and the impure function. Essentially, the wrapper has to receive as
+input &quot;the entire universe&quot; of state it can operate on.</p>
+<pre><code class="language-js">function safer_fetchUserData(userId, users) {
+  // simple, naive ES6+ shallow object copy, could also
+  // be done w/ various libs or frameworks
+  users = Object.assign({}, users);
+
+  fetchUserData(userId);
+
+  // return the copied state
+  return users;
+
+  // ***********************
+
+  // original untouched impure function:
+  function fetchUserData(userId) {
+    ajax(`http://some.api/user/${userId}`, function onUserData(user) {
+      users[userId] = user;
+    });
+  }
+}
+</code></pre>
+<p><strong>Warning:</strong> <code>safer_fetchUserData(..)</code> is <em>more</em> pure, but is not strictly pure
+in that it still relies on the I/O of making an Ajax call. There's no getting
+around the fact that an Ajax call is an impure side effect, so we'll just leave
+that detail unaddressed.</p>
+<p>Both <code>userId</code> and <code>users</code> are input for the original <code>fetchUserData</code>, and
+<code>users</code> is also output. The <code>safer_fetchUserData(..)</code> takes both of these
+inputs, and returns <code>users</code>. To make sure we're not creating a side effect on
+the outside when <code>users</code> is mutated, we make a local copy of <code>users</code>.</p>
+<p>This technique has limited usefulness mostly because if you cannot modify a
+function itself to be pure, you're not that likely to be able to modify its
+surrounding code either. However, it's helpful to explore it if possible, as
+it's the simplest of our fixes.</p>
+<p>Regardless of whether this will be a practical technique for refactoring to pure
+functions, the more important take-away is that function purity only need be
+skin deep. That is, the <strong>purity of a function is judged from the outside</strong>,
+regardless of what goes on inside. As long as a function's usage behaves pure,
+it is pure. Inside a pure function, impure techniques can be used -- in
+moderation! -- for a variety of reasons, including most commonly, for
+performance. It's not necessarily, as they say, &quot;turtles all the way down&quot;.</p>
+<p>Be very careful, though. Any part of the program that's impure, even if it's
+wrapped with and only ever used via a pure function, is a potential source of
+bugs and confusion for readers of the code. The overall goal is to reduce side
+effects wherever possible, not just hide them.</p>
+<h3><a class="header" href="#covering-up-effects" id="covering-up-effects">Covering Up Effects</a></h3>
+<p>Many times you will be unable to modify the code to encapsulate the lexical free
+variables inside the scope of a wrapper function. For example, the impure
+function may be in a third-party library file that you do not control,
+containing something like:</p>
+<pre><code class="language-js">var nums = [];
+var smallCount = 0;
+var largeCount = 0;
+
+function generateMoreRandoms(count) {
+  for (let i = 0; i &lt; count; i++) {
+    let num = Math.random();
+
+    if (num &gt;= 0.5) {
+      largeCount++;
+    } else {
+      smallCount++;
+    }
+
+    nums.push(num);
+  }
+}
+</code></pre>
+<p>The brute-force strategy to <em>quarantine</em> the side causes/effects when using this
+utility in the rest of our program is to create an interface function that
+performs the following steps:</p>
+<ol>
+<li>Capture the to-be-affected current states</li>
+<li>Set initial input states</li>
+<li>Run the impure function</li>
+<li>Capture the side effect states</li>
+<li>Restore the original states</li>
+<li>Return the captured side effect states</li>
+</ol>
+<pre><code class="language-js">function safer_generateMoreRandoms(count, initial) {
+  // (1) Save original state
+  var orig = {
+    nums,
+    smallCount,
+    largeCount
+  };
+
+  // (2) Set up initial pre-side effects state
+  nums = [...initial.nums];
+  smallCount = initial.smallCount;
+  largeCount = initial.largeCount;
+
+  // (3) Beware impurity!
+  generateMoreRandoms(count);
+
+  // (4) Capture side effect state
+  var sides = {
+    nums,
+    smallCount,
+    largeCount
+  };
+
+  // (5) Restore original state
+  nums = orig.nums;
+  smallCount = orig.smallCount;
+  largeCount = orig.largeCount;
+
+  // (6) Expose side effect state directly as output
+  return sides;
+}
+</code></pre>
+<p>And to use <code>safer_generateMoreRandoms(..)</code>:</p>
+<pre><code class="language-js">var initialStates = {
+  nums: [0.3, 0.4, 0.5],
+  smallCount: 2,
+  largeCount: 1
+};
+
+safer_generateMoreRandoms(5, initialStates);
+// { nums: [0.3,0.4,0.5,0.8510024448959794,0.04206799238...
+
+nums; // []
+smallCount; // 0
+largeCount; // 0
+</code></pre>
+<p>That's a lot of manual work to avoid a few side causes/effects; it'd be a lot
+easier if we just didn't have them in the first place. But if we have no choice,
+this extra effort is well worth it to avoid surprises in our programs.</p>
+<p><strong>Note:</strong> This technique really only works when you're dealing with synchronous
+code. Asynchronous code can't reliably be managed with this approach because it
+can't prevent surprises if other parts of the program access/modify the state
+variables in the interim.</p>
+<h3><a class="header" href="#evading-effects" id="evading-effects">Evading Effects</a></h3>
+<p>When the nature of the side effect to be dealt with is a mutation of a direct
+input value (object, array, etc.) via reference, we can again create an
+interface function to interact with instead of the original impure function.</p>
+<p>Consider:</p>
+<pre><code class="language-js">function handleInactiveUsers(userList, dateCutoff) {
+  for (let i = 0; i &lt; userList.length; i++) {
+    if (userList[i].lastLogin == null) {
+      // remove the user from the list
+      userList.splice(i, 1);
+      i--;
+    } else if (userList[i].lastLogin &lt; dateCutoff) {
+      userList[i].inactive = true;
+    }
+  }
+}
+</code></pre>
+<p>Both the <code>userList</code> array itself, plus the objects in it, are mutated. One
+strategy to protect against these side effects is to do a deep (well, just not
+shallow) copy first:</p>
+<pre><code class="language-js">function safer_handleInactiveUsers(userList, dateCutoff) {
+  // make a copy of both the list and its user objects
+  let copiedUserList = userList.map(function mapper(user) {
+    // copy a `user` object
+    return Object.assign({}, user);
+  });
+
+  // call the original function with the copy
+  handleInactiveUsers(copiedUserList, dateCutoff);
+
+  // expose the mutated list as a direct output
+  return copiedUserList;
+}
+</code></pre>
+<p>The success of this technique will be dependent on the thoroughness of the
+<em>copy</em> you make of the value. Using <code>[...userList]</code> would not work here, since
+that only creates a shallow copy of the <code>userList</code> array itself. Each element of
+the array is an object that needs to be copied, so we need to take extra care.
+Of course, if those objects have objects inside them (they might!), the copying
+needs to be even more robust.</p>
+<h3><a class="header" href="#this-revisited" id="this-revisited"><code>this</code> Revisited</a></h3>
+<p>Another variation of the via-reference side cause/effect is with <code>this</code>-aware
+functions having <code>this</code> as an implicit input. See
+<a href="chapter_2.html">Chapter 2, &quot;What's This&quot;</a> for more info on why the
+<code>this</code> keyword is problematic for FPers.</p>
+<p>Consider:</p>
+<pre><code class="language-js">var ids = {
+  prefix: &quot;_&quot;,
+  generate() {
+    return this.prefix + Math.random();
+  }
+};
+</code></pre>
+<p>Our strategy is similar to the previous section's discussion: create an
+interface function that forces the <code>generate()</code> function to use a predictable
+<code>this</code> context:</p>
+<pre><code class="language-js">function safer_generate(context) {
+  return ids.generate.call(context);
+}
+
+// *********************
+
+safer_generate({ prefix: &quot;foo&quot; });
+// &quot;foo0.8988802158307285&quot;
+</code></pre>
+<p>These strategies are in no way fool-proof; the safest protection against side
+causes/effects is to not do them. But if you're trying to improve the
+readability and confidence level of your program, reducing the side
+causes/effects wherever possible is a huge step forward.</p>
+<p>Essentially, we're not really eliminating side causes/effects, but rather
+containing and limiting them, so that more of our code is verifiable and
+reliable. If we later run into program bugs, we know that the parts of our code
+still using side causes/effects are the most likely culprits.</p>
+<h2><a class="header" href="#summary" id="summary">Summary</a></h2>
+<p>Side effects are harmful to code readability and quality because they make your
+code much harder to understand. Side effects are also one of the most common
+<em>causes</em> of bugs in programs, because juggling them is hard. Idempotence is a
+strategy for restricting side effects by essentially creating one-time-only
+operations.</p>
+<p>Pure functions are how we best avoid side effects. A pure function is one that
+always returns the same output given the same input, and has no side causes or
+side effects. Referential transparency further states that -- more as a mental
+exercise than a literal action -- a pure function's call could be replaced with
+its output and the program would not have altered behavior.</p>
+<p>Refactoring an impure function to be pure is the preferred option. But if that's
+not possible, try encapsulating the side causes/effects, or creating a pure
+interface against them.</p>
+<p>No program can be entirely free of side effects. But prefer pure functions in as
+many places as that's practical. Collect impure functions side effects together
+as much as possible, so that it's easier to identify and audit these most likely
+culprits of bugs when they arise.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="chapter_4.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="chapter_6.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="chapter_4.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="chapter_6.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

@@ -1,0 +1,857 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Appendix A: Transducing - Functional-Light JavaScript</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="foreword.html"><strong aria-hidden="true">1.</strong> Foreword</a></li><li class="expanded "><a href="preface.html"><strong aria-hidden="true">2.</strong> Preface</a></li><li class="expanded "><a href="chapter_1.html"><strong aria-hidden="true">3.</strong> Chapter 1</a></li><li class="expanded "><a href="chapter_2.html"><strong aria-hidden="true">4.</strong> Chapter 2</a></li><li class="expanded "><a href="chapter_3.html"><strong aria-hidden="true">5.</strong> Chapter 3</a></li><li class="expanded "><a href="chapter_4.html"><strong aria-hidden="true">6.</strong> Chapter 4</a></li><li class="expanded "><a href="chapter_5.html"><strong aria-hidden="true">7.</strong> Chapter 5</a></li><li class="expanded "><a href="chapter_6.html"><strong aria-hidden="true">8.</strong> Chapter 6</a></li><li class="expanded "><a href="chapter_7.html"><strong aria-hidden="true">9.</strong> Chapter 7</a></li><li class="expanded "><a href="chapter_8.html"><strong aria-hidden="true">10.</strong> Chapter 8</a></li><li class="expanded "><a href="chapter_9.html"><strong aria-hidden="true">11.</strong> Chapter 9</a></li><li class="expanded "><a href="chapter_10.html"><strong aria-hidden="true">12.</strong> Chapter 10</a></li><li class="expanded "><a href="chapter_11.html"><strong aria-hidden="true">13.</strong> Chapter 11</a></li><li class="expanded "><a href="apA.html" class="active"><strong aria-hidden="true">14.</strong> Appendix A: Transducing</a></li><li class="expanded "><a href="apB.html"><strong aria-hidden="true">15.</strong> Appendix B: The Humble Monad</a></li><li class="expanded "><a href="apC.html"><strong aria-hidden="true">16.</strong> Appendix C: FP Libraries</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Functional-Light JavaScript</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#functional-light-javascript" id="functional-light-javascript">Functional-Light JavaScript</a></h1>
+<h1><a class="header" href="#appendix-a-transducing" id="appendix-a-transducing">Appendix A: Transducing</a></h1>
+<p>Transducing is a more advanced technique than we've covered in this book. It
+extends many of the concepts from <a href="chapter_9.html">Chapter 9</a> on list operations.</p>
+<p>I wouldn't necessarily call this topic strictly &quot;Functional-Light&quot;, but more
+like a bonus on top. I've presented this as an appendix because you might very
+well need to skip the discussion for now and come back to it once you feel
+fairly comfortable with -- and make sure you've practiced! -- the main book
+concepts.</p>
+<p>To be honest, even after teaching transducing many times, and writing this
+chapter, I am still trying to fully wrap my brain around this technique. So
+don't feel bad if it twists you up. Bookmark this appendix and come back when
+you're ready.</p>
+<p>Transducing means transforming with reduction.</p>
+<p>I know that may sound like a jumble of words that confuses more than it
+clarifies. But let's take a look at how powerful it can be. I actually think
+it's one of the best illustrations of what you can do once you grasp the
+principles of Functional-Light Programming.</p>
+<p>As with the rest of this book, my approach is to first explain <em>why</em>, then
+<em>how</em>, then finally boil it down to a simplified, repeatable <em>what</em>. That's
+often the reverse of how many teach, but I think you'll learn the topic more
+deeply this way.</p>
+<h2><a class="header" href="#why-first" id="why-first">Why, First</a></h2>
+<p>Let's start by extending a
+<a href="chapter_3.html">scenario we covered back in Chapter 3</a>,
+testing words to see if they're short enough and/or long enough:</p>
+<pre><code class="language-js">function isLongEnough(str) {
+  return str.length &gt;= 5;
+}
+
+function isShortEnough(str) {
+  return str.length &lt;= 10;
+}
+</code></pre>
+<p>In
+<a href="chapter_3.html">Chapter 3, we used these predicate functions</a>
+to test a single word. Then in Chapter 9, we learned how to repeat such tests
+<a href="chapter_9.html">using list operations like <code>filter(..)</code></a>. For example:</p>
+<pre><code class="language-js">var words = [&quot;You&quot;, &quot;have&quot;, &quot;written&quot;, &quot;something&quot;, &quot;very&quot;, &quot;interesting&quot;];
+
+words.filter(isLongEnough).filter(isShortEnough);
+// [&quot;written&quot;,&quot;something&quot;]
+</code></pre>
+<p>It may not be obvious, but this pattern of separate adjacent list operations has
+some non-ideal characteristics. When we're dealing with only a single array of a
+small number of values, everything is fine. But if there were lots of values in
+the array, each <code>filter(..)</code> processing the list separately can slow down a bit
+more than we'd like.</p>
+<p>A similar performance problem arises when our arrays are async/lazy (aka
+Observables), processing values over time in response to events (see
+<a href="chapter_10.html">Chapter 10</a>). In this scenario, only a single value comes down
+the event stream at a time, so processing that discrete value with two separate
+<code>filter(..)</code>s function calls isn't really such a big deal.</p>
+<p>But what's not obvious is that each <code>filter(..)</code> method produces a separate
+observable. The overhead of pumping a value out of one observable into another
+can really add up. That's especially true since in these cases, it's not
+uncommon for thousands or millions of values to be processed; even such small
+overhead costs add up quickly.</p>
+<p>The other downside is readability, especially when we need to repeat the same
+series of operations against multiple lists (or Observables). For example:</p>
+<pre><code class="language-js">zip(
+  list1.filter(isLongEnough).filter(isShortEnough),
+  list2.filter(isLongEnough).filter(isShortEnough),
+  list3.filter(isLongEnough).filter(isShortEnough)
+);
+</code></pre>
+<p>Repetitive, right?</p>
+<p>Wouldn't it be better (both for readability and performance) if we could combine
+the <code>isLongEnough(..)</code> predicate with the <code>isShortEnough(..)</code> predicate? You
+could do so manually:</p>
+<pre><code class="language-js">function isCorrectLength(str) {
+  return isLongEnough(str) &amp;&amp; isShortEnough(str);
+}
+</code></pre>
+<p>But that's not the FP way!</p>
+<p>In <a href="chapter_9.html">Chapter 9, we talked about fusion</a> -- composing
+adjacent mapping functions. Recall:</p>
+<pre><code class="language-js">words.map(pipe(removeInvalidChars, upper, elide));
+</code></pre>
+<p>Unfortunately, combining adjacent predicate functions doesn't work as easily as
+combining adjacent mapping functions. To understand why, think about the &quot;shape&quot;
+of the predicate function -- a sort of academic way of describing the signature
+of inputs and output. It takes a single value in, and it returns a <code>true</code> or a
+<code>false</code>.</p>
+<p>If you tried <code>isShortEnough(isLongEnough(str))</code>, it wouldn't work properly.
+<code>isLongEnough(..)</code> will return <code>true</code>/<code>false</code>, not the string value that
+<code>isShortEnough(..)</code> is expecting. Bummer.</p>
+<p>A similar frustration exists trying to compose two adjacent reducer functions.
+The &quot;shape&quot; of a reducer is a function that receives two values as input, and
+returns a single combined value. The output of a reducer as a single value is
+not suitable for input to another reducer expecting two inputs.</p>
+<p>Moreover, the <code>reduce(..)</code> helper takes an optional <code>initialValue</code> input.
+Sometimes this can be omitted, but sometimes it has to be passed in. That even
+further complicates composition, since one reduction might need one
+<code>initialValue</code> and the other reduction might seem like it needs a different
+<code>initialValue</code>. How can we possibly do that if we only make one <code>reduce(..)</code>
+call with some sort of composed reducer?</p>
+<p>Consider a chain like this:</p>
+<pre><code class="language-js">words
+  .map(strUppercase)
+  .filter(isLongEnough)
+  .filter(isShortEnough)
+  .reduce(strConcat, &quot;&quot;);
+// &quot;WRITTENSOMETHING&quot;
+</code></pre>
+<p>Can you envision a composition that includes all of these steps:
+<code>map(strUppercase)</code>, <code>filter(isLongEnough)</code>, <code>filter(isShortEnough)</code>,
+<code>reduce(strConcat)</code>? The shape of each operator is different, so they won't
+directly compose together. We need to bend their shapes a little bit to fit them
+together.</p>
+<p>Hopefully these observations have illustrated why simple fusion-style
+composition isn't up to the task. We need a more powerful technique, and
+transducing is that tool.</p>
+<h2><a class="header" href="#how-next" id="how-next">How, Next</a></h2>
+<p>Let's talk about how we might derive a composition of mappers, predicates,
+and/or reducers.</p>
+<p>Don't get too overwhelmed: you won't have to go through all these mental steps
+we're about to explore in your own programming. Once you understand and can
+recognize the problem transducing solves, you'll be able to just jump straight
+to using a <code>transduce(..)</code> utility from a FP library and move on with the rest
+of your application!</p>
+<p>Let's jump in.</p>
+<h3><a class="header" href="#expressing-mapfilter-as-reduce" id="expressing-mapfilter-as-reduce">Expressing Map/Filter as Reduce</a></h3>
+<p>The first trick we need to perform is expressing our <code>filter(..)</code> and <code>map(..)</code>
+calls as <code>reduce(..)</code> calls. Recall
+<a href="chapter_9.html">how we did that in Chapter 9</a>:</p>
+<pre><code class="language-js">function strUppercase(str) {
+  return str.toUpperCase();
+}
+function strConcat(str1, str2) {
+  return str1 + str2;
+}
+
+function strUppercaseReducer(list, str) {
+  list.push(strUppercase(str));
+  return list;
+}
+
+function isLongEnoughReducer(list, str) {
+  if (isLongEnough(str)) list.push(str);
+  return list;
+}
+
+function isShortEnoughReducer(list, str) {
+  if (isShortEnough(str)) list.push(str);
+  return list;
+}
+
+words
+  .reduce(strUppercaseReducer, [])
+  .reduce(isLongEnoughReducer, [])
+  .reduce(isShortEnoughReducer, [])
+  .reduce(strConcat, &quot;&quot;);
+// &quot;WRITTENSOMETHING&quot;
+</code></pre>
+<p>That's a decent improvement. We now have four adjacent <code>reduce(..)</code> calls
+instead of a mixture of three different methods all with different shapes. We
+still can't just <code>compose(..)</code> those four reducers, however, because they accept
+two arguments instead of one.</p>
+<p><a name="cheating"></a></p>
+<p>In <a href="chapter_9.html">Chapter 9, we sort of cheated</a>
+and used <code>list.push(..)</code> to mutate as a side effect rather than creating a whole
+new array to concatenate onto. Let's step back and be a bit more formal for now:</p>
+<pre><code class="language-js">function strUppercaseReducer(list, str) {
+  return [...list, strUppercase(str)];
+}
+
+function isLongEnoughReducer(list, str) {
+  if (isLongEnough(str)) return [...list, str];
+  return list;
+}
+
+function isShortEnoughReducer(list, str) {
+  if (isShortEnough(str)) return [...list, str];
+  return list;
+}
+</code></pre>
+<p>Later, we'll revisit whether creating a new array (e.g., <code>[...list,str]</code>) to
+concatenate onto is necessary here or not.</p>
+<h3><a class="header" href="#parameterizing-the-reducers" id="parameterizing-the-reducers">Parameterizing the Reducers</a></h3>
+<p>Both filter reducers are almost identical, except they use a different predicate
+function. Let's parameterize that so we get one utility that can define any
+filter-reducer:</p>
+<pre><code class="language-js">function filterReducer(predicateFn) {
+  return function reducer(list, val) {
+    if (predicateFn(val)) return [...list, val];
+    return list;
+  };
+}
+
+var isLongEnoughReducer = filterReducer(isLongEnough);
+var isShortEnoughReducer = filterReducer(isShortEnough);
+</code></pre>
+<p>Let's do the same parameterization of the <code>mapperFn(..)</code> for a utility to
+produce any map-reducer:</p>
+<pre><code class="language-js">function mapReducer(mapperFn) {
+  return function reducer(list, val) {
+    return [...list, mapperFn(val)];
+  };
+}
+
+var strToUppercaseReducer = mapReducer(strUppercase);
+</code></pre>
+<p>Our chain still looks the same:</p>
+<pre><code class="language-js">words
+  .reduce(strUppercaseReducer, [])
+  .reduce(isLongEnoughReducer, [])
+  .reduce(isShortEnoughReducer, [])
+  .reduce(strConcat, &quot;&quot;);
+</code></pre>
+<h3><a class="header" href="#extracting-common-combination-logic" id="extracting-common-combination-logic">Extracting Common Combination Logic</a></h3>
+<p>Look very closely at the preceding <code>mapReducer(..)</code> and <code>filterReducer(..)</code>
+functions. Do you spot the common functionality shared in each?</p>
+<p>This part:</p>
+<pre><code class="language-js">return [ ...list, .. ];
+
+// or
+return list;
+</code></pre>
+<p>Let's define a helper for that common logic. But what shall we call it?</p>
+<pre><code class="language-js">function WHATSITCALLED(list, val) {
+  return [...list, val];
+}
+</code></pre>
+<p>If you examine what that <code>WHATSITCALLED(..)</code> function does, it takes two values
+(an array and another value) and it &quot;combines&quot; them by creating a new array and
+concatenating the value onto the end of it. Very uncreatively, we could name
+this <code>listCombine(..)</code>:</p>
+<pre><code class="language-js">function listCombine(list, val) {
+  return [...list, val];
+}
+</code></pre>
+<p>Let's now re-define our reducer helpers to use <code>listCombine(..)</code>:</p>
+<pre><code class="language-js">function mapReducer(mapperFn) {
+  return function reducer(list, val) {
+    return listCombine(list, mapperFn(val));
+  };
+}
+
+function filterReducer(predicateFn) {
+  return function reducer(list, val) {
+    if (predicateFn(val)) return listCombine(list, val);
+    return list;
+  };
+}
+</code></pre>
+<p>Our chain still looks the same (so we won't repeat it).</p>
+<h3><a class="header" href="#parameterizing-the-combination" id="parameterizing-the-combination">Parameterizing the Combination</a></h3>
+<p>Our simple <code>listCombine(..)</code> utility is only one possible way that we might
+combine two values. Let's parameterize the use of it to make our reducers more
+generalized:</p>
+<pre><code class="language-js">function mapReducer(mapperFn, combinerFn) {
+  return function reducer(list, val) {
+    return combinerFn(list, mapperFn(val));
+  };
+}
+
+function filterReducer(predicateFn, combinerFn) {
+  return function reducer(list, val) {
+    if (predicateFn(val)) return combinerFn(list, val);
+    return list;
+  };
+}
+</code></pre>
+<p>To use this form of our helpers:</p>
+<pre><code class="language-js">var strToUppercaseReducer = mapReducer(strUppercase, listCombine);
+var isLongEnoughReducer = filterReducer(isLongEnough, listCombine);
+var isShortEnoughReducer = filterReducer(isShortEnough, listCombine);
+</code></pre>
+<p>Defining these utilities to take two arguments instead of one is less convenient
+for composition, so let's use our <code>curry(..)</code> approach:</p>
+<pre><code class="language-js">var curriedMapReducer = curry(function mapReducer(mapperFn, combinerFn) {
+  return function reducer(list, val) {
+    return combinerFn(list, mapperFn(val));
+  };
+});
+
+var curriedFilterReducer = curry(function filterReducer(
+  predicateFn,
+  combinerFn
+) {
+  return function reducer(list, val) {
+    if (predicateFn(val)) return combinerFn(list, val);
+    return list;
+  };
+});
+
+var strToUppercaseReducer = curriedMapReducer(strUppercase)(listCombine);
+var isLongEnoughReducer = curriedFilterReducer(isLongEnough)(listCombine);
+var isShortEnoughReducer = curriedFilterReducer(isShortEnough)(listCombine);
+</code></pre>
+<p>That looks a bit more verbose, and probably doesn't seem very useful.</p>
+<p>But this is actually necessary to get to the next step of our derivation.
+Remember, our ultimate goal here is to be able to <code>compose(..)</code> these reducers.
+We're almost there.</p>
+<h3><a class="header" href="#composing-curried" id="composing-curried">Composing Curried</a></h3>
+<p>This step is the trickiest of all to visualize. So read slowly and pay close
+attention here.</p>
+<p>Let's consider the curried functions from earlier, but without the
+<code>listCombine(..)</code> function having been passed in to each:</p>
+<pre><code class="language-js">var x = curriedMapReducer(strUppercase);
+var y = curriedFilterReducer(isLongEnough);
+var z = curriedFilterReducer(isShortEnough);
+</code></pre>
+<p>Think about the shape of all three of these intermediate functions, <code>x(..)</code>,
+<code>y(..)</code>, and <code>z(..)</code>. Each one expects a single combination function, and
+produces a reducer function with it.</p>
+<p>Remember, if we wanted the independent reducers from all these, we could do:</p>
+<pre><code class="language-js">var upperReducer = x(listCombine);
+var longEnoughReducer = y(listCombine);
+var shortEnoughReducer = z(listCombine);
+</code></pre>
+<p>But what would you get back if you called <code>y(z)</code>, instead of <code>y(listCombine)</code>?
+Basically, what happens when passing <code>z</code> in as the <code>combinerFn(..)</code> for the
+<code>y(..)</code> call? That returned reducer function internally looks kinda like this:</p>
+<pre><code class="language-js">function reducer(list, val) {
+  if (isLongEnough(val)) return z(list, val);
+  return list;
+}
+</code></pre>
+<p>See the <code>z(..)</code> call inside? That should look wrong to you, because the <code>z(..)</code>
+function is supposed to receive only a single argument (a <code>combinerFn(..)</code>), not
+two arguments (<code>list</code> and <code>val</code>). The shapes don't match. That won't work.</p>
+<p>Let's instead look at the composition <code>y(z(listCombine))</code>. We'll break that down
+into two separate steps:</p>
+<pre><code class="language-js">var shortEnoughReducer = z(listCombine);
+var longAndShortEnoughReducer = y(shortEnoughReducer);
+</code></pre>
+<p>We create <code>shortEnoughReducer(..)</code>, then we pass <em>it</em> in as the <code>combinerFn(..)</code>
+to <code>y(..)</code> instead of calling <code>y(listCombine)</code>; this new call produces
+<code>longAndShortEnoughReducer(..)</code>. Re-read that a few times until it clicks.</p>
+<p>Now consider: what do <code>shortEnoughReducer(..)</code> and
+<code>longAndShortEnoughReducer(..)</code> look like internally? Can you see them in your
+mind?</p>
+<pre><code class="language-js">// shortEnoughReducer, from calling z(..):
+function reducer(list, val) {
+  if (isShortEnough(val)) return listCombine(list, val);
+  return list;
+}
+
+// longAndShortEnoughReducer, from calling y(..):
+function reducer(list, val) {
+  if (isLongEnough(val)) return shortEnoughReducer(list, val);
+  return list;
+}
+</code></pre>
+<p>Do you see how <code>shortEnoughReducer(..)</code> has taken the place of <code>listCombine(..)</code>
+inside <code>longAndShortEnoughReducer(..)</code>? Why does that work?</p>
+<p>Because <strong>the shape of a <code>reducer(..)</code> and the shape of <code>listCombine(..)</code> are
+the same.</strong> In other words, a reducer can be used as a combination function for
+another reducer; that's how they compose! The <code>listCombine(..)</code> function makes
+the first reducer, then <em>that reducer</em> can be used as the combination function
+to make the next reducer, and so on.</p>
+<p>Let's test out our <code>longAndShortEnoughReducer(..)</code> with a few different values:</p>
+<pre><code class="language-js">longAndShortEnoughReducer([], &quot;nope&quot;);
+// []
+
+longAndShortEnoughReducer([], &quot;hello&quot;);
+// [&quot;hello&quot;]
+
+longAndShortEnoughReducer([], &quot;hello world&quot;);
+// []
+</code></pre>
+<p>The <code>longAndShortEnoughReducer(..)</code> utility is filtering out both values that
+are not long enough and values that are not short enough, and it's doing both
+these filterings in the same step. It's a composed reducer!</p>
+<p>Take another moment to let that sink in. It still kinda blows my mind.</p>
+<p>Now, to bring <code>x(..)</code> (the uppercase reducer producer) into the composition:</p>
+<pre><code class="language-js">var longAndShortEnoughReducer = y(z(listCombine));
+var upperLongAndShortEnoughReducer = x(longAndShortEnoughReducer);
+</code></pre>
+<p>As the name <code>upperLongAndShortEnoughReducer(..)</code> implies, it does all three
+steps at once -- a mapping and two filters! What it kinda look likes internally:</p>
+<pre><code class="language-js">// upperLongAndShortEnoughReducer:
+function reducer(list, val) {
+  return longAndShortEnoughReducer(list, strUppercase(val));
+}
+</code></pre>
+<p>A string <code>val</code> is passed in, uppercased by <code>strUppercase(..)</code> and then passed
+along to <code>longAndShortEnoughReducer(..)</code>. <em>That</em> function only conditionally
+adds this uppercased string to the <code>list</code> if it's both long enough and short
+enough. Otherwise, <code>list</code> will remain unchanged.</p>
+<p>It took my brain weeks to fully understand the implications of that juggling. So
+don't worry if you need to stop here and re-read a few (dozen!) times to get it.
+Take your time.</p>
+<p>Now let's verify:</p>
+<pre><code class="language-js">upperLongAndShortEnoughReducer([], &quot;nope&quot;);
+// []
+
+upperLongAndShortEnoughReducer([], &quot;hello&quot;);
+// [&quot;HELLO&quot;]
+
+upperLongAndShortEnoughReducer([], &quot;hello world&quot;);
+// []
+</code></pre>
+<p>This reducer is the composition of the map and both filters! That's amazing!</p>
+<p>Let's recap where we're at so far:</p>
+<pre><code class="language-js">var x = curriedMapReducer(strUppercase);
+var y = curriedFilterReducer(isLongEnough);
+var z = curriedFilterReducer(isShortEnough);
+
+var upperLongAndShortEnoughReducer = x(y(z(listCombine)));
+
+words.reduce(upperLongAndShortEnoughReducer, []);
+// [&quot;WRITTEN&quot;,&quot;SOMETHING&quot;]
+</code></pre>
+<p>That's pretty cool. But let's make it even better.</p>
+<p><code>x(y(z( .. )))</code> is a composition. Let's skip the intermediate <code>x</code> / <code>y</code> / <code>z</code>
+variable names, and just express that composition directly:</p>
+<pre><code class="language-js">var composition = compose(
+  curriedMapReducer(strUppercase),
+  curriedFilterReducer(isLongEnough),
+  curriedFilterReducer(isShortEnough)
+);
+
+var upperLongAndShortEnoughReducer = composition(listCombine);
+
+words.reduce(upperLongAndShortEnoughReducer, []);
+// [&quot;WRITTEN&quot;,&quot;SOMETHING&quot;]
+</code></pre>
+<p>Think about the flow of &quot;data&quot; in that composed function:</p>
+<ol>
+<li><code>listCombine(..)</code> flows in as the combination function to make the
+filter-reducer for <code>isShortEnough(..)</code>.</li>
+<li><em>That</em> resulting reducer function then flows in as the combination function
+to make the filter-reducer for <code>isLongEnough(..)</code>.</li>
+<li>Finally, <em>that</em> resulting reducer function flows in as the combination
+function to make the map-reducer for <code>strUppercase(..)</code>.</li>
+</ol>
+<p>In the previous snippet, <code>composition(..)</code> is a composed function expecting a
+combination function to make a reducer; <code>composition(..)</code> here has a special
+name: transducer. Providing the combination function to a transducer produces
+the composed reducer:</p>
+<pre><code class="language-js">var transducer = compose(
+  curriedMapReducer(strUppercase),
+  curriedFilterReducer(isLongEnough),
+  curriedFilterReducer(isShortEnough)
+);
+
+words.reduce(transducer(listCombine), []);
+// [&quot;WRITTEN&quot;,&quot;SOMETHING&quot;]
+</code></pre>
+<p><strong>Note:</strong> We should make an observation about the <code>compose(..)</code> order in the
+previous two snippets, which may be confusing. Recall that in our original
+example chain, we <code>map(strUppercase)</code> and then <code>filter(isLongEnough)</code> and
+finally <code>filter(isShortEnough)</code>; those operations indeed happen in that order.
+But in <a href="chapter_4.html">Chapter 4</a>, we learned that
+<code>compose(..)</code> typically has the effect of running its functions in reverse order
+of listing. So why don't we need to reverse the order <em>here</em> to get the same
+desired outcome? The abstraction of the <code>combinerFn(..)</code> from each reducer
+reverses the effective applied order of operations under the hood. So
+counter-intuitively, when composing a transducer, you actually want to list them
+in desired order of execution!</p>
+<h4><a class="header" href="#list-combination-pure-vs-impure" id="list-combination-pure-vs-impure">List Combination: Pure vs. Impure</a></h4>
+<p>As a quick aside, let's revisit our <code>listCombine(..)</code> combination function
+implementation:</p>
+<pre><code class="language-js">function listCombine(list, val) {
+  return [...list, val];
+}
+</code></pre>
+<p>While this approach is pure, it has negative consequences for performance: for
+each step in the reduction, we're creating a whole new array to append the value
+onto, effectively throwing away the previous array. That's a lot of arrays being
+created and thrown away, which is not only bad for CPU but also GC memory churn.</p>
+<p>By contrast, look again at the better-performing but impure version:</p>
+<pre><code class="language-js">function listCombine(list, val) {
+  list.push(val);
+  return list;
+}
+</code></pre>
+<p>Thinking about <code>listCombine(..)</code> in isolation, there's no question it's impure
+and that's usually something we'd want to avoid. However, there's a bigger
+context we should consider.</p>
+<p><code>listCombine(..)</code> is not a function we interact with at all. We don't directly
+use it anywhere in the program; instead, we let the transducing process use it.</p>
+<p>Back in <a href="chapter_5.html">Chapter 5</a>, we asserted that our goal with reducing side
+effects and defining pure functions was only that we expose pure functions to
+the API level of functions we'll use throughout our program. We observed that
+under the covers, inside a pure function, it can cheat for performance sake all
+it wants, as long as it doesn't violate the external contract of purity.</p>
+<p><code>listCombine(..)</code> is more an internal implementation detail of the transducing
+-- in fact, it'll often be provided by the transducing library for you! --
+rather than a top-level method you'd interact with on a normal basis throughout
+your program.</p>
+<p>Bottom line: I think it's perfectly acceptable, and advisable even, to use the
+performance-optimal impure version of <code>listCombine(..)</code>. Just make sure you
+document that it's impure with a code comment!</p>
+<h3><a class="header" href="#alternative-combination" id="alternative-combination">Alternative Combination</a></h3>
+<p>So far, this is what we've derived with transducing:</p>
+<pre><code class="language-js">words.reduce(transducer(listCombine), []).reduce(strConcat, &quot;&quot;);
+// WRITTENSOMETHING
+</code></pre>
+<p>That's pretty good, but we have one final trick up our sleeve with transducing.
+And frankly, I think this part is what makes all this mental effort you've
+expended thus far, actually worth it.</p>
+<p>Can we somehow &quot;compose&quot; these two <code>reduce(..)</code> calls to get it down to just one
+<code>reduce(..)</code>? Unfortunately, we can't just add <code>strConcat(..)</code> into the
+<code>compose(..)</code> call; because it's a reducer and not a combination-expecting
+function, its shape is not correct for the composition.</p>
+<p>But let's look at these two functions side by side:</p>
+<pre><code class="language-js">function strConcat(str1, str2) {
+  return str1 + str2;
+}
+
+function listCombine(list, val) {
+  list.push(val);
+  return list;
+}
+</code></pre>
+<p>If you squint your eyes, you can almost see how these two functions are
+interchangeable. They operate with different data types, but conceptually they
+do the same thing: combine two values into one.</p>
+<p>In other words, <code>strConcat(..)</code> is a combination function!</p>
+<p>That means we can use <em>it</em> instead of <code>listCombine(..)</code> if our end goal is to
+get a string concatenation rather than a list:</p>
+<pre><code class="language-js">words.reduce(transducer(strConcat), &quot;&quot;);
+// WRITTENSOMETHING
+</code></pre>
+<p>Boom! That's transducing for you. I won't actually drop the mic here, but just
+gently set it down...</p>
+<h2><a class="header" href="#what-finally" id="what-finally">What, Finally</a></h2>
+<p>Take a deep breath. That was a lot to digest.</p>
+<p>Clearing our brains for a minute, let's turn our attention back to just using
+transducing in our applications without jumping through all those mental hoops
+to derive how it works.</p>
+<p>Recall the helpers we defined earlier; let's rename them for clarity:</p>
+<pre><code class="language-js">var transduceMap = curry(function mapReducer(mapperFn, combinerFn) {
+  return function reducer(list, v) {
+    return combinerFn(list, mapperFn(v));
+  };
+});
+
+var transduceFilter = curry(function filterReducer(predicateFn, combinerFn) {
+  return function reducer(list, v) {
+    if (predicateFn(v)) return combinerFn(list, v);
+    return list;
+  };
+});
+</code></pre>
+<p>Also recall that we use them like this:</p>
+<pre><code class="language-js">var transducer = compose(
+  transduceMap(strUppercase),
+  transduceFilter(isLongEnough),
+  transduceFilter(isShortEnough)
+);
+</code></pre>
+<p><code>transducer(..)</code> still needs a combination function (like <code>listCombine(..)</code> or
+<code>strConcat(..)</code>) passed to it to produce a transduce-reducer function, which can
+then be used (along with an initial value) in <code>reduce(..)</code>.</p>
+<p>But to express all these transducing steps more declaratively, let's make a
+<code>transduce(..)</code> utility that does these steps for us:</p>
+<pre><code class="language-js">function transduce(transducer, combinerFn, initialValue, list) {
+  var reducer = transducer(combinerFn);
+  return list.reduce(reducer, initialValue);
+}
+</code></pre>
+<p>Here's our running example, cleaned up:</p>
+<pre><code class="language-js">var transducer = compose(
+  transduceMap(strUppercase),
+  transduceFilter(isLongEnough),
+  transduceFilter(isShortEnough)
+);
+
+transduce(transducer, listCombine, [], words);
+// [&quot;WRITTEN&quot;,&quot;SOMETHING&quot;]
+
+transduce(transducer, strConcat, &quot;&quot;, words);
+// WRITTENSOMETHING
+</code></pre>
+<p>Not bad, huh!? See the <code>listCombine(..)</code> and <code>strConcat(..)</code> functions used
+interchangeably as combination functions?</p>
+<h3><a class="header" href="#transducersjs" id="transducersjs">Transducers.js</a></h3>
+<p>Finally, let's illustrate our running example using the
+<a href="https://github.com/cognitect-labs/transducers-js"><code>transducers-js</code> library</a>:</p>
+<pre><code class="language-js">var transformer = transducers.comp(
+  transducers.map(strUppercase),
+  transducers.filter(isLongEnough),
+  transducers.filter(isShortEnough)
+);
+
+transducers.transduce(transformer, listCombine, [], words);
+// [&quot;WRITTEN&quot;,&quot;SOMETHING&quot;]
+
+transducers.transduce(transformer, strConcat, &quot;&quot;, words);
+// WRITTENSOMETHING
+</code></pre>
+<p>Looks almost identical to above.</p>
+<p><strong>Note:</strong> The preceding snippet uses <code>transformers.comp(..)</code> because the library
+provides it, but in this case our
+<a href="chapter_4.html"><code>compose(..)</code> from Chapter 4</a> would
+produce the same outcome. In other words, composition itself isn't a
+transducing-sensitive operation.</p>
+<p>The composed function in this snippet is named <code>transformer</code> instead of
+<code>transducer</code>. That's because if we call <code>transformer( listCombine )</code> (or
+<code>transformer( strConcat )</code>), we won't get a straight-up transduce-reducer
+function as earlier.</p>
+<p><code>transducers.map(..)</code> and <code>transducers.filter(..)</code> are special helpers that
+adapt regular predicate or mapper functions into functions that produce a
+special transform object (with the transducer function wrapped underneath); the
+library uses these transform objects for transducing. The extra capabilities of
+this transform object abstraction are beyond what we'll explore, so consult the
+library's documentation for more information.</p>
+<p>Because calling <code>transformer(..)</code> produces a transform object and not a typical
+binary transduce-reducer function, the library also provides <code>toFn(..)</code> to adapt
+the transform object to be useable by native array <code>reduce(..)</code>:</p>
+<pre><code class="language-js">words.reduce(transducers.toFn(transformer, strConcat), &quot;&quot;);
+// WRITTENSOMETHING
+</code></pre>
+<p><code>into(..)</code> is another provided helper that automatically selects a default
+combination function based on the type of empty/initial value specified:</p>
+<pre><code class="language-js">transducers.into([], transformer, words);
+// [&quot;WRITTEN&quot;,&quot;SOMETHING&quot;]
+
+transducers.into(&quot;&quot;, transformer, words);
+// WRITTENSOMETHING
+</code></pre>
+<p>When specifying an empty <code>[]</code> array, the <code>transduce(..)</code> called under the covers
+uses a default implementation of a function like our <code>listCombine(..)</code> helper.
+But when specifying an empty <code>&quot;&quot;</code> string, something like our <code>strConcat(..)</code> is
+used. Cool!</p>
+<p>As you can see, the <code>transducers-js</code> library makes transducing pretty
+straightforward. We can very effectively leverage the power of this technique
+without getting into the weeds of defining all those intermediate
+transducer-producing utilities ourselves.</p>
+<h2><a class="header" href="#summary" id="summary">Summary</a></h2>
+<p>To transduce means to transform with a reduce. More specifically, a transducer
+is a composable reducer.</p>
+<p>We use transducing to compose adjacent <code>map(..)</code>, <code>filter(..)</code>, and <code>reduce(..)</code>
+operations together. We accomplish this by first expressing <code>map(..)</code>s and
+<code>filter(..)</code>s as <code>reduce(..)</code>s, and then abstracting out the common combination
+operation to create unary reducer-producing functions that are easily composed.</p>
+<p>Transducing primarily improves performance, which is especially obvious if used
+on an observable.</p>
+<p>But more broadly, transducing is how we express a more declarative composition
+of functions that would otherwise not be directly composable. The result, if
+used appropriately as with all other techniques in this book, is clearer, more
+readable code! A single <code>reduce(..)</code> call with a transducer is easier to reason
+about than tracing through multiple <code>reduce(..)</code> calls.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="chapter_11.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="apB.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="chapter_11.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="apB.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Chapter 1 - Functional-Light JavaScript</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="foreword.html"><strong aria-hidden="true">1.</strong> Foreword</a></li><li class="expanded "><a href="preface.html"><strong aria-hidden="true">2.</strong> Preface</a></li><li class="expanded "><a href="chapter_1.html" class="active"><strong aria-hidden="true">3.</strong> Chapter 1</a></li><li class="expanded "><a href="chapter_2.html"><strong aria-hidden="true">4.</strong> Chapter 2</a></li><li class="expanded "><a href="chapter_3.html"><strong aria-hidden="true">5.</strong> Chapter 3</a></li><li class="expanded "><a href="chapter_4.html"><strong aria-hidden="true">6.</strong> Chapter 4</a></li><li class="expanded "><a href="chapter_5.html"><strong aria-hidden="true">7.</strong> Chapter 5</a></li><li class="expanded "><a href="chapter_6.html"><strong aria-hidden="true">8.</strong> Chapter 6</a></li><li class="expanded "><a href="chapter_7.html"><strong aria-hidden="true">9.</strong> Chapter 7</a></li><li class="expanded "><a href="chapter_8.html"><strong aria-hidden="true">10.</strong> Chapter 8</a></li><li class="expanded "><a href="chapter_9.html"><strong aria-hidden="true">11.</strong> Chapter 9</a></li><li class="expanded "><a href="chapter_10.html"><strong aria-hidden="true">12.</strong> Chapter 10</a></li><li class="expanded "><a href="chapter_11.html"><strong aria-hidden="true">13.</strong> Chapter 11</a></li><li class="expanded "><a href="apA.html"><strong aria-hidden="true">14.</strong> Appendix A: Transducing</a></li><li class="expanded "><a href="apB.html"><strong aria-hidden="true">15.</strong> Appendix B: The Humble Monad</a></li><li class="expanded "><a href="apC.html"><strong aria-hidden="true">16.</strong> Appendix C: FP Libraries</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Functional-Light JavaScript</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#functional-light-javascript" id="functional-light-javascript">Functional-Light JavaScript</a></h1>
+<h1><a class="header" href="#chapter-1-why-functional-programming" id="chapter-1-why-functional-programming">Chapter 1: Why Functional Programming?</a></h1>
+<blockquote>
+<p>Functional programmer: (noun) One who names variables &quot;x&quot;, names functions
+&quot;f&quot;, and names code patterns &quot;zygohistomorphic prepromorphism&quot;</p>
+<p>James Iry @jamesiry 5/13/15</p>
+<p>https://twitter.com/jamesiry/status/598547781515485184</p>
+</blockquote>
+<p>Functional Programming (FP) is not a new concept by any means. It's been around
+almost the entire history of programming. However, and I'm not sure it's fair to
+say, but... it sure hasn't seemed like as mainstream of a concept in the overall
+developer world until perhaps the last few years. I think FP has more been the
+realm of academics.</p>
+<p>That's all changing, though. A groundswell of interest is growing around FP, not
+just at the languages level but even in libraries and frameworks. You very well
+might be reading this text because you've finally realized FP is something you
+can't ignore any longer. Or maybe you're like me and you've tried to learn FP
+many times before but struggled to wade through all the terms or mathematical
+notation.</p>
+<p>This first chapter's purpose is to answer questions like &quot;Why should I use FP
+style with my code?&quot; and &quot;How does Functional-Light JavaScript compare to what
+others say about FP?&quot; After we've laid that groundwork, throughout the rest of
+the book we'll uncover, piece by piece, the techniques and patterns for writing
+JS in Functional-Light style.</p>
+<h2><a class="header" href="#at-a-glance" id="at-a-glance">At a Glance</a></h2>
+<p>Let's briefly illustrate the notion of &quot;Functional-Light JavaScript&quot; with a
+before-and-after snapshot of code. Consider:</p>
+<pre><code class="language-js">var numbers = [4, 10, 0, 27, 42, 17, 15, -6, 58];
+var faves = [];
+var magicNumber = 0;
+
+pickFavoriteNumbers();
+calculateMagicNumber();
+outputMsg(); // The magic number is: 42
+
+// ***************
+
+function calculateMagicNumber() {
+  for (let fave of faves) {
+    magicNumber = magicNumber + fave;
+  }
+}
+
+function pickFavoriteNumbers() {
+  for (let num of numbers) {
+    if (num &gt;= 10 &amp;&amp; num &lt;= 20) {
+      faves.push(num);
+    }
+  }
+}
+
+function outputMsg() {
+  var msg = `The magic number is: ${magicNumber}`;
+  console.log(msg);
+}
+</code></pre>
+<p>Now consider a very different style that accomplishes exactly the same outcome:</p>
+<pre><code class="language-js">var sumOnlyFavorites = FP.compose([
+  FP.filterReducer(FP.gte(10)),
+  FP.filterReducer(FP.lte(20))
+])(sum);
+
+var printMagicNumber = FP.pipe([
+  FP.reduce(sumOnlyFavorites, 0),
+  constructMsg,
+  console.log
+]);
+
+var numbers = [4, 10, 0, 27, 42, 17, 15, -6, 58];
+
+printMagicNumber(numbers); // The magic number is: 42
+
+// ***************
+
+function sum(x, y) {
+  return x + y;
+}
+function constructMsg(v) {
+  return `The magic number is: ${v}`;
+}
+</code></pre>
+<p>Once you understand FP and Functional-Light, this is likely how you'd <em>read</em> and
+mentally process that second snippet:</p>
+<blockquote>
+<p>We're first creating a function called <code>sumOnlyFavorites(..)</code> that's a
+combination of three other functions. We combine two filters, one checking if
+a value is greater-than-or-equal to 10 and one for less-than-or-equal to 20.
+Then we include the <code>sum(..)</code> reducer in the transducer composition. The
+resulting <code>sumOnlyFavorites(..)</code> function is a reducer that checks if a value
+passes both filters, and if so, adds the value to an accumulator value.</p>
+<p>Then we make another function called <code>printMagicNumber(..)</code> which first
+reduces a list of numbers using that <code>sumOnlyFavorites(..)</code> reducer we just
+defined, resulting in a sum of only numbers that passed the <em>favorite</em> checks.
+Then <code>printMagicNumber(..)</code> pipes that final sum into <code>constructMsg(..)</code>,
+which creates a string value that finally goes into <code>console.log(..)</code>.</p>
+</blockquote>
+<p>All those moving pieces <em>speak</em> to an FP developer in ways that likely seem
+highly unfamiliar to you right now. This book will help you <em>speak</em> that same
+kind of reasoning so that it's as readable to you as any other code, if not more
+so!</p>
+<p>A few other quick remarks about this code comparison:</p>
+<ul>
+<li>
+<p>It's likely that for many readers, the former snippet feels closer to
+comfortable/readable/maintainable than the latter snippet. It's entirely OK if
+that's the case. You're in exactly the right spot. I'm confident that if you
+stick it out through the whole book, and practice everything we talk about,
+that second snippet will eventually become a lot more natural, maybe even
+preferable!</p>
+</li>
+<li>
+<p>You might have done the task significantly or entirely different from either
+snippet presented. That's OK, too. This book won't be prescriptive in
+dictating that you should do something a specific way. The goal is to
+illustrate the pros/cons of various patterns and enable you to make those
+decisions. By the end of this book, how you would approach the task may fall a
+little closer to the second snippet than it does right now.</p>
+</li>
+<li>
+<p>It's also possible that you're already a seasoned FP developer who's scanning
+through the start of this book to see if it has anything useful for you to
+read. That second snippet certainly has some bits that are quite familiar. But
+I'm also betting that you thought, &quot;Hmmm, I wouldn't have done it <em>that</em>
+way...&quot; a couple of times. That's OK, and entirely reasonable.</p>
+<p>This is not a traditional, canonical FP book. We'll at times seem quite
+heretical in our approaches. We're seeking to strike a pragmatic balance
+between the clear undeniable benefits of FP, and the need to ship workable,
+maintainable JS without having to tackle a daunting mountain of
+math/notation/terminology. This is not <em>your</em> FP, it's &quot;Functional-Light
+JavaScript&quot;.</p>
+</li>
+</ul>
+<p>Whatever your reasons for reading this book, welcome!</p>
+<h2><a class="header" href="#confidence" id="confidence">Confidence</a></h2>
+<p>I have a very simple premise that sort of underlies everything I do as a teacher
+of software development (in JavaScript): code that you cannot trust is code that
+you do not understand. The reverse is true also: code that you don't understand
+is code you can't trust. Furthermore, if you cannot trust or understand your
+code, then you can't have any confidence whatsoever that the code you write is
+suitable to the task. You run the program and basically just cross your fingers.</p>
+<p>What do I mean by trust? I mean that you can verify, by reading and reasoning,
+not just executing, that you understand what a piece of code <em>will</em> do; you
+aren't just relying on what it <em>should</em> do. More often than is perhaps prudent,
+we tend to rely on running test suites to verify our programs' correctness. I
+don't mean to suggest tests are bad. But I do think we should aspire to be able
+to understand our code well enough that we know the test suite will pass before
+it runs.</p>
+<p>The techniques that form the foundation of FP are designed from the mindset of
+having far more confidence over our programs just by reading them. Someone who
+understands FP, and who's disciplined enough to diligently use it throughout
+their programs, will write code that they <strong>and others</strong> can read and verify
+that the program will do what they want.</p>
+<p>Confidence is also increased when we use techniques that avoid or minimize
+likely sources of bugs. That's perhaps one of the biggest selling points of FP:
+FP programs often have fewer bugs, and the bugs that do exist are usually in
+more obvious places, so they're easier to find and fix. FP code tends to be more
+bug-resistant -- certainly not bug-proof, though.</p>
+<p>As you journey through this book, you will begin to develop more confidence in
+the code you write, because you will use patterns and practices that are already
+well proven; and you'll avoid the most common causes of program bugs!</p>
+<h2><a class="header" href="#communication" id="communication">Communication</a></h2>
+<p>Why is Functional Programming important? To answer that, we need to take a
+bigger step back and talk about why programming itself is important.</p>
+<p>It may surprise you to hear this, but I don't believe that code is primarily a
+set of instructions for the computer. Actually, I think the fact that code
+instructs the computer is almost a happy accident.</p>
+<p>I believe very deeply that the vastly more important role of code is as a means
+of communication with other human beings.</p>
+<p>You probably know by experience that an awful lot of your time spent &quot;coding&quot; is
+actually spent reading existing code. Very few of us are so privileged as to
+spend all or most of our time simply banging out all new code and never dealing
+with code that others (or our past selves) wrote.</p>
+<p>It's widely estimated that developers spend 70% of code maintenance time on
+reading to understand it. That is eye-opening. 70%. No wonder the global average
+for a programmer's lines of code written per day is about 10. We spend up to 7
+hours of our day just reading the code to figure out where those 10 lines should
+go!</p>
+<p>We need to focus a lot more on the readability of our code. And by the way,
+readability is not just about fewer characters. Readability is actually most
+impacted by familiarity.<a href="#user-content-footnote-1"><sup>1</sup></a></p>
+<p>If we are going to spend our time concerned with making code that will be more
+readable and understandable, FP is central in that effort. The principles of FP
+are well established, deeply studied and vetted, and provably verifiable. Taking
+the time to learn and employ these FP principles will ultimately lead to more
+readily and recognizably familiar code for you and others. The increase in code
+familiarity, and the expediency of that recognition, will improve code
+readability.</p>
+<p>For example, once you learn what <code>map(..)</code> does, you'll be able to almost
+instantly spot and understand it when you see it in any program. But every time
+you see a <code>for</code> loop, you're going to have to read the whole loop to understand
+it. The syntax of the <code>for</code> loop may be familiar, but the substance of what it's
+doing is not; that has to be <em>read</em>, every time.</p>
+<p>By having more code that's recognizable at a glance, and thus spending less time
+figuring out what the code is doing, our focus is freed up to think about the
+higher levels of program logic; this is the important stuff that most needs our
+attention anyway.</p>
+<p>FP (at least, without all the terminology weighing it down) is one of the most
+effective tools for crafting readable code. <em>That</em> is why it's so important.</p>
+<h2><a class="header" href="#readability" id="readability">Readability</a></h2>
+<p>Readability is not a binary characteristic. It's a largely subjective human
+factor describing our relationship to code. And it will naturally vary over time
+as our skills and understanding evolve. I have experienced effects similar to
+the following figure, and anecdotally many others I've talked to have as well.</p>
+<p align="center">
+    <img alt="figure" src="images/fig17.png" width="50%">
+</p>
+<p>You may just find yourself experiencing similar effects as you work through the
+book. But take heart; if you stick this out, the curve comes back up!</p>
+<p><em>Imperative</em> describes the code most of us probably already write naturally;
+it's focused on precisely instructing the computer <em>how</em> to do something.
+Declarative code -- the kind we'll be learning to write, which adheres to FP
+principles -- is code that's more focused on describing the <em>what</em> outcome.</p>
+<p>Let's revisit the two code snippets presented earlier in this chapter.</p>
+<p>The first snippet is imperative, focused almost entirely on <em>how</em> to do the
+tasks; it's littered with <code>if</code> statements, <code>for</code> loops, temporary variables,
+reassignments, value mutations, function calls with side effects, and implicit
+data flow between functions. You certainly <em>can</em> trace through its logic to see
+how the numbers flow and change to the end state, but it's not at all clear or
+straightforward.</p>
+<p>The second snippet is more declarative; it does away with most of those
+aforementioned imperative techniques. Notice there's no explicit conditionals,
+loops, side effects, reassignments, or mutations; instead, it employs well-known
+(to the FP world, anyway!) and trustable patterns like filtering, reduction,
+transducing, and composition. The focus shifts from low-level <em>how</em> to higher
+level <em>what</em> outcomes.</p>
+<p>Instead of messing with an <code>if</code> statement to test a number, we delegate that to
+a well-known FP utility like <code>gte(..)</code> (greater-than-or-equal-to), and then
+focus on the more important task of combining that filter with another filter
+and a summation function.</p>
+<p>Moreover, the flow of data through the second program is explicit:</p>
+<ol>
+<li>A list of numbers goes into <code>printMagicNumber(..)</code>.</li>
+<li>One at a time those numbers are processed by <code>sumOnlyFavorites(..)</code>,
+resulting in a single number total of only our favorite kinds of numbers.</li>
+<li>That total is converted to a message string with <code>constructMsg(..)</code>.</li>
+<li>The message string is printed to the console with <code>console.log(..)</code>.</li>
+</ol>
+<p>You may still feel this approach is convoluted, and that the imperative snippet
+was easier to understand. You're much more accustomed to it; familiarity has a
+profound influence on our judgments of readability. By the end of this book,
+though, you will have internalized the benefits of the second snippet's
+declarative approach, and that familiarity will spring its readability to life.</p>
+<p>I know asking you to believe that at this point is a leap of faith.</p>
+<p>It takes a lot more effort, and sometimes more code, to improve its readability
+as I'm suggesting, and to minimize or eliminate many of the mistakes that lead
+to bugs. Quite honestly, when I started writing this book, I could never have
+written (or even fully understood!) that second snippet. As I'm now further
+along on my journey of learning, it's more natural and comfortable.</p>
+<p>If you're hoping that FP refactoring, like a magic silver bullet, will quickly
+transform your code to be more graceful, elegant, clever, resilient, and concise
+-- that it will come easy in the short term -- unfortunately that's just not a
+realistic expectation.</p>
+<p>FP is a very different way of thinking about how code should be structured, to
+make the flow of data much more obvious and to help your reader follow your
+thinking. It will take time. This effort is eminently worthwhile, but it can be
+an arduous journey.</p>
+<p>It still often takes me multiple attempts at refactoring a snippet of imperative
+code into more declarative FP, before I end up with something that's clear
+enough for me to understand later. I've found converting to FP is a slow
+iterative process rather than a quick binary flip from one paradigm to another.</p>
+<p>I also apply the &quot;teach it later&quot; test to every piece of code I write. After
+I've written a piece of code, I leave it alone for a few hours or days, then
+come back and try to read it with fresh eyes, and pretend as if I need to teach
+or explain it to someone else. Usually, it's jumbled and confusing the first few
+passes, so I tweak it and repeat!</p>
+<p>I'm not trying to dampen your spirits. I really want you to hack through these
+weeds. I am glad I did it. I can finally start to see the curve bending upward
+toward improved readability. The effort has been worth it. It will be for you,
+too.</p>
+<h2><a class="header" href="#perspective" id="perspective">Perspective</a></h2>
+<p>Most other FP texts seem to take a top-down approach, but we're going to go the
+opposite direction: working from the ground up, we'll uncover the basic
+foundational principles that I believe formal FPers would admit are the
+scaffolding for everything they do. But for the most part we'll stay arm's
+length away from most of the intimidating terminology or mathematical notation
+that can so easily frustrate learners.</p>
+<p>I believe it's less important what you call something and more important that
+you understand what it is and how it works. That's not to say there's no
+importance to shared terminology -- it undoubtedly eases communication among
+seasoned professionals. But for the learner, I've found it can be distracting.</p>
+<p>So this book will try to focus more on the base concepts and less on the fancy
+fluff. That's not to say there won't be terminology; there definitely will be.
+But don't get too wrapped up in the sophisticated words. Wherever necessary,
+look beyond them to the ideas.</p>
+<p>I call the less formal practice herein &quot;Functional-Light Programming&quot; because I
+think where the formalism of true FP suffers is that it can be quite
+overwhelming if you're not already accustomed to formal thought. I'm not just
+guessing; this is my own personal story. Even after teaching FP and writing this
+book, I can still say that the formalism of terms and notation in FP is very,
+very difficult for me to process. I've tried, and tried, and I can't seem to get
+through much of it.</p>
+<p>I know many FPers who believe that the formalism itself helps learning. But I
+think there's clearly a cliff where that only becomes true once you reach a
+certain comfort with the formalism. If you happen to already have a math
+background or even some flavors of CS experience, this may come more naturally
+to you. But some of us don't, and no matter how hard we try, the formalism keeps
+getting in the way.</p>
+<p>So this book introduces the concepts that I believe FP is built on, but comes at
+it by giving you a boost from below to climb up the cliff wall, rather than
+condescendingly shouting down at you from the top, prodding you to just figure
+out how to climb as you go.</p>
+<h2><a class="header" href="#how-to-find-balance" id="how-to-find-balance">How to Find Balance</a></h2>
+<p>If you've been around programming for very long, chances are you've heard the
+phrase &quot;YAGNI&quot; before: &quot;You Ain't Gonna Need It&quot;. This principle primarily comes
+from extreme programming, and stresses the high risk and cost of building a
+feature before it's needed.</p>
+<p>Sometimes we guess we'll need a feature in the future, build it now believing
+it'll be easier to do as we build other stuff, then realize we guessed wrong and
+the feature wasn't needed, or needed to be quite different. Other times we guess
+right, but build a feature too early, and suck up time from the features that
+are genuinely needed now; we incur an opportunity cost in diluting our energy.</p>
+<p>YAGNI challenges us to remember: even if it's counterintuitive in a situation,
+we often should postpone building something until it's presently needed. We tend
+to exaggerate our mental estimates of the future refactoring cost of adding it
+later when it is needed. Odds are, it won't be as hard to do later as we might
+assume.</p>
+<p>As it applies to functional programming, I would offer this admonition: there
+will be plenty of interesting and compelling patterns discussed in this text,
+but just because you find some pattern exciting to apply, it may not necessarily
+be appropriate to do so in a given part of your code.</p>
+<p>This is where I will differ from many formal FPers: just because you <em>can</em> apply
+FP to something doesn't mean you <em>should</em> apply FP to it. Moreover, there are
+many ways to slice a problem, and even though you may have learned a more
+sophisticated approach that is more &quot;future-proof&quot; to maintenance and
+extensibility, a simpler FP pattern might be more than sufficient in that spot.</p>
+<p>Generally, I'd recommend seeking balance in what you code, and to be
+conservative in your application of FP concepts as you get the hang of things.
+Default to the YAGNI principle in deciding if a certain pattern or abstraction
+will help that part of the code be more readable or if it's just introducing
+clever sophistication that isn't (yet) warranted.</p>
+<blockquote>
+<p>Reminder, any extensibility point that’s never used isn’t just wasted effort,
+it’s likely to also get in your way as well</p>
+<p>Jeremy D. Miller @jeremydmiller 2/20/15</p>
+<p>https://twitter.com/jeremydmiller/status/568797862441586688</p>
+</blockquote>
+<p>Remember, every single line of code you write has a reader cost associated with
+it. That reader may be another team member, or even your future self. Neither of
+those readers will be impressed with overly clever, unnecessary sophistication
+just to show off your FP prowess.</p>
+<p>The best code is the code that is most readable in the future because it strikes
+exactly the right balance between what it can/should be (idealism) and what it
+must be (pragmatism).</p>
+<h2><a class="header" href="#resources" id="resources">Resources</a></h2>
+<p>I have drawn on a great many different resources to be able to compose this
+text. I believe you, too, may benefit from them, so I wanted to take a moment to
+point them out.</p>
+<h3><a class="header" href="#books" id="books">Books</a></h3>
+<p>Some FP/JavaScript books that you should definitely read:</p>
+<ul>
+<li><a href="https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch1.html">Professor Frisby's Mostly Adequate Guide to Functional Programming</a>
+by <a href="https://twitter.com/drboolean">Brian Lonsdorf</a></li>
+<li><a href="https://leanpub.com/javascriptallongesix">JavaScript Allongé</a> by
+<a href="https://twitter.com/raganwald">Reg Braithwaite</a></li>
+<li><a href="http://shop.oreilly.com/product/0636920028857.do">Functional JavaScript</a> by
+<a href="https://twitter.com/fogus">Michael Fogus</a></li>
+</ul>
+<h3><a class="header" href="#blogssites" id="blogssites">Blogs/sites</a></h3>
+<p>Some other authors and content you should check out:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=BMUiFMZr7vk">Fun Fun Function Videos</a> by
+<a href="https://twitter.com/mpjme">Mattias P Johansson</a></li>
+<li><a href="https://github.com/stoeffel/awesome-fp-js">Awesome FP JS</a></li>
+<li><a href="http://blog.jenkster.com/2015/12/what-is-functional-programming.html">Kris Jenkins</a></li>
+<li><a href="https://medium.com/@_ericelliott">Eric Elliott</a></li>
+<li><a href="https://james-forbes.com/">James A Forbes</a></li>
+<li><a href="https://github.com/jlongster">James Longster</a></li>
+<li><a href="http://staltz.com/">André Staltz</a></li>
+<li><a href="https://github.com/hemanth/functional-programming-jargon#functional-programming-jargon">Functional Programming Jargon</a></li>
+<li><a href="https://github.com/InceptionCode/Functional-Programming-Exercises">Functional Programming Exercises</a></li>
+</ul>
+<h3><a class="header" href="#libraries" id="libraries">Libraries</a></h3>
+<p>The code snippets in this book largely do not rely on libraries. Each operation
+that we discover, we'll derive how to implement it in standalone, plain ol'
+JavaScript. However, as you begin to build more of your real code with FP,
+you'll soon want a library to provide optimized and highly reliable versions of
+these commonly accepted utilities.</p>
+<p>By the way, you need to check the documentation for the library functions you
+use to ensure you know how they work. There will be a lot of similarities in
+many of them to the code we build on in this text, but there will undoubtedly be
+some differences, even between popular libraries.</p>
+<p>Here are a few popular FP libraries for JavaScript that are a great place to
+start your exploration with:</p>
+<ul>
+<li><a href="http://ramdajs.com">Ramda</a></li>
+<li><a href="https://github.com/lodash/lodash/wiki/FP-Guide">lodash/fp</a></li>
+<li><a href="http://functionaljs.com/">functional.js</a></li>
+<li><a href="https://github.com/facebook/immutable-js">Immutable.js</a></li>
+</ul>
+<p><a href="apC.html">Appendix C takes a deeper look at these libraries</a>
+and others.</p>
+<h2><a class="header" href="#summary" id="summary">Summary</a></h2>
+<p>You may have a variety of reasons for starting to read this book, and different
+expectations of what you'll get out of it. This chapter has explained why I want
+you to read the book and what I want you to get out of the journey. It also
+helps you articulate to others (like your fellow developers) why they should
+come on the journey with you!</p>
+<p>Functional programming is about writing code that is based on proven principles
+so we can gain a level of confidence and trust over the code we write and read.
+We shouldn't be content to write code that we anxiously <em>hope</em> works, and then
+abruptly breathe a sigh of relief when the test suite passes. We should <em>know</em>
+what it will do before we run it, and we should be absolutely confident that
+we've communicated all these ideas in our code for the benefit of other readers
+(including our future selves).</p>
+<p>This is the heart of Functional-Light JavaScript. The goal is to learn to
+effectively communicate with our code but not have to suffocate under mountains
+of notation or terminology to get there.</p>
+<p>The journey to learning functional programming starts with deeply understanding
+the nature of what a function is. That's what we tackle in the next chapter.</p>
+<hr />
+<p><a name="footnote-1"><sup>1</sup></a>Buse, Raymond P. L., and Westley R. Weimer.
+“Learning a Metric for Code Readability.” IEEE Transactions on Software
+Engineering, IEEE Press, July 2010, dl.acm.org/citation.cfm?id=1850615.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="preface.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="chapter_2.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="preface.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="chapter_2.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

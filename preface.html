@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Preface - Functional-Light JavaScript</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="foreword.html"><strong aria-hidden="true">1.</strong> Foreword</a></li><li class="expanded "><a href="preface.html" class="active"><strong aria-hidden="true">2.</strong> Preface</a></li><li class="expanded "><a href="chapter_1.html"><strong aria-hidden="true">3.</strong> Chapter 1</a></li><li class="expanded "><a href="chapter_2.html"><strong aria-hidden="true">4.</strong> Chapter 2</a></li><li class="expanded "><a href="chapter_3.html"><strong aria-hidden="true">5.</strong> Chapter 3</a></li><li class="expanded "><a href="chapter_4.html"><strong aria-hidden="true">6.</strong> Chapter 4</a></li><li class="expanded "><a href="chapter_5.html"><strong aria-hidden="true">7.</strong> Chapter 5</a></li><li class="expanded "><a href="chapter_6.html"><strong aria-hidden="true">8.</strong> Chapter 6</a></li><li class="expanded "><a href="chapter_7.html"><strong aria-hidden="true">9.</strong> Chapter 7</a></li><li class="expanded "><a href="chapter_8.html"><strong aria-hidden="true">10.</strong> Chapter 8</a></li><li class="expanded "><a href="chapter_9.html"><strong aria-hidden="true">11.</strong> Chapter 9</a></li><li class="expanded "><a href="chapter_10.html"><strong aria-hidden="true">12.</strong> Chapter 10</a></li><li class="expanded "><a href="chapter_11.html"><strong aria-hidden="true">13.</strong> Chapter 11</a></li><li class="expanded "><a href="apA.html"><strong aria-hidden="true">14.</strong> Appendix A: Transducing</a></li><li class="expanded "><a href="apB.html"><strong aria-hidden="true">15.</strong> Appendix B: The Humble Monad</a></li><li class="expanded "><a href="apC.html"><strong aria-hidden="true">16.</strong> Appendix C: FP Libraries</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Functional-Light JavaScript</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#functional-light-javascript" id="functional-light-javascript">Functional-Light JavaScript</a></h1>
+<h1><a class="header" href="#preface" id="preface">Preface</a></h1>
+<blockquote>
+<p><em>A monad is just a monoid in the category of endofunctors.</em></p>
+</blockquote>
+<p>Did I just lose you? Don't worry, I'd be lost, too! All those terms that only
+mean something to the already-initiated in Functional Programming™ (FP)
+are just jumbled nonsense to many of the rest of us.</p>
+<p>This book is not going to teach you what those words mean. If that's what you're
+looking for, keep looking. In fact, there are already plenty of great books that
+teach FP the <em>right way</em>, from the top-down. Those words have important meanings
+and if you formally study FP in-depth, you'll absolutely want to get familiar
+with them.</p>
+<p>But this book is going to approach the topic quite differently. I'm going to
+present fundamental FP concepts from the ground-up, with fewer special or
+non-intuitive terms than most approaches to FP. We'll try to take a practical
+approach to each principle rather than a purely academic angle. <strong>There will be
+terms</strong>, no doubt. But we'll be careful and deliberate about introducing them
+and explaining why they're important.</p>
+<p>Sadly, I am not a card-carrying member of the FP Cool Kids Club. I've never been
+formally taught anything about FP. And though I have a CS academic background
+and I am decent at math, mathematical notation is not how my brain understands
+programming. I have never written a line of Scheme, Clojure, or Haskell. I'm not
+an old-school Lisp'r.</p>
+<p>I <em>have</em> attended countless conference talks about FP, each one with the
+desperate clinging hope that finally, <em>this time</em> would be the time I understood
+what this whole functional programming mysticism is all about. And each time, I
+came away frustrated and reminded that those terms got all mixed up in my head
+and I had no idea if or what I learned. Maybe I learned things. But I couldn't
+figure out what those things were for the longest time.</p>
+<p>Little by little, across those various exposures, I teased out bits and pieces
+of important concepts that seem to just come all too naturally to the formal
+FPer. I learned them slowly and I learned them pragmatically and experientially,
+not academically with appropriate terminology. Have you ever known a thing for a
+long time, and only later found out it had a specific name you never knew!?</p>
+<p>Maybe you're like me; I heard terms such as &quot;map-reduce&quot; around industry
+segments like &quot;big data&quot; for years with no real idea what they were. Eventually
+I learned what the <code>map(..)</code> function did -- all long before I had any idea that
+list operations were a cornerstone of the FPer path and what makes them so
+important. I knew what <em>map</em> was long before I ever knew it was called
+<code>map(..)</code>.</p>
+<p>Eventually I began to gather all these tidbits of understanding into what I now
+call &quot;Functional-Light Programming&quot; (FLP).</p>
+<h2><a class="header" href="#mission" id="mission">Mission</a></h2>
+<p>But why is it so important for you to learn functional programming, even the
+light form?</p>
+<p>I've come to believe something very deeply in recent years, so much so you could
+<em>almost</em> call it a religious belief. I believe that programming is fundamentally
+about humans, not about code. I believe that code is first and foremost a means
+of human communication, and only as a <em>side effect</em> (hear my self-referential
+chuckle) does it instruct the computer.</p>
+<p>The way I see it, functional programming is at its heart about using patterns in
+your code that are well-known, understandable, <em>and</em> proven to keep away the
+mistakes that make code harder to understand. In that view, FP -- or, ahem, FLP!
+-- might be one of the most important collections of tools any developer could
+acquire.</p>
+<blockquote>
+<p>The curse of the monad is that... once you understand... you lose the ability
+to explain it to anyone else.</p>
+<p>Douglas Crockford 2012 &quot;Monads and Gonads&quot;</p>
+<p>https://www.youtube.com/watch?v=dkZFtimgAcM</p>
+</blockquote>
+<p>I hope this book &quot;Maybe&quot; breaks the spirit of that curse, even though we won't
+talk about &quot;monads&quot; until the very end in the appendices.</p>
+<p>The formal FPer will often assert that the <em>real value</em> of FP is in using it
+essentially 100%: it's an all-or-nothing proposition. The belief is that if you
+use FP in one part of your program but not in another, the whole program is
+polluted by the non-FP stuff and therefore suffers enough that the FP was
+probably not worth it.</p>
+<p>I'll say unequivocally: <strong>I think that absolutism is bogus</strong>. That's as silly to
+me as suggesting that this book is only good if I use perfect grammar and active
+voice throughout; if I make any mistakes, it degrades the entire book's quality.
+Nonsense.</p>
+<p>The better I am at writing in a clear, consistent voice, the better your reading
+experience will be. But I'm not a 100% perfect author. Some parts will be better
+written than others. The parts where I can still improve are not going to
+invalidate the other parts of this book which are useful.</p>
+<p>And so it goes with our code. The more you can apply these principles to more
+parts of your code, the better your code will be. Use them well 25% of the time,
+and you'll get some good benefit. Use them 80% of the time, and you'll see even
+more benefit.</p>
+<p>With perhaps a few exceptions, I don't think you'll find many absolutes in this
+text. We'll instead talk about aspirations, goals, principles to strive for.
+We'll talk about balance and pragmatism and trade-offs.</p>
+<p>Welcome to this journey into the most useful and practical foundations of FP. We
+both have plenty to learn!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="foreword.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="chapter_1.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="foreword.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="chapter_1.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

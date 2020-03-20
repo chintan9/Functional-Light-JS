@@ -1,0 +1,585 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Appendix C: FP Libraries - Functional-Light JavaScript</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
+                <ol class="chapter"><li class="expanded "><a href="foreword.html"><strong aria-hidden="true">1.</strong> Foreword</a></li><li class="expanded "><a href="preface.html"><strong aria-hidden="true">2.</strong> Preface</a></li><li class="expanded "><a href="chapter_1.html"><strong aria-hidden="true">3.</strong> Chapter 1</a></li><li class="expanded "><a href="chapter_2.html"><strong aria-hidden="true">4.</strong> Chapter 2</a></li><li class="expanded "><a href="chapter_3.html"><strong aria-hidden="true">5.</strong> Chapter 3</a></li><li class="expanded "><a href="chapter_4.html"><strong aria-hidden="true">6.</strong> Chapter 4</a></li><li class="expanded "><a href="chapter_5.html"><strong aria-hidden="true">7.</strong> Chapter 5</a></li><li class="expanded "><a href="chapter_6.html"><strong aria-hidden="true">8.</strong> Chapter 6</a></li><li class="expanded "><a href="chapter_7.html"><strong aria-hidden="true">9.</strong> Chapter 7</a></li><li class="expanded "><a href="chapter_8.html"><strong aria-hidden="true">10.</strong> Chapter 8</a></li><li class="expanded "><a href="chapter_9.html"><strong aria-hidden="true">11.</strong> Chapter 9</a></li><li class="expanded "><a href="chapter_10.html"><strong aria-hidden="true">12.</strong> Chapter 10</a></li><li class="expanded "><a href="chapter_11.html"><strong aria-hidden="true">13.</strong> Chapter 11</a></li><li class="expanded "><a href="apA.html"><strong aria-hidden="true">14.</strong> Appendix A: Transducing</a></li><li class="expanded "><a href="apB.html"><strong aria-hidden="true">15.</strong> Appendix B: The Humble Monad</a></li><li class="expanded "><a href="apC.html" class="active"><strong aria-hidden="true">16.</strong> Appendix C: FP Libraries</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Functional-Light JavaScript</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#functional-light-javascript" id="functional-light-javascript">Functional-Light JavaScript</a></h1>
+<h1><a class="header" href="#appendix-c-fp-libraries" id="appendix-c-fp-libraries">Appendix C: FP Libraries</a></h1>
+<p>If you've been reading this book from start to finish, take a minute to stop and
+look back how far you've come since <a href="chapter_1.html">Chapter 1</a>. It's been quite a
+journey. I hope you've learned a lot and gained insight into thinking
+functionally for your own programs.</p>
+<p>I want to close this book leaving you with some quick pointers of working with
+common/popular FP libraries. This is not an exhaustive documentation on each,
+but a quick glance at the things you should be aware of as you venture beyond
+&quot;Functional-Light&quot; into broader FP.</p>
+<p>Wherever possible, I recommend you <em>not</em> reinvent any wheels. If you find an FP
+library that suits your needs, use it. Only use the ad hoc helper utilities from
+this book -- or invent ones of your own! -- if you can't find a suitable library
+method for your circumstance.</p>
+<h2><a class="header" href="#stuff-to-investigate" id="stuff-to-investigate">Stuff to Investigate</a></h2>
+<p>Let's expand the
+<a href="chapter_1.html">list of FP libraries to be aware of, from Chapter 1</a>.
+We won't cover all of these (as there's a lot of overlap), but here are the ones
+that should probably be on your radar screen:</p>
+<ul>
+<li><a href="http://ramdajs.com">Ramda</a>: General FP Utilities</li>
+<li><a href="https://github.com/sanctuary-js/sanctuary">Sanctuary</a>: Ramda Companion for FP
+Types</li>
+<li><a href="https://github.com/lodash/lodash/wiki/FP-Guide">lodash/fp</a>: General FP
+Utilities</li>
+<li><a href="http://functionaljs.com/">functional.js</a>: General FP Utilities</li>
+<li><a href="https://github.com/facebook/immutable-js">Immutable</a>: Immutable Data
+Structures</li>
+<li><a href="https://github.com/swannodette/mori">Mori</a>: (ClojureScript Inspired)
+Immutable Data Structures</li>
+<li><a href="https://github.com/rtfeldman/seamless-immutable">Seamless-Immutable</a>:
+Immutable Data Helpers</li>
+<li><a href="https://github.com/cognitect-labs/transducers-js">transducers-js</a>:
+Transducers</li>
+<li><a href="https://github.com/monet/monet.js">monet.js</a>: Monadic Types</li>
+</ul>
+<p>There are dozens of other fine libraries not on this list. Just because it's not
+on my list here doesn't mean it's not good, nor is this list a particular
+endorsement. It's just a quick glance at the landscape of FP-in-JavaScript. A
+much longer list of FP resources can be
+<a href="https://github.com/stoeffel/awesome-fp-js">found here</a>.</p>
+<p>One resource that's extremely important to the FP world -- it's not a library
+but more an encyclopedia! -- is
+<a href="https://github.com/fantasyland/fantasy-land">Fantasy Land</a> (aka FL).</p>
+<p>This is definitely not light reading for the faint of heart. It's a complete
+detailed roadmap of all of FP as it's interpreted in JavaScript. FL has become a
+de facto standard for JavaScript FP libraries to adhere to, to ensure maximum
+interoperability.</p>
+<p>Fantasy Land is pretty much the exact opposite of &quot;Functional-Light&quot;. It's the
+full-on no-holds-barred approach to FP in JavaScript. That said, as you venture
+beyond this book, it's likely that FL will be on that road for you. I'd
+recommend you bookmark it, and go back to it after you've had at least six
+months of real-world practice with this book's concepts.</p>
+<h2><a class="header" href="#ramda-0230" id="ramda-0230">Ramda (0.23.0)</a></h2>
+<p>From the <a href="http://ramdajs.com/">Ramda documentation</a>:</p>
+<blockquote>
+<p>Ramda functions are automatically curried.</p>
+<p>The parameters to Ramda functions are arranged to make it convenient for
+currying. The data to be operated on is generally supplied last.</p>
+</blockquote>
+<p>I find that design decision to be one of Ramda's strengths. It's also important
+to note that Ramda's form of currying (as with most libraries, it seems) is the
+<a href="chapter_3.html">&quot;loose currying&quot; we talked about in Chapter 3</a>.</p>
+<p>The <a href="chapter_3.html">final example of Chapter 3</a> --
+recall defining a point-free <code>printIf(..)</code> utility -- can be done with Ramda
+like this:</p>
+<pre><code class="language-js">function output(msg) {
+  console.log(msg);
+}
+
+function isShortEnough(str) {
+  return str.length &lt;= 5;
+}
+
+var isLongEnough = R.complement(isShortEnough);
+
+var printIf = R.partial(R.flip(R.when), [output]);
+
+var msg1 = &quot;Hello&quot;;
+var msg2 = msg1 + &quot; World&quot;;
+
+printIf(isShortEnough, msg1); // Hello
+printIf(isShortEnough, msg2);
+
+printIf(isLongEnough, msg1);
+printIf(isLongEnough, msg2); // Hello World
+</code></pre>
+<p>A few differences to point out compared to
+<a href="chapter_3.html">Chapter 3's approach</a>:</p>
+<ul>
+<li>
+<p>We use <code>R.complement(..)</code> instead of <code>not(..)</code> to create a negating function
+<code>isLongEnough(..)</code> around <code>isShortEnough(..)</code>.</p>
+</li>
+<li>
+<p>We use <code>R.flip(..)</code> instead of <code>reverseArgs(..)</code>. It's important to note that
+<code>R.flip(..)</code> only swaps the first two arguments, whereas <code>reverseArgs(..)</code>
+reverses all of them. In this case, <code>flip(..)</code> is more convenient for us, so
+we don't need to do <code>partialRight(..)</code> or any of that kind of juggling.</p>
+</li>
+<li>
+<p><code>R.partial(..)</code> takes all of its subsequent arguments (beyond the function) as
+a single array.</p>
+</li>
+<li>
+<p>Because Ramda is using loose currying, we don't need to use <code>R.uncurryN(..)</code>
+to get a <code>printIf(..)</code> that takes both its arguments. If we did, it would look
+like <code>R.uncurryN( 2, .. )</code> wrapped around the <code>R.partial(..)</code> call; but that's
+not necessary.</p>
+</li>
+</ul>
+<p>Ramda is a very popular and powerful library. It's a really good place to start
+if you're practicing adding FP to your code base.</p>
+<h2><a class="header" href="#lodashfp-4174" id="lodashfp-4174">Lodash/fp (4.17.4)</a></h2>
+<p>Lodash is one of the most popular libraries in the entire JS ecosystem. They
+publish an &quot;FP-friendly&quot; version of their API as
+<a href="https://github.com/lodash/lodash/wiki/FP-Guide">&quot;lodash/fp&quot;</a>.</p>
+<p>In
+<a href="chapter_9.html">Chapter 9, we looked at composing standalone list operations</a>
+(<code>map(..)</code>, <code>filter(..)</code>, and <code>reduce(..)</code>). Here's how we could do it with
+&quot;lodash/fp&quot;:</p>
+<pre><code class="language-js">var sum = (x, y) =&gt; x + y;
+var double = x =&gt; x * 2;
+var isOdd = x =&gt; x % 2 == 1;
+
+fp.compose([fp.reduce(sum)(0), fp.map(double), fp.filter(isOdd)])([
+  1,
+  2,
+  3,
+  4,
+  5
+]); // 18
+</code></pre>
+<p>Instead of the more familiar <code>_.</code> namespace prefix, &quot;lodash/fp&quot; defines its
+methods with <code>fp.</code> as the namespace prefix. I find that a helpful distinguisher,
+and also generally more easy on my eyes than <code>_.</code> anyway!</p>
+<p>Notice that <code>fp.compose(..)</code> (also known as <code>_.flowRight(..)</code> in lodash proper)
+takes an array of functions instead of individual arguments.</p>
+<p>You cannot beat the stability, widespread community support, and performance of
+lodash. It's a solid bet for your FP explorations.</p>
+<h2><a class="header" href="#mori-032" id="mori-032">Mori (0.3.2)</a></h2>
+<p>In <a href="chapter_6.html">Chapter 6</a>, we already briefly glanced at the Immutable.js
+library, probably the most well-known for immutable data structures.</p>
+<p>Let's instead look at another popular library:
+<a href="https://github.com/swannodette/mori">Mori</a>. Mori is designed with a different
+(ostensibly more FP-like) take on API: it uses standalone functions instead of
+methods directly on the values.</p>
+<pre><code class="language-js">var state = mori.vector(1, 2, 3, 4);
+
+var newState = mori.assoc(
+  mori.into(state, Array.from({ length: 39 })),
+  42,
+  &quot;meaning of life&quot;
+);
+
+state === newState; // false
+
+mori.get(state, 2); // 3
+mori.get(state, 42); // undefined
+
+mori.get(newState, 2); // 3
+mori.get(newState, 42); // &quot;meaning of life&quot;
+
+mori.toJs(newState).slice(1, 3); // [2,3]
+</code></pre>
+<p>Some interesting things to point out about Mori for this example:</p>
+<ul>
+<li>
+<p>We're using a <code>vector</code> instead of a <code>list</code> (as one might assume), mostly
+because the documentation says it behaves more like we expect JS arrays to be.</p>
+</li>
+<li>
+<p>We cannot just randomly set a position past the end of the vector like we can
+with JS arrays; that throws an exception. So we have to first &quot;grow&quot; the
+vector using <code>mori.into(..)</code> with an array of the appropriate size of extra
+slots we want. Once we have a vector with 43 slots (4 + 39), we can set the
+final slot (position <code>42</code>) to the <code>&quot;meaning of life&quot;</code> value using the
+<code>mori.assoc(..)</code> method.</p>
+</li>
+<li>
+<p>The intermediate step of creating a larger vector with <code>mori.into(..)</code> and
+then creating another from it with <code>mori.assoc(..)</code> might sound inefficient.
+But the beauty of immutable data structures is that no cloning is going on
+here. Each time a &quot;change&quot; is made, the new data structure is just tracking
+the difference from the previous state.</p>
+</li>
+</ul>
+<p>Mori is heavily inspired by ClojureScript. Its API will be very familiar if you
+have experience (or currently work in!) that language. Since I don't have that
+experience, I find the method names a little strange to get used to.</p>
+<p>But I really like the standalone function design instead of methods on values.
+Mori also has some functions that automatically return regular JS arrays, which
+is a nice convenience.</p>
+<h2><a class="header" href="#bonus-fpo" id="bonus-fpo">Bonus: FPO</a></h2>
+<p>In <a href="chapter_2.html">Chapter 2, we introduced a pattern</a> for
+dealing with arguments called &quot;named arguments&quot;, which in JS means using an
+object at the call-site to map properties to destructured function parameters:</p>
+<pre><code class="language-js">function foo({ x, y } = {}) {
+  console.log(x, y);
+}
+
+foo({
+  y: 3
+}); // undefined 3
+</code></pre>
+<p>Then in <a href="chapter_3.html">Chapter 3, we talked about extending</a> our
+ideas of currying and partial application to work with named arguments, like
+this:</p>
+<pre><code class="language-js">function foo({ x, y, z } = {}) {
+  console.log(`x:${x} y:${y} z:${z}`);
+}
+
+var f1 = curryProps(foo, 3);
+
+f1({ y: 2 })({ x: 1 })({ z: 3 });
+</code></pre>
+<p>One major benefit of this style is being able to pass arguments (even with
+currying or partial application!) in any order without needing to do
+<code>reverseArgs(..)</code>-style juggling of parameters. Another is being able to omit an
+optional argument by simply not specifying it, instead of passing an ugly
+placeholder.</p>
+<p>In my journey learning FP, I've regularly been frustrated by both of those
+irritations of functions with traditional positional arguments; thus I've really
+appreciated the named arguments style for addressing those concerns.</p>
+<p>One day, I was musing about with this style of FP coding, and wondered what it
+would be like if a whole FP library had all its API methods exposed in this
+style. I started experimenting, showed those experiments to a few FP folks, and
+got some positive feedback.</p>
+<p>From those experiments, eventually the <a href="https://github.com/getify/fpo">FPO</a>
+(pronounced &quot;eff-poh&quot;) library was born; FPO stands for FP-with-Objects, in case
+you were wondering.</p>
+<p>From the documentation:</p>
+<pre><code class="language-js">// Ramda's `reduce(..)`
+R.reduce((acc, v) =&gt; acc + v, 0, [3, 7, 9]); // 19
+
+// FPO named-argument method style
+FPO.reduce({
+  arr: [3, 7, 9],
+  fn: ({ acc, v }) =&gt; acc + v
+}); // 19
+</code></pre>
+<p>With traditional library implementations of <code>reduce(..)</code> (like Ramda), the
+initial value parameter is in the middle, and not optional. FPO's <code>reduce(..)</code>
+method can take the arguments in any order, and you can omit the optional
+initial value if desired.</p>
+<p>As with most other FP libraries, FPO's API methods are automatically
+loose-curried, so you can not only provide arguments in any order, but
+specialize the function by providing its arguments over multiple calls:</p>
+<pre><code class="language-js">var f = FPO.reduce({ arr: [3, 7, 9] });
+
+// later
+
+f({ fn: ({ acc, v }) =&gt; acc + v }); // 19
+</code></pre>
+<p>Lastly, all of FPO's API methods are also exposed using the traditional
+positional arguments style -- you'll find they're all very similar to Ramda and
+other libraries -- under the <code>FPO.std.*</code> namespace:</p>
+<pre><code class="language-js">FPO.std.reduce((acc, v) =&gt; acc + v, undefined, [3, 7, 9]); // 19
+</code></pre>
+<p>If FPO's named argument form of FP appeals to you, perhaps check out the library
+and see what you think. It has a full test suite and most of the major FP
+functionality you'd expect, including everything we covered in this text to get
+you up and going with Functional-Light JavaScript!</p>
+<h2><a class="header" href="#bonus-2-fasy" id="bonus-2-fasy">Bonus #2: fasy</a></h2>
+<p>FP iterations (<code>map(..)</code>, <code>filter(..)</code>, etc.) are almost always modeled as
+synchronous operations, meaning we eagerly run through all the steps of the
+iteration immediately. As a matter of fact, other FP patterns like composition
+and even transducing are also iterations, and are also modeled exactly this way.</p>
+<p>But what happens if one or more of the steps in an iteration needs to complete
+asynchronously? You might jump to thinking that Observables (see
+<a href="chapter_10.html">Chapter 10</a>) is the natural answer, but they're not
+what we need.</p>
+<p>Let me quickly illustrate.</p>
+<p>Imagine you have a list of URLs that represent images you want to load into a
+web page. The fetching of the images is asynchronous, obviously. So, this isn't
+going to work quite like you'd hope:</p>
+<pre><code class="language-js">var imageURLs = [
+  &quot;https://some.tld/image1.png&quot;,
+  &quot;https://other.tld/image2.png&quot;,
+  &quot;https://various.tld/image3.png&quot;
+];
+
+var images = imageURLs.map(fetchImage);
+</code></pre>
+<p>The <code>images</code> array won't contain the images. Depending on the behavior of
+<code>fetchImage(..)</code>, it probably returns a promise for the image object once it
+finishes downloading. So <code>images</code> would now be a list of promises.</p>
+<p>Of course, you could then use <code>Promise.all(..)</code> to wait for all those promises
+to resolve, and then unwrap an array of the image object results at its
+completion:</p>
+<pre><code class="language-js">Promise.all(images).then(function allImages(imgObjs) {
+  // ..
+});
+</code></pre>
+<p>Unfortunately, this &quot;trick&quot; only works if you're going to do all the
+asynchronous steps concurrently (rather than serially, one after the other), and
+only if the operation is a <code>map(..)</code> call as shown. If you want serial
+asynchrony, or you want to, for example, do a <code>filter(..)</code> concurrently, this
+won't quite work; it's possible, but it's messier.</p>
+<p>And some operations naturally require serial asynchrony, like for example an
+asynchronous <code>reduce(..)</code>, which clearly needs to work left-to-right one at a
+time; those steps can't be run concurrently and have that operation make any
+sense.</p>
+<p>As I said, Observables (see <a href="chapter_10.html">Chapter 10</a>) aren't the
+answer to these kinds of tasks. The reason is, an Observable's coordination of
+asynchrony is between separate operations, not between steps/iterations at a
+single level of operation.</p>
+<p>Another way to visualize this distinction is that Observables support &quot;vertical
+asynchrony&quot;, whereas what I'm talking about would be &quot;horizontal asynchrony&quot;.</p>
+<p>Consider:</p>
+<pre><code class="language-js">var obsv = Rx.Observable.from([1, 2, 3, 4, 5]);
+
+obsv
+  .map(x =&gt; x * 2)
+  .delay(100) // &lt;-- vertical asynchrony
+  .map(x =&gt; x + 1)
+  .subscribe(v =&gt; console.log);
+// {after 100 ms}
+// 3
+// 5
+// 7
+// 9
+// 11
+</code></pre>
+<p>If for some reason I wanted to ensure that there was a delay of 100 ms between
+when <code>1</code> was processed by the first <code>map(..)</code> and when <code>2</code> was processed, that
+would be the &quot;horizontal asynchrony&quot; I'm referring to. There's not really a
+clean way to model that.</p>
+<p>And of course, I'm using an arbitrary delay in that description, but in practice
+that would more likely be serial-asynchrony like an asynchronous reduce, where
+each step in that reduction iteration could take some time before it completes
+and lets the next step be processed.</p>
+<p>So, how do we support both serial and concurrent iteration across asynchronous
+operations?</p>
+<p><strong>fasy</strong> (pronounced like &quot;Tracy&quot; but with an &quot;f&quot;) is a little utility library I
+built for supporting exactly those kinds of tasks. You can find more information
+about it <a href="https://github.com/getify/fasy">here</a>.</p>
+<p>To illustrate <strong>fasy</strong>, let's consider a concurrent <code>map(..)</code> versus a serial
+<code>map(..)</code>:</p>
+<pre><code class="language-js">FA.concurrent.map(fetchImage, imageURLs).then(function allImages(imgObjs) {
+  // ..
+});
+
+FA.serial.map(fetchImage, imageURLs).then(function allImages(imgObjs) {
+  // ..
+});
+</code></pre>
+<p>In both cases, the <code>then(..)</code> handler will only be invoked once all the fetches
+have fully completed. The difference is whether the fetches will all initiate
+concurrently (aka, &quot;in parallel&quot;) or go out one at a time.</p>
+<p>Your instinct might be that concurrent would always be preferable, and while
+that may be common, it's not always the case.</p>
+<p>For example, what if <code>fetchImage(..)</code> maintains a cache of fetched images, and
+it checks the cache before making the actual network request? What if, in
+addition to that, the list of <code>imageURLs</code> could have duplicates in it? You'd
+certainly want the first fetch of an image URL to complete (and populate the
+cache) before doing the check on the duplicate image URL later in the list.</p>
+<p>Again, there will inevitably be cases where concurrent or serial asynchrony will
+be called for. Asynchronous reductions will always be serial, whereas
+asynchronous mappings may likely tend to be more concurrent but can also need to
+be serial in some cases. That's why <strong>fasy</strong> supports all these options.</p>
+<p>Along with Observables, <strong>fasy</strong> will help you extend more FP patterns and
+principles to your asynchronous operations.</p>
+<h2><a class="header" href="#summary" id="summary">Summary</a></h2>
+<p>JavaScript is not particularly designed as an FP language. However, it does have
+enough of the basics (like function values, closures, etc.) for us to make it
+FP-friendly. And the libraries we've examined here will help you do that.</p>
+<p>Armed with the concepts from this book, you're ready to start tackling
+real-world code. Find a good, comfortable FP library and jump in. Practice,
+practice, practice!</p>
+<p>So... that's it. I've shared what I have for you, for now. I hereby officially
+certify you as a &quot;Functional-Light JavaScript&quot; programmer! It's time to close
+out this &quot;chapter&quot; of our story of learning FP together. But my learning journey
+still continues; I hope yours does, too!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="apB.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="apB.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+        
+        
+        <script type="text/javascript">
+            window.playpen_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
