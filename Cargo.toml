@@ -51,7 +51,7 @@ ammonia = { version = "3", optional = true }
 
 [dev-dependencies]
 select = "0.4"
-pretty_assertions = "0.6"
+pretty_assertions = "1.1"
 walkdir = "2.0"
 
 [features]
